@@ -1,0 +1,1149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A visual, student-friendly guide to the Quantum Genome Detective Qiskit challenge.">
+  <title>Quantum Genome Detective — the challenge, simply explained</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--cp-bg);
+      color: var(--cp-text);
+      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+    }
+    a { color: var(--cp-link); }
+    button { font: inherit; }
+    .wrap { width: min(1080px, calc(100% - 36px)); margin: 0 auto; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      border-bottom: 1px solid var(--cp-border);
+      background: var(--cp-overlay);
+      backdrop-filter: blur(8px);
+    }
+    .topbar-inner {
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand { font-size: .92rem; font-weight: 750; letter-spacing: .01em; }
+    .topbar a { text-decoration: none; font-size: .9rem; }
+    .topbar nav { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero {
+      padding: 64px 0 44px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
+      align-items: center;
+      gap: 38px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border: 1px solid var(--cp-border);
+      border-radius: .625rem;
+      background: var(--cp-surface);
+      color: var(--cp-text-muted);
+      font-size: .8rem;
+      font-weight: 700;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin: 16px 0; font-size: clamp(2.4rem, 6vw, 4.5rem); line-height: 1.04; letter-spacing: -.045em; }
+    h2 { margin-bottom: 10px; font-size: clamp(1.7rem, 3.5vw, 2.45rem); line-height: 1.16; letter-spacing: -.025em; }
+    h3 { margin-bottom: 8px; font-size: 1.13rem; }
+    .lead { max-width: 610px; color: var(--cp-text-muted); font-size: 1.17rem; }
+    .hero-art, .card, .callout, .step-card {
+      background: var(--cp-surface);
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      box-shadow: 0 0 2px var(--cp-border), 0 1px 2px var(--cp-border);
+    }
+    .hero-art { padding: 20px; }
+    .hero-art svg, .diagram svg { width: 100%; height: auto; display: block; }
+    .hero-art figcaption { margin-top: 10px; color: var(--cp-text-soft); font-size: .85rem; text-align: center; }
+    .quick-answer {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: .625rem;
+      background: var(--cp-accent-soft);
+      color: var(--cp-text);
+      font-weight: 700;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 9px;
+      margin: 10px 0 54px;
+    }
+    .flow-item {
+      position: relative;
+      min-height: 72px;
+      padding: 12px 10px;
+      display: grid;
+      place-content: center;
+      text-align: center;
+      border: 1px solid var(--cp-border);
+      border-radius: .625rem;
+      background: var(--cp-surface);
+      font-size: .84rem;
+      font-weight: 700;
+    }
+    .flow-item:not(:last-child)::after {
+      content: "›";
+      position: absolute;
+      right: -9px;
+      top: 50%;
+      z-index: 1;
+      transform: translate(50%, -50%);
+      color: var(--cp-accent);
+      font-size: 1.3rem;
+    }
+    section { padding: 26px 0 36px; scroll-margin-top: 76px; }
+    .section-head { max-width: 720px; margin-bottom: 20px; }
+    .section-head p { color: var(--cp-text-muted); font-size: 1.04rem; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .card { padding: 20px; }
+    .card p:last-child { margin-bottom: 0; }
+    .muted { color: var(--cp-text-muted); }
+    .small { font-size: .9rem; }
+    .tag {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 3px 8px;
+      border-radius: .625rem;
+      background: var(--cp-accent-soft);
+      color: var(--cp-accent);
+      font-size: .77rem;
+      font-weight: 750;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+    .diagram {
+      padding: 14px;
+      background: var(--cp-surface);
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+    }
+    .diagram-note { margin: 8px 4px 0; color: var(--cp-text-soft); font-size: .84rem; }
+    .callout {
+      padding: 16px 18px;
+      border-left: 4px solid var(--cp-accent);
+      border-radius: .625rem;
+      background: var(--cp-surface);
+    }
+    .callout strong { color: var(--cp-accent); }
+    .math {
+      overflow-x: auto;
+      margin: 14px 0;
+      padding: 16px;
+      border: 1px solid var(--cp-border);
+      border-radius: .625rem;
+      background: var(--cp-surface-soft);
+      font-family: Consolas, "Courier New", Courier, monospace;
+      font-size: .98rem;
+      white-space: nowrap;
+    }
+    .mini-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    .mini-table th, .mini-table td { padding: 8px; border-bottom: 1px solid var(--cp-border); text-align: left; }
+    .mini-table th { color: var(--cp-text-muted); font-weight: 700; }
+    .bits { display: inline-flex; gap: 6px; margin: 6px 0 14px; }
+    .bit {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--cp-border-strong);
+      border-radius: .625rem;
+      background: var(--cp-surface);
+      color: var(--cp-text);
+      cursor: pointer;
+      font-family: Consolas, "Courier New", Courier, monospace;
+      font-size: 1.15rem;
+      font-weight: 750;
+    }
+    .bit[aria-pressed="true"] { border-color: var(--cp-accent); background: var(--cp-accent-soft); color: var(--cp-accent); }
+    .score-result { min-height: 48px; margin: 8px 0 0; font-weight: 750; }
+    .score-result strong { color: var(--cp-accent); font-size: 1.4rem; }
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+    .steps { display: grid; gap: 10px; }
+    .step-card { padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; }
+    .step-number {
+      flex: 0 0 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: .625rem;
+      background: var(--cp-accent);
+      color: var(--cp-accent-fg);
+      font-weight: 800;
+    }
+    .step-card p { margin: 2px 0 0; color: var(--cp-text-muted); }
+    .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; font-size: .85rem; }
+    .legend span { display: inline-flex; gap: 7px; align-items: center; }
+    .swatch { width: 13px; height: 13px; border-radius: 50%; background: var(--cp-accent); }
+    .swatch.soft { background: var(--cp-border-strong); }
+    .swatch.line { width: 20px; height: 3px; border-radius: 0; }
+    .compare-card { border-top: 3px solid var(--cp-accent); }
+    .checklist { list-style: none; padding: 0; margin: 10px 0 0; }
+    .checklist li { padding: 7px 0 7px 28px; position: relative; border-bottom: 1px solid var(--cp-border); }
+    .checklist li::before { content: "✓"; position: absolute; left: 3px; color: var(--cp-success); font-weight: 800; }
+    .code {
+      padding: 2px 5px;
+      border-radius: .35rem;
+      background: var(--cp-surface-soft);
+      font-family: Consolas, "Courier New", Courier, monospace;
+      font-size: .92em;
+    }
+    footer { margin-top: 34px; padding: 28px 0 40px; border-top: 1px solid var(--cp-border); color: var(--cp-text-muted); font-size: .88rem; }
+    .term {
+      color: inherit;
+      text-decoration: underline dotted var(--cp-accent);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+      cursor: help;
+    }
+    .term:hover, .term:focus-visible { color: var(--cp-accent); }
+    .term-tip {
+      position: fixed;
+      z-index: 20;
+      max-width: 290px;
+      padding: 9px 12px;
+      border: 1px solid var(--cp-border-strong);
+      border-radius: .625rem;
+      background: var(--cp-panel-strong);
+      color: var(--cp-text);
+      box-shadow: var(--cp-shadow);
+      font-size: .86rem;
+      line-height: 1.45;
+      pointer-events: none;
+    }
+    .term-tip[hidden] { display: none; }
+    .term-tip b { color: var(--cp-accent); }
+    .hint { margin: 14px 0 0; color: var(--cp-text-soft); font-size: .9rem; }
+    .zoom {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .zoom-step {
+      position: relative;
+      padding: 14px;
+      background: var(--cp-surface);
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+    }
+    .zoom-step:not(:last-child)::after {
+      content: "›";
+      position: absolute;
+      right: -7px;
+      top: 42%;
+      z-index: 1;
+      transform: translate(50%, -50%);
+      color: var(--cp-accent);
+      font-size: 1.5rem;
+    }
+    .zoom-step svg { width: 100%; height: auto; display: block; }
+    .zoom-step h3 { margin: 10px 0 2px; font-size: 1rem; }
+    .zoom-step p { margin: 0; color: var(--cp-text-muted); font-size: .87rem; }
+    .slowmo-head { margin: 28px 0 12px; scroll-margin-top: 84px; }
+    .slowmo-head h3 { margin: 0; font-size: 1.15rem; }
+    .slowmo-head p { margin: 2px 0 0; color: var(--cp-text-muted); }
+    .why-bit { margin: 16px 0 14px; scroll-margin-top: 84px; }
+    .why-bit svg { width: 100%; height: auto; display: block; }
+    .why-bit .mini-table td:first-child { color: var(--cp-text-muted); }
+    .qa { list-style: none; padding: 0; margin: 12px 0 0; }
+    .qa li { padding: 8px 0; border-top: 1px solid var(--cp-border); color: var(--cp-text-muted); font-size: .9rem; }
+    .qa b { color: var(--cp-text); }
+    .zoom-num {
+      display: inline-grid;
+      place-items: center;
+      min-width: 22px;
+      padding: 0 5px;
+      height: 22px;
+      margin-right: 6px;
+      border-radius: .625rem;
+      background: var(--cp-accent);
+      color: var(--cp-accent-fg);
+      font-size: .78rem;
+      font-weight: 800;
+    }
+    .gloss-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
+    .gloss-group { padding: 16px 20px 8px; }
+    .gloss-group h3 { margin-bottom: 4px; }
+    .gloss-group dl { margin: 0; }
+    .gterm {
+      display: grid;
+      grid-template-columns: 112px minmax(0, 1fr);
+      gap: 4px 14px;
+      padding: 10px 0;
+      border-top: 1px solid var(--cp-border);
+      scroll-margin-top: 84px;
+    }
+    .gterm:target { padding: 10px 8px; border-radius: .625rem; background: var(--cp-highlight); }
+    .gterm dt { color: var(--cp-accent); font-weight: 750; }
+    .gterm dt small { display: block; color: var(--cp-text-soft); font-weight: 400; font-size: .76rem; }
+    .gterm dd { margin: 0; font-size: .93rem; }
+    .cs {
+      display: inline-block;
+      margin-top: 5px;
+      padding: 2px 8px;
+      border: 1px solid var(--cp-border);
+      border-radius: .625rem;
+      background: var(--cp-surface-soft);
+      color: var(--cp-text-muted);
+      font-size: .8rem;
+    }
+    .cs::before { content: "CS view: "; color: var(--cp-text); font-weight: 700; }
+    @media (max-width: 760px) {
+      .hero, .grid-2, .grid-3, .split, .gloss-grid { grid-template-columns: minmax(0, 1fr); }
+      .hero { padding-top: 40px; }
+      .flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .flow-item:nth-child(3)::after { content: ""; }
+      .zoom { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .zoom-step:nth-child(2)::after { content: ""; }
+      .topbar nav { display: none; }
+    }
+    @media (max-width: 460px) {
+      .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .flow-item:nth-child(2n)::after { content: ""; }
+      .flow-item:nth-child(3)::after { content: "›"; }
+      .zoom { grid-template-columns: minmax(0, 1fr); }
+      .zoom-step::after { content: "" !important; }
+      .gterm { grid-template-columns: minmax(0, 1fr); }
+      .wrap { width: min(100% - 24px, 1080px); }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <div class="brand">Qiskit challenge guide</div>
+      <nav aria-label="Page sections">
+        <a href="#biology">Biology terms</a>
+        <a href="#puzzle">The puzzle</a>
+        <a href="#votes">Votes &amp; score</a>
+        <a href="#qaoa">QAOA</a>
+        <a href="#investigation">Your project</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero" id="top">
+      <div>
+        <span class="eyebrow">FreeYaMind Campus QC Hackathon · Advanced track</span>
+        <h1>The challenge,<br>without the fog.</h1>
+        <p class="lead">You get short, incomplete <a class="term" href="#t-read">reads</a> of someone’s <a class="term" href="#t-dna">DNA</a>. Turn their overlaps into votes, work out which <a class="term" href="#t-allele">alleles</a> sit on the same <a class="term" href="#t-copies">chromosome copy</a>, then see whether a quantum circuit can sample good answers.</p>
+        <p class="quick-answer">In one sentence: rebuild the two <a class="term" href="#t-haplotype">haplotypes</a> of five <a class="term" href="#t-snp">SNPs</a>, using QAOA to search a tiny optimization problem.</p>
+        <p class="hint">New to biology? Hover or focus any dotted-underlined term, or read the two-minute cheat sheet below first.</p>
+      </div>
+      <figure class="hero-art">
+        <svg viewBox="0 0 440 285" role="img" aria-labelledby="hero-title hero-desc">
+          <title id="hero-title">A DNA reconstruction puzzle</title>
+          <desc id="hero-desc">Two complementary chromosome patterns are partly hidden by short sequencing reads. Their overlaps provide clues.</desc>
+          <rect x="14" y="12" width="412" height="261" rx="16" fill="var(--cp-surface-soft)" stroke="var(--cp-border)"/>
+          <text x="34" y="45" fill="var(--cp-text)" font-size="16" font-weight="700">Two hidden copies</text>
+          <text x="34" y="72" fill="var(--cp-text-muted)" font-size="12">SNP position</text>
+          <g fill="var(--cp-text-soft)" font-size="12" text-anchor="middle">
+            <text x="150" y="72">1</text><text x="205" y="72">2</text><text x="260" y="72">3</text><text x="315" y="72">4</text><text x="370" y="72">5</text>
+          </g>
+          <text x="34" y="113" fill="var(--cp-text-muted)" font-size="12">Copy A</text>
+          <text x="34" y="153" fill="var(--cp-text-muted)" font-size="12">Copy B</text>
+          <g font-family="Consolas, monospace" font-size="18" font-weight="700" text-anchor="middle">
+            <g fill="var(--cp-accent)"><text x="150" y="113">0</text><text x="205" y="113">1</text><text x="260" y="113">1</text><text x="315" y="113">0</text><text x="370" y="113">1</text></g>
+            <g fill="var(--cp-text-muted)"><text x="150" y="153">1</text><text x="205" y="153">0</text><text x="260" y="153">0</text><text x="315" y="153">1</text><text x="370" y="153">0</text></g>
+          </g>
+          <path d="M142 188 H267" stroke="var(--cp-accent)" stroke-width="8" stroke-linecap="round"/>
+          <path d="M203 210 H376" stroke="var(--cp-border-strong)" stroke-width="8" stroke-linecap="round"/>
+          <path d="M253 232 H376" stroke="var(--cp-accent)" stroke-width="8" stroke-linecap="round"/>
+          <g fill="var(--cp-text-muted)" font-size="11">
+            <text x="34" y="192">read A</text><text x="34" y="214">read B</text><text x="34" y="236">read C</text>
+            <text x="34" y="258">overlap = clue</text>
+          </g>
+          <circle cx="142" cy="188" r="5" fill="var(--cp-accent)"/>
+          <circle cx="267" cy="188" r="5" fill="var(--cp-accent)"/>
+          <circle cx="203" cy="210" r="5" fill="var(--cp-border-strong)"/>
+          <circle cx="376" cy="210" r="5" fill="var(--cp-border-strong)"/>
+        </svg>
+        <figcaption>Each short <a class="term" href="#t-read">read</a> covers only some <a class="term" href="#t-snp">SNP</a> positions. Which copy it came from is unknown.</figcaption>
+      </figure>
+    </section>
+
+    <section id="biology">
+      <div class="section-head">
+        <span class="tag">0 · Biology cheat sheet</span>
+        <h2>All the biology you need, in four pictures.</h2>
+        <p>Zoom from a chromosome down to the data the notebook gives you. Every term used later on this page is defined below.</p>
+      </div>
+
+      <div class="zoom">
+        <figure class="zoom-step" style="margin:0">
+          <svg viewBox="0 0 220 130" role="img" aria-label="Two copies of the same chromosome, one from each parent, with a dashed zoom window">
+            <text x="6" y="41" font-size="11" fill="var(--cp-text-muted)">copy A</text>
+            <rect x="54" y="28" width="158" height="18" rx="9" fill="var(--cp-accent)"/>
+            <text x="6" y="89" font-size="11" fill="var(--cp-text-muted)">copy B</text>
+            <rect x="54" y="76" width="158" height="18" rx="9" fill="var(--cp-border-strong)"/>
+            <rect x="104" y="20" width="42" height="82" rx="6" fill="none" stroke="var(--cp-text)" stroke-width="2" stroke-dasharray="4 3"/>
+            <text x="125" y="120" font-size="10" text-anchor="middle" fill="var(--cp-text-soft)">zoom in</text>
+          </svg>
+          <h3><span class="zoom-num">1</span>Two copies</h3>
+          <p>You inherit one copy of each chromosome from each parent.</p>
+        </figure>
+
+        <figure class="zoom-step" style="margin:0">
+          <svg viewBox="0 0 220 130" role="img" aria-label="Two DNA letter strings that are identical except at two highlighted positions, labelled SNP 1 and SNP 2">
+            <rect x="73" y="31" width="22" height="62" rx="5" fill="var(--cp-highlight)" stroke="var(--cp-accent)"/>
+            <rect x="161" y="31" width="22" height="62" rx="5" fill="var(--cp-highlight)" stroke="var(--cp-accent)"/>
+            <g font-size="10" text-anchor="middle" fill="var(--cp-accent)" font-weight="700">
+              <text x="84" y="24">SNP 1</text><text x="172" y="24">SNP 2</text>
+            </g>
+            <g font-size="10" fill="var(--cp-text-muted)"><text x="6" y="56">A</text><text x="6" y="86">B</text></g>
+            <g font-family="Consolas, monospace" font-size="16" font-weight="700" text-anchor="middle" fill="var(--cp-text)">
+              <text x="40" y="56">G</text><text x="62" y="56">A</text><text x="84" y="56">T</text><text x="106" y="56">T</text><text x="128" y="56">C</text><text x="150" y="56">A</text><text x="172" y="56">G</text><text x="194" y="56">T</text>
+              <text x="40" y="86">G</text><text x="62" y="86">A</text><text x="84" y="86">C</text><text x="106" y="86">T</text><text x="128" y="86">C</text><text x="150" y="86">A</text><text x="172" y="86">A</text><text x="194" y="86">T</text>
+            </g>
+            <text x="110" y="118" font-size="10" text-anchor="middle" fill="var(--cp-text-soft)">everything else is identical</text>
+          </svg>
+          <h3><span class="zoom-num">2</span>DNA letters</h3>
+          <p>The copies are almost identical. Single-letter differences are SNPs.</p>
+        </figure>
+
+        <figure class="zoom-step" style="margin:0">
+          <svg viewBox="0 0 220 130" role="img" aria-label="Only the two SNP columns are kept. SNP 1 uses the key T equals 0, C equals 1. SNP 2 uses A equals 0, G equals 1. Copy A has T and G, so its haplotype is 01. Copy B has C and A, so its haplotype is 10.">
+            <g font-size="10" text-anchor="middle" fill="var(--cp-accent)" font-weight="700">
+              <text x="92" y="18">SNP 1</text><text x="146" y="18">SNP 2</text>
+            </g>
+            <text x="216" y="18" font-size="9" text-anchor="end" fill="var(--cp-text-muted)">haplotype</text>
+            <g font-family="Consolas, monospace" font-size="9.5" text-anchor="middle" fill="var(--cp-text-muted)">
+              <text x="92" y="35">T=0 C=1</text><text x="146" y="35">A=0 G=1</text>
+            </g>
+            <text x="6" y="35" font-size="9" fill="var(--cp-text-soft)">key</text>
+            <line x1="6" y1="44" x2="214" y2="44" stroke="var(--cp-border)"/>
+            <g font-size="10" fill="var(--cp-text-muted)"><text x="6" y="72">copy A</text><text x="6" y="100">copy B</text></g>
+            <g font-family="Consolas, monospace" font-size="13" text-anchor="middle" fill="var(--cp-text)">
+              <text x="92" y="72">T→<tspan fill="var(--cp-accent)" font-weight="700">0</tspan></text>
+              <text x="146" y="72">G→<tspan fill="var(--cp-accent)" font-weight="700">1</tspan></text>
+              <text x="92" y="100">C→<tspan font-weight="700">1</tspan></text>
+              <text x="146" y="100">A→<tspan font-weight="700">0</tspan></text>
+            </g>
+            <g font-family="Consolas, monospace" font-size="15" font-weight="700" text-anchor="middle">
+              <text x="196" y="73" fill="var(--cp-accent)">01</text>
+              <text x="196" y="101" fill="var(--cp-text)">10</text>
+            </g>
+            <text x="110" y="124" font-size="9.5" text-anchor="middle" fill="var(--cp-text-soft)">read each row left → right</text>
+          </svg>
+          <h3><span class="zoom-num">3</span>Letters → bits</h3>
+          <p>Keep only SNP letters. Swap each for 0 or 1 using that SNP’s key. Each row is a haplotype. <a href="#letters-to-bits">Step by step ↓</a></p>
+        </figure>
+
+        <figure class="zoom-step" style="margin:0">
+          <svg viewBox="0 0 220 130" role="img" aria-label="Three short reads over five SNP positions: 0 1 1 on SNPs 1 to 3, 0 0 1 on SNPs 2 to 4, and 1 0 1 on SNPs 3 to 5. Their source copy is unknown.">
+            <g font-size="10" text-anchor="middle" fill="var(--cp-text-muted)">
+              <text x="30" y="16">1</text><text x="70" y="16">2</text><text x="110" y="16">3</text><text x="150" y="16">4</text><text x="190" y="16">5</text>
+            </g>
+            <g fill="var(--cp-surface-soft)" stroke="var(--cp-border-strong)">
+              <rect x="16" y="26" width="108" height="22" rx="11"/>
+              <rect x="56" y="56" width="108" height="22" rx="11"/>
+              <rect x="96" y="86" width="108" height="22" rx="11"/>
+            </g>
+            <g font-family="Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" fill="var(--cp-text)">
+              <text x="30" y="42">0</text><text x="70" y="42">1</text><text x="110" y="42">1</text>
+              <text x="70" y="72">0</text><text x="110" y="72">0</text><text x="150" y="72">1</text>
+              <text x="110" y="102">1</text><text x="150" y="102">0</text><text x="190" y="102">1</text>
+            </g>
+            <text x="110" y="124" font-size="10" text-anchor="middle" fill="var(--cp-text-soft)">source copy of each read: unknown</text>
+          </svg>
+          <h3><span class="zoom-num">4</span>Reads</h3>
+          <p>The sequencer returns short snippets without saying which copy each came from.</p>
+        </figure>
+      </div>
+
+      <div class="slowmo-head" id="letters-to-bits">
+        <h3>Picture 3, step by step: letters → bits</h3>
+        <p>Same two copies as picture 2. Four small moves turn the letters into bits.</p>
+      </div>
+      <div class="zoom">
+        <figure class="zoom-step" style="margin:0">
+          <svg viewBox="0 0 220 130" role="img" aria-label="The two copies' letters. Six columns are identical and faded out. Only the SNP 1 column, T over C, and SNP 2 column, G over A, remain highlighted.">
+            <rect x="73" y="37" width="22" height="58" rx="5" fill="var(--cp-highlight)" stroke="var(--cp-accent)"/>
+            <rect x="161" y="37" width="22" height="58" rx="5" fill="var(--cp-highlight)" stroke="var(--cp-accent)"/>
+            <g font-size="10" text-anchor="middle" fill="var(--cp-accent)" font-weight="700">
+              <text x="84" y="28">SNP 1</text><text x="172" y="28">SNP 2</text>
+            </g>
+            <g font-size="10" fill="var(--cp-text-muted)"><text x="6" y="61">A</text><text x="6" y="91">B</text></g>
+            <g font-family="Consolas, monospace" font-size="16" font-weight="700" text-anchor="middle" fill="var(--cp-text-soft)" opacity=".38">
+              <text x="40" y="61">G</text><text x="62" y="61">A</text><text x="106" y="61">T</text><text x="128" y="61">C</text><text x="150" y="61">A</text><text x="194" y="61">T</text>
+              <text x="40" y="91">G</text><text x="62" y="91">A</text><text x="106" y="91">T</text><text x="128" y="91">C</text><text x="150" y="91">A</text><text x="194" y="91">T</text>
+            </g>
+            <g stroke="var(--cp-border-strong)" stroke-width="1.5">
+              <line x1="33" y1="96" x2="47" y2="40"/><line x1="55" y1="96" x2="69" y2="40"/>
+              <line x1="99" y1="96" x2="113" y2="40"/><line x1="121" y1="96" x2="135" y2="40"/>
+              <line x1="143" y1="96" x2="157" y2="40"/><line x1="187" y1="96" x2="201" y2="40"/>
+            </g>
+            <g font-family="Consolas, monospace" font-size="16" font-weight="700" text-anchor="middle" fill="var(--cp-text)">
+              <text x="84" y="61">T</text><text x="172" y="61">G</text>
+              <text x="84" y="91">C</text><text x="172" y="91">A</text>
+            </g>
+            <text x="110" y="120" font-size="9.5" text-anchor="middle" fill="var(--cp-text-soft)">same in both copies → no clue → drop</text>
+          </svg>
+          <h3><span class="zoom-num">3a</span>Drop matching letters</h3>
+          <p>If both copies have the same letter, it can’t tell them apart. Keep only the SNP columns.</p>
+        </figure>
+
+        <figure class="zoom-step" style="margin:0">
+          <svg viewBox="0 0 220 130" role="img" aria-label="DNA has four letters, A, C, G and T. At SNP 1 only T and C ever appear, so the key is T equals 0, C equals 1. At SNP 2 only A and G appear, so the key is A equals 0, G equals 1.">
+            <g fill="var(--cp-surface-soft)" stroke="var(--cp-border)">
+              <rect x="8" y="12" width="98" height="92" rx="10"/>
+              <rect x="114" y="12" width="98" height="92" rx="10"/>
+            </g>
+            <g font-size="10" text-anchor="middle" fill="var(--cp-accent)" font-weight="700">
+              <text x="57" y="28">SNP 1</text><text x="163" y="28">SNP 2</text>
+            </g>
+            <g fill="var(--cp-highlight)" stroke="var(--cp-accent)">
+              <rect x="38" y="37" width="18" height="21" rx="4"/><rect x="78" y="37" width="18" height="21" rx="4"/>
+              <rect x="124" y="37" width="18" height="21" rx="4"/><rect x="164" y="37" width="18" height="21" rx="4"/>
+            </g>
+            <g font-family="Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" fill="var(--cp-text-soft)" opacity=".4">
+              <text x="27" y="53">A</text><text x="67" y="53">G</text>
+              <text x="153" y="53">C</text><text x="193" y="53">T</text>
+            </g>
+            <g font-family="Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" fill="var(--cp-text)">
+              <text x="47" y="53">C</text><text x="87" y="53">T</text>
+              <text x="133" y="53">A</text><text x="173" y="53">G</text>
+            </g>
+            <g font-size="9" text-anchor="middle" fill="var(--cp-text-soft)">
+              <text x="57" y="72">only T, C seen</text><text x="163" y="72">only A, G seen</text>
+            </g>
+            <g font-family="Consolas, monospace" font-size="12" text-anchor="middle" fill="var(--cp-text)">
+              <text x="57" y="94">T=<tspan font-weight="700" fill="var(--cp-accent)">0</tspan>  C=<tspan font-weight="700" fill="var(--cp-accent)">1</tspan></text>
+              <text x="163" y="94">A=<tspan font-weight="700" fill="var(--cp-accent)">0</tspan>  G=<tspan font-weight="700" fill="var(--cp-accent)">1</tspan></text>
+            </g>
+            <text x="110" y="122" font-size="9.5" text-anchor="middle" fill="var(--cp-text-soft)">4 letters exist · only 2 show up per SNP</text>
+          </svg>
+          <h3><span class="zoom-num">3b</span>Give each SNP a key</h3>
+          <p>DNA has 4 letters, but each SNP only ever shows 2. One gets 0, the other 1. <a href="#why-one-bit">Why only 2? ↓</a></p>
+        </figure>
+
+        <figure class="zoom-step" style="margin:0">
+          <svg viewBox="0 0 220 130" role="img" aria-label="Translate with the keys. Copy A: T, G becomes 0, 1. Copy B: C, A becomes 1, 0.">
+            <g font-size="9.5" text-anchor="middle" fill="var(--cp-text-muted)">
+              <text x="95" y="26">letters</text><text x="180" y="26">bits</text>
+            </g>
+            <g font-size="10" fill="var(--cp-text-muted)"><text x="6" y="62">copy A</text><text x="6" y="96">copy B</text></g>
+            <g font-family="Consolas, monospace" font-size="16" text-anchor="middle" fill="var(--cp-text)">
+              <text x="82" y="62">T</text><text x="108" y="62">G</text>
+              <text x="82" y="96">C</text><text x="108" y="96">A</text>
+            </g>
+            <g font-size="15" text-anchor="middle" fill="var(--cp-text-soft)">
+              <text x="138" y="61">→</text><text x="138" y="95">→</text>
+            </g>
+            <g font-family="Consolas, monospace" font-size="16" font-weight="700" text-anchor="middle">
+              <text x="167" y="62" fill="var(--cp-accent)">0</text><text x="193" y="62" fill="var(--cp-accent)">1</text>
+              <text x="167" y="96" fill="var(--cp-text)">1</text><text x="193" y="96" fill="var(--cp-text)">0</text>
+            </g>
+            <text x="110" y="122" font-size="9.5" text-anchor="middle" fill="var(--cp-text-soft)">using the keys from 3b</text>
+          </svg>
+          <h3><span class="zoom-num">3c</span>Translate</h3>
+          <p>Swap each letter for its bit. Copy A: T, G → 0, 1. Copy B: C, A → 1, 0.</p>
+        </figure>
+
+        <figure class="zoom-step" style="margin:0">
+          <svg viewBox="0 0 220 130" role="img" aria-label="Copy A's bits 0 1 form haplotype x. Copy B's bits 1 0 are x flipped, written 1 minus x.">
+            <g font-size="10" fill="var(--cp-text-muted)"><text x="6" y="45">copy A</text><text x="6" y="95">copy B</text></g>
+            <rect x="70" y="24" width="28" height="28" rx="6" fill="var(--cp-highlight)" stroke="var(--cp-accent)"/>
+            <rect x="102" y="24" width="28" height="28" rx="6" fill="var(--cp-highlight)" stroke="var(--cp-accent)"/>
+            <rect x="70" y="74" width="28" height="28" rx="6" fill="var(--cp-surface-soft)" stroke="var(--cp-border-strong)"/>
+            <rect x="102" y="74" width="28" height="28" rx="6" fill="var(--cp-surface-soft)" stroke="var(--cp-border-strong)"/>
+            <g font-family="Consolas, monospace" font-size="16" font-weight="700" text-anchor="middle">
+              <text x="84" y="44" fill="var(--cp-accent)">0</text><text x="116" y="44" fill="var(--cp-accent)">1</text>
+              <text x="84" y="94" fill="var(--cp-text)">1</text><text x="116" y="94" fill="var(--cp-text)">0</text>
+            </g>
+            <g stroke="var(--cp-border-strong)" stroke-width="1.5">
+              <line x1="84" y1="56" x2="84" y2="70"/><line x1="116" y1="56" x2="116" y2="70"/>
+            </g>
+            <text x="142" y="67" font-size="9" fill="var(--cp-text-soft)">flipped</text>
+            <g font-family="Consolas, monospace" font-size="12">
+              <text x="142" y="43" fill="var(--cp-accent)" font-weight="700">= x</text>
+              <text x="142" y="93" fill="var(--cp-text)">= 1 − x</text>
+            </g>
+            <text x="110" y="124" font-size="9.5" text-anchor="middle" fill="var(--cp-text-soft)">each row of bits = one haplotype</text>
+          </svg>
+          <h3><span class="zoom-num">3d</span>Read across</h3>
+          <p>A copy’s bits, read left to right, form its haplotype. Copy B is copy A flipped, since each SNP has one of each letter.</p>
+        </figure>
+      </div>
+      <article class="card why-bit" id="why-one-bit">
+        <div class="split">
+          <svg viewBox="0 0 300 190" role="img" aria-label="Five reads cover SNP 1. At that spot they show T, C, C, T, C. Tally: A never, C in 3 reads, G never, T in 2 reads. Only two letters appear.">
+            <text x="110" y="15" font-size="11.5" text-anchor="middle" fill="var(--cp-accent)" font-weight="700">SNP 1</text>
+            <text x="292" y="15" font-size="10.5" text-anchor="end" fill="var(--cp-text-soft)">each bar = one read</text>
+            <g fill="var(--cp-surface-soft)" stroke="var(--cp-border-strong)">
+              <rect x="40" y="26" width="130" height="15" rx="7.5"/>
+              <rect x="80" y="46" width="150" height="15" rx="7.5"/>
+              <rect x="16" y="66" width="134" height="15" rx="7.5"/>
+              <rect x="92" y="86" width="178" height="15" rx="7.5"/>
+              <rect x="56" y="106" width="144" height="15" rx="7.5"/>
+            </g>
+            <rect x="99" y="21" width="22" height="105" rx="6" fill="none" stroke="var(--cp-accent)" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <g font-family="Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" fill="var(--cp-text)">
+              <text x="110" y="38">T</text><text x="110" y="58">C</text><text x="110" y="78">C</text><text x="110" y="98">T</text><text x="110" y="118">C</text>
+            </g>
+            <g fill="var(--cp-surface-soft)" stroke="var(--cp-border)" opacity=".5">
+              <rect x="10" y="140" width="62" height="44" rx="8"/><rect x="154" y="140" width="62" height="44" rx="8"/>
+            </g>
+            <g fill="var(--cp-highlight)" stroke="var(--cp-accent)">
+              <rect x="82" y="140" width="62" height="44" rx="8"/><rect x="226" y="140" width="62" height="44" rx="8"/>
+            </g>
+            <g font-family="Consolas, monospace" font-size="15" font-weight="700" text-anchor="middle">
+              <text x="41" y="160" fill="var(--cp-text-soft)" opacity=".5">A</text>
+              <text x="113" y="160" fill="var(--cp-text)">C</text>
+              <text x="185" y="160" fill="var(--cp-text-soft)" opacity=".5">G</text>
+              <text x="257" y="160" fill="var(--cp-text)">T</text>
+            </g>
+            <g font-size="11" text-anchor="middle">
+              <text x="41" y="177" fill="var(--cp-text-soft)">never</text>
+              <text x="113" y="177" fill="var(--cp-accent)" font-weight="700">3 reads</text>
+              <text x="185" y="177" fill="var(--cp-text-soft)">never</text>
+              <text x="257" y="177" fill="var(--cp-accent)" font-weight="700">2 reads</text>
+            </g>
+          </svg>
+          <div>
+            <h3>DNA has 4 letters. Why is one bit enough?</h3>
+            <p class="muted small">A key only needs the letters that actually show up at that SNP. In this lab that is always exactly two, and two options fit in one bit.</p>
+            <table class="mini-table">
+              <tr><th></th><th>SNP 1</th><th>SNP 2</th></tr>
+              <tr><td>seen in reads</td><td>T, C</td><td>A, G</td></tr>
+              <tr><td>never seen there</td><td>A, G</td><td>C, T</td></tr>
+              <tr><td>key (1 bit)</td><td><span class="code">T=0 C=1</span></td><td><span class="code">A=0 G=1</span></td></tr>
+            </table>
+            <ul class="qa">
+              <li><b>Why only two?</b> A SNP usually comes from one mutation long ago: the original letter plus the changed one. Sites with 3 or 4 letters are less common, and this simplified lab picks only two-letter (<a class="term" href="#t-biallelic">biallelic</a>) SNPs.</li>
+              <li><b>Which letter gets 0?</b> Any fixed choice works. Real tools use 0 for the letter in the standard reference genome.</li>
+              <li><b>Do I convert letters myself?</b> No. The lab’s <span class="code">READS</span> already arrive as <span class="code">0</span>, <span class="code">1</span> and <span class="code">−1</span> (missing).</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+      <div class="callout" style="margin-bottom:14px">
+        <strong>Now scale up:</strong> the notebook uses five SNPs. The same moves give copy A = <span class="code">01101</span> and copy B = <span class="code">10010</span>, the hidden pair at the top of this page.
+      </div>
+
+      <div class="callout">
+        <strong>So the puzzle is:</strong> given the snippets from picture 4, rebuild the two bit rows from picture 3.
+      </div>
+
+      <div class="gloss-grid">
+        <article class="card gloss-group">
+          <h3>The molecule</h3>
+          <dl>
+            <div class="gterm" id="t-dna"><dt>DNA</dt><dd>The molecule that stores a living thing’s instructions, written with four letters: A, C, G, T.<br><span class="cs">a very long string over {A, C, G, T}</span></dd></div>
+            <div class="gterm" id="t-genome"><dt>Genome</dt><dd>All of an organism’s DNA—the “Genome” in the challenge name.<br><span class="cs">the whole repository</span></dd></div>
+            <div class="gterm" id="t-chromosome"><dt>Chromosome</dt><dd>The genome is split into a few dozen long DNA pieces called chromosomes.<br><span class="cs">one file in the repository</span></dd></div>
+            <div class="gterm" id="t-copies"><dt>Two copies<small>“autosomal” pair</small></dt><dd>Humans carry two copies of most chromosomes, one from each parent. “Autosomal” means non-sex chromosomes.<br><span class="cs">two nearly identical versions of one file</span></dd></div>
+            <div class="gterm" id="t-gene"><dt>Gene</dt><dd>A stretch of a chromosome that holds the instructions for one product, such as a protein.<br><span class="cs">a function inside the file</span></dd></div>
+          </dl>
+        </article>
+
+        <article class="card gloss-group">
+          <h3>Where the copies differ</h3>
+          <dl>
+            <div class="gterm" id="t-variant"><dt>Variant</dt><dd>A position where DNA differs, between people or between your two copies.<br><span class="cs">one line in a diff</span></dd></div>
+            <div class="gterm" id="t-snp"><dt>SNP<small>say “snip”</small></dt><dd>Single-nucleotide polymorphism: a variant that changes just one letter. The lab uses five known SNPs.<br><span class="cs">a one-character diff at a known index</span></dd></div>
+            <div class="gterm" id="t-allele"><dt>Allele</dt><dd>One version of the letter at a SNP, e.g. T or C at SNP 1 in the pictures. The lab writes the two versions as 0 and 1 using a fixed key per SNP; they are labels, not DNA letters.<br><span class="cs">the value stored at that index</span></dd></div>
+            <div class="gterm" id="t-biallelic"><dt>Biallelic</dt><dd>Only two of the four DNA letters ever appear at that SNP, so one bit can label them.<br><span class="cs">a column with only two distinct values → a boolean</span></dd></div>
+            <div class="gterm" id="t-heterozygous"><dt>Heterozygous</dt><dd>Your two copies carry different alleles at that SNP. Every lab SNP is heterozygous, so each column has one 0 and one 1.<br><span class="cs">the two versions always disagree here</span></dd></div>
+          </dl>
+        </article>
+
+        <article class="card gloss-group">
+          <h3>The puzzle</h3>
+          <dl>
+            <div class="gterm" id="t-haplotype"><dt>Haplotype</dt><dd>The alleles along one copy, read in order, for example <span class="code">01101</span>.<br><span class="cs">bit vector x; the other copy is 1 − x</span></dd></div>
+            <div class="gterm" id="t-phase"><dt>Phase<small>and “phasing”</small></dt><dd>Which alleles sit together on the same copy. Phasing means reconstructing the two haplotypes.<br><span class="cs">assign each column’s two values to the correct row</span></dd></div>
+            <div class="gterm" id="t-cistrans"><dt>Cis / trans</dt><dd>Two alternate (1) alleles on the same copy are in <b>cis</b>; on different copies, in <b>trans</b>. If two variants both damage one gene, cis leaves the other copy intact, while trans can affect both. The lab makes no medical predictions.<br><span class="cs">x[i] == x[j] versus x[i] != x[j]</span></dd></div>
+          </dl>
+        </article>
+
+        <article class="card gloss-group">
+          <h3>The data</h3>
+          <dl>
+            <div class="gterm" id="t-sequencing"><dt>Sequencing</dt><dd>Lab machines read DNA letters, but only in short pieces.<br><span class="cs">reading a file through random short snippets</span></dd></div>
+            <div class="gterm" id="t-read"><dt>Read<small>or fragment</small></dt><dd>One short piece returned by sequencing. It comes from one copy, but the copy label is lost. In the notebook, it is one row of <span class="code">READS</span>.<br><span class="cs">a substring without its source filename</span></dd></div>
+            <div class="gterm" id="t-aligned"><dt>Aligned</dt><dd>Each read is already matched to its location, so we know which SNPs it covers. <span class="code">−1</span> means a SNP is not covered.<br><span class="cs">each snippet’s offset is known</span></dd></div>
+            <div class="gterm" id="t-call"><dt>Call / error</dt><dd>The allele the machine reports at a position. Sometimes it is wrong; the last notebook read contradicts the others.<br><span class="cs">noisy bit flips</span></dd></div>
+          </dl>
+        </article>
+      </div>
+      <p class="hint">Not part of this challenge: finding the SNPs (“variant calling”) or stitching reads into a full genome (“assembly”). That work is already done for you.</p>
+    </section>
+
+    <div class="flow" aria-label="Challenge pipeline">
+      <div class="flow-item">DNA reads</div>
+      <div class="flow-item">pair votes</div>
+      <div class="flow-item">graph cost</div>
+      <div class="flow-item">Ising model</div>
+      <div class="flow-item">QAOA search</div>
+      <div class="flow-item">compare &amp; explain</div>
+    </div>
+
+    <section id="puzzle">
+      <div class="section-head">
+        <span class="tag">1 · Understand the puzzle</span>
+        <h2>One chromosome pair. A lot of missing pieces.</h2>
+        <p>The person has two <a class="term" href="#t-copies">chromosome copies</a>. The lab looks at five <a class="term" href="#t-snp">SNPs</a>; each is <a class="term" href="#t-biallelic">biallelic</a> and <a class="term" href="#t-heterozygous">heterozygous</a>, so every position has one <span class="code">0</span> and one <span class="code">1</span> across the pair.</p>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>What does “phase” mean?</h3>
+          <p><a class="term" href="#t-phase">Phase</a> asks which <a class="term" href="#t-allele">alleles</a> are together on the <em>same</em> copy. At two sites, <span class="code">11 / 00</span> means the 1s are together (<a class="term" href="#t-cistrans"><strong>cis</strong></a>). <span class="code">10 / 01</span> means they are on opposite copies (<a class="term" href="#t-cistrans"><strong>trans</strong></a>).</p>
+          <p class="muted small">The 0/1 symbols are labels, not actual DNA letters. This toy exercise is not a medical diagnosis.</p>
+        </article>
+        <article class="card">
+          <h3>Why two answers can mean the same thing</h3>
+          <p>We name one <a class="term" href="#t-haplotype">haplotype</a> <span class="code">x</span>; the other is automatically <span class="code">1 − x</span>. If we swap the copy names, every bit flips, but “same” and “opposite” relationships stay the same.</p>
+          <div class="math">00110 and 11001 describe the same pairing</div>
+          <p class="muted small">Reads are already <a class="term" href="#t-aligned">aligned</a> to known SNP positions. The challenge is not finding SNPs or assembling raw DNA.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="votes">
+      <div class="section-head">
+        <span class="tag">2 · Reads become votes</span>
+        <h2>Every overlapping pair leaves a clue.</h2>
+        <p>Ignore missing positions. For each <a class="term" href="#t-read">read</a>, compare every pair of positions it does cover. Equal bits vote “same”; different bits vote “opposite.”</p>
+      </div>
+      <div class="split">
+        <div class="diagram">
+          <svg viewBox="0 0 480 236" role="img" aria-labelledby="read-title read-desc">
+            <title id="read-title">One read creates three pairwise votes</title>
+            <desc id="read-desc">The fragment 0, 1, 1 covers positions one through three. It votes opposite for pairs one-two and one-three, and same for pair two-three.</desc>
+            <text x="22" y="30" fill="var(--cp-text)" font-size="15" font-weight="700">Example read: 0, 1, 1</text>
+            <g fill="var(--cp-text-muted)" font-size="12" text-anchor="middle">
+              <text x="115" y="60">SNP 1</text><text x="240" y="60">SNP 2</text><text x="365" y="60">SNP 3</text>
+            </g>
+            <g font-family="Consolas, monospace" font-size="20" font-weight="700" text-anchor="middle">
+              <text x="115" y="95" fill="var(--cp-accent)">0</text><text x="240" y="95" fill="var(--cp-text)">1</text><text x="365" y="95" fill="var(--cp-text)">1</text>
+            </g>
+            <path d="M115 113 Q180 170 240 113" fill="none" stroke="var(--cp-accent)" stroke-width="3"/>
+            <path d="M115 120 Q240 216 365 120" fill="none" stroke="var(--cp-accent)" stroke-width="3"/>
+            <path d="M240 113 Q300 171 365 113" fill="none" stroke="var(--cp-border-strong)" stroke-width="3" stroke-dasharray="6 5"/>
+            <g text-anchor="middle" font-size="12">
+              <text x="177" y="159" fill="var(--cp-accent)" font-weight="700">1–2: opposite</text>
+              <text x="241" y="209" fill="var(--cp-accent)" font-weight="700">1–3: opposite</text>
+              <text x="305" y="159" fill="var(--cp-text-muted)" font-weight="700">2–3: same</text>
+            </g>
+            <text x="22" y="226" fill="var(--cp-text-soft)" font-size="11">A read and its flipped copy cast identical votes.</text>
+          </svg>
+          <div class="legend">
+            <span><i class="swatch"></i> opposite vote</span>
+            <span><i class="swatch soft"></i> same vote</span>
+          </div>
+        </div>
+        <article class="card">
+          <h3>Votes add up; they aren’t certainty.</h3>
+          <p>For each site pair <span class="code">(i, j)</span>, keep two counts:</p>
+          <table class="mini-table">
+            <thead><tr><th>Count</th><th>Meaning</th></tr></thead>
+            <tbody><tr><td><span class="code">A[i,j]</span></td><td>reads saying the pair is the same</td></tr>
+            <tr><td><span class="code">D[i,j]</span></td><td>reads saying the pair is opposite</td></tr></tbody>
+          </table>
+          <p class="muted small">The starter counts every pair in a read, even non-neighboring SNPs. One bad <a class="term" href="#t-call">call</a> can affect several pairs, so these votes are correlated—not independent proof.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="cost">
+      <div class="section-head">
+        <span class="tag">3 · Score a proposed answer</span>
+        <h2>A candidate loses points when it disagrees with the clues.</h2>
+        <p>The notebook’s tiny example has conflicting votes. Try changing the candidate bits to see how its penalty changes.</p>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Tiny example: three SNP positions</h3>
+          <table class="mini-table">
+            <thead><tr><th>Pair</th><th>Same votes A</th><th>Opposite votes D</th></tr></thead>
+            <tbody>
+              <tr><td>1–2</td><td>1</td><td>2</td></tr>
+              <tr><td>1–3</td><td>0</td><td>2</td></tr>
+              <tr><td>2–3</td><td>2</td><td>0</td></tr>
+            </tbody>
+          </table>
+          <div class="math">cost = A if candidate differs + D if candidate agrees</div>
+          <p class="muted small">In words: agreeing with the pair’s majority avoids a penalty; disagreeing pays for the votes you contradict.</p>
+        </article>
+        <article class="card">
+          <h3>Interactive: choose a candidate</h3>
+          <p class="muted small">Click each bit. The string is written SNP 1 first.</p>
+          <div class="bits" aria-label="Candidate bits">
+            <button type="button" class="bit" data-bit="0" aria-label="Toggle SNP 1 bit" aria-pressed="false">0</button>
+            <button type="button" class="bit" data-bit="1" aria-label="Toggle SNP 2 bit" aria-pressed="true">1</button>
+            <button type="button" class="bit" data-bit="2" aria-label="Toggle SNP 3 bit" aria-pressed="true">1</button>
+          </div>
+          <p class="score-result" id="score-output" aria-live="polite"></p>
+          <p class="muted small">Try <span class="code">011</span> (cost 1), then <span class="code">001</span> (cost 4). Lower is better for this model.</p>
+        </article>
+      </div>
+      <div class="callout" style="margin-top:14px">
+        <strong>Important:</strong> “best score” means best fit to this vote-counting rule. It does not prove which chromosome arrangement is biologically true.
+      </div>
+    </section>
+
+    <section id="ising">
+      <div class="section-head">
+        <span class="tag">4 · Turn votes into an Ising model</span>
+        <h2>Same problem, new notation.</h2>
+        <p>Quantum circuits often express optimization with spins instead of bits. Nothing about the puzzle changes; the new form is convenient for quantum gates.</p>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Bit to spin</h3>
+          <div class="math">zᵢ = 1 − 2xᵢ &nbsp; → &nbsp; bit 0 becomes +1, bit 1 becomes −1</div>
+          <p>Each pair gets a coupling <span class="code">J = (D − A) / 2</span>. A negative J favors equal bits; a positive J favors different bits.</p>
+        </article>
+        <article class="card">
+          <h3>Why an offset appears</h3>
+          <div class="math">energy = offset + Σ Jᵢⱼ zᵢ zⱼ</div>
+          <p>The offset makes the energy numerically match the vote cost. It is constant across candidates, so it doesn’t change which answer is best.</p>
+          <p class="muted small">The notebook checks that the two scores match for all candidates in the tiny example before building a circuit.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="qaoa">
+      <div class="section-head">
+        <span class="tag">5 · QAOA searches candidates</span>
+        <h2>Build a quantum sampler, tune it classically.</h2>
+        <p>QAOA is a loop: prepare many possible bit strings at once, use the graph to change their quantum phases, mix possibilities, then adjust angles to make low-cost answers more likely.</p>
+      </div>
+      <div class="diagram">
+        <svg viewBox="0 0 930 286" role="img" aria-labelledby="qaoa-title qaoa-desc">
+          <title id="qaoa-title">The QAOA training loop</title>
+          <desc id="qaoa-desc">Start in a uniform superposition, apply a cost gate and mixer repeatedly, evaluate expected cost, and let a classical optimizer adjust parameters.</desc>
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L7,3 z" fill="var(--cp-border-strong)"/>
+            </marker>
+          </defs>
+          <g fill="var(--cp-text)" font-size="13" font-weight="700" text-anchor="middle">
+            <text x="92" y="40">Start</text><text x="256" y="40">Cost layer</text><text x="415" y="40">Mixer</text>
+            <text x="575" y="40">Measure / score</text><text x="791" y="40">Tune angles</text>
+          </g>
+          <g fill="var(--cp-text-muted)" font-size="11" text-anchor="middle">
+            <text x="92" y="60">Hadamard H</text><text x="256" y="60">RZZ gates</text><text x="415" y="60">RX gates</text>
+            <text x="575" y="60">expected cost</text><text x="791" y="60">classical optimizer</text>
+          </g>
+          <g stroke="var(--cp-border-strong)" stroke-width="2">
+            <line x1="37" y1="105" x2="887" y2="105"/>
+            <line x1="37" y1="145" x2="887" y2="145"/>
+            <line x1="37" y1="185" x2="887" y2="185"/>
+          </g>
+          <g fill="var(--cp-accent)">
+            <rect x="67" y="91" width="50" height="28" rx="6"/><rect x="67" y="131" width="50" height="28" rx="6"/><rect x="67" y="171" width="50" height="28" rx="6"/>
+            <rect x="227" y="91" width="58" height="28" rx="6"/><rect x="387" y="91" width="58" height="28" rx="6"/>
+            <rect x="387" y="131" width="58" height="28" rx="6"/><rect x="387" y="171" width="58" height="28" rx="6"/>
+          </g>
+          <g fill="var(--cp-accent-fg)" font-size="12" font-weight="700" text-anchor="middle">
+            <text x="92" y="110">H</text><text x="92" y="150">H</text><text x="92" y="190">H</text>
+            <text x="256" y="110">RZZ</text><text x="416" y="110">RX</text><text x="416" y="150">RX</text><text x="416" y="190">RX</text>
+          </g>
+          <g fill="none" stroke="var(--cp-accent)" stroke-width="2">
+            <path d="M256 105 C275 150 280 185 256 185"/><path d="M256 145 C275 130 282 119 256 105"/>
+          </g>
+          <g fill="var(--cp-surface)" stroke="var(--cp-border)" stroke-width="1.5">
+            <rect x="520" y="86" width="110" height="110" rx="12"/><rect x="736" y="86" width="110" height="110" rx="12"/>
+          </g>
+          <g fill="var(--cp-text)" font-size="12" text-anchor="middle">
+            <text x="575" y="126">sample strings</text><text x="575" y="148">0/1 answers</text><text x="575" y="170">calculate cost</text>
+            <text x="791" y="126">change γ, β</text><text x="791" y="148">try again</text><text x="791" y="170">lower average?</text>
+          </g>
+          <g fill="none" stroke="var(--cp-border-strong)" stroke-width="2" marker-end="url(#arrow)">
+            <line x1="125" y1="145" x2="214" y2="145"/><line x1="293" y1="145" x2="374" y2="145"/>
+            <line x1="455" y1="145" x2="508" y2="145"/><line x1="633" y1="145" x2="724" y2="145"/>
+            <path d="M791 205 C791 258 92 258 92 211"/>
+          </g>
+          <text x="442" y="254" fill="var(--cp-text-muted)" font-size="12" text-anchor="middle">repeat the circuit with updated angles</text>
+        </svg>
+        <p class="diagram-note">The cost layer nudges relative phases; the mixer lets amplitudes move between bit strings. Interference changes which answers are sampled more often.</p>
+      </div>
+      <div class="grid-3" style="margin-top:14px">
+        <article class="card">
+          <h3>Start broadly</h3>
+          <p class="muted">Hadamard gates prepare an even distribution over all possible bit strings.</p>
+        </article>
+        <article class="card">
+          <h3>Use the clues</h3>
+          <p class="muted">RZZ cost gates encode pair relationships; RX mixer gates move probability around. One cost-plus-mixer pair is a layer.</p>
+        </article>
+        <article class="card">
+          <h3>Adjust and sample</h3>
+          <p class="muted">A classical optimizer tunes the angles. Then fresh measurements produce candidate answers to score.</p>
+        </article>
+      </div>
+      <div class="callout" style="margin-top:14px">
+        <strong>Reality check:</strong> the challenge does not assume quantum advantage. For five SNPs, all 32 answers can be checked classically; that exact answer is the baseline.
+      </div>
+    </section>
+
+    <section id="results">
+      <div class="section-head">
+        <span class="tag">6 · Read the results honestly</span>
+        <h2>“Best sample” and “typical sample” are different.</h2>
+        <p>Measure both how good the whole set of samples is and how often the circuit found the minimum-cost candidates.</p>
+      </div>
+      <div class="grid-2">
+        <article class="card compare-card">
+          <h3>Mean cost = typical quality</h3>
+          <p>Average the costs of all measured answers. Lower mean cost suggests the distribution tends to favor better answers.</p>
+        </article>
+        <article class="card compare-card">
+          <h3>Optimum frequency = repeatability</h3>
+          <p>What fraction of samples landed on any minimum-cost answer? One lucky minimum is less convincing than finding it repeatedly.</p>
+        </article>
+      </div>
+      <div class="callout" style="margin-top:14px">
+        <strong>Fair baseline:</strong> compare QAOA with uniform random sampling and exact enumeration. The notebook uses 2,048 final shots; its training uses a statevector simulator, not training shots.
+      </div>
+    </section>
+
+    <section id="hardware">
+      <div class="section-head">
+        <span class="tag">7 · Hardware and noise</span>
+        <h2>Same math, messier physical circuit.</h2>
+        <p>A real device can only connect qubits in certain ways. Transpilation maps logical qubits onto the device, adds routing gates if needed, and turns abstract gates into supported operations.</p>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>What the lab compares</h3>
+          <ul class="checklist">
+            <li>Ideal simulation</li>
+            <li>A noisy simulation using a historical FakeManila device snapshot</li>
+            <li>Optional: the same fixed circuit on an IBM QPU</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Keep the experiment fair</h3>
+          <p>To isolate hardware effects, keep the reads, cost function, trained angles and shot count the same. Report circuit depth and two-qubit gate count too.</p>
+          <p class="muted small">A fake device is a useful noise model, not a live quantum computer. One run cannot cleanly separate noise from ordinary shot-to-shot variation.</p>
+        </article>
+      </div>
+      <div class="callout" style="margin-top:14px">
+        <strong>Qiskit bit-order warning:</strong> printed measurement keys put qubit 0 on the right, while the notebook writes SNP 1 first. Use the supplied decoder once; don’t reverse the bits again after routing.
+      </div>
+    </section>
+
+    <section id="investigation">
+      <div class="section-head">
+        <span class="tag">8 · Your hackathon contribution</span>
+        <h2>Don’t just run the lab—ask one testable question.</h2>
+        <p>Pick one improvement, compare it against the starter fairly, and report what happened—even if the result is negative.</p>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Example question: are long reads over-counted?</h3>
+          <p><strong>Prediction:</strong> a long read creates many pair votes, but those votes are related.</p>
+          <p><strong>Change:</strong> compare the starter’s equal pair votes with a version that normalizes each read’s contribution.</p>
+          <p><strong>Compare:</strong> use the same synthetic reads, exact score, and QAOA settings. Report candidate quality and graph/circuit size.</p>
+        </article>
+        <article class="card">
+          <h3>Other directions from the challenge</h3>
+          <ul class="checklist">
+            <li>Evidence: weight, prune, or deduplicate votes</li>
+            <li>Search: vary QAOA depth, optimizer, or restarts</li>
+            <li>Hardware: test SNP ordering or routing strategies</li>
+            <li>Information: remove a bridge and find what becomes unknowable</li>
+            <li>Optional: compare pairwise cost with full-read MEC (the fewest read calls to flip so every read fits one copy)</li>
+          </ul>
+        </article>
+      </div>
+      <div class="grid-3" style="margin-top:14px">
+        <article class="card"><span class="tag">Question</span><p class="small">What exactly do you want to learn?</p></article>
+        <article class="card"><span class="tag">Comparison</span><p class="small">What is your baseline, and what are you holding fixed?</p></article>
+        <article class="card"><span class="tag">Evidence</span><p class="small">What metric, code, figure, and limitation support your conclusion?</p></article>
+      </div>
+      <div class="callout" style="margin-top:14px">
+        <strong>Submission:</strong> turn in your notebook/code with outputs and a short presentation describing the question, change, fair comparison, evidence, and conclusion. Disclose fallbacks or outside references. Real-hardware claims need backend, shots, and job ID; a hardware run is not required.
+      </div>
+    </section>
+
+    <section id="limits">
+      <div class="section-head">
+        <span class="tag">What this model can’t promise</span>
+        <h2>Optimization finds the best answer to the model—not necessarily reality.</h2>
+      </div>
+      <div class="grid-3">
+        <article class="card"><h3>Missing clues</h3><p class="muted">If <a class="term" href="#t-read">reads</a> never connect two groups of SNPs, their relative <a class="term" href="#t-phase">phase</a> may be impossible to infer from the available evidence.</p></article>
+        <article class="card"><h3>Conflicting or biased votes</h3><p class="muted">Errors, correlated pairs, and equal-weight assumptions can make a minimum-score answer differ from biological truth.</p></article>
+        <article class="card"><h3>Small experiment</h3><p class="muted">One tiny dataset, one random seed, or one favorable sample distribution cannot establish general usefulness or a speed advantage.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <strong>Sources in this folder</strong>
+      <p>Based on <span class="code">docs/Quantum_Genome_Detective_Lab.ipynb</span> and <span class="code">docs/PARTICIPANT_NOTES.pdf</span> in the challenge repository. The guide simplifies the shared foundation and investigation requirements; the notebook remains the source for exact code and checks.</p>
+    </div>
+  </footer>
+
+  <script>
+    const votes = [
+      { left: 0, right: 1, same: 1, opposite: 2 },
+      { left: 0, right: 2, same: 0, opposite: 2 },
+      { left: 1, right: 2, same: 2, opposite: 0 }
+    ];
+    const bitButtons = [...document.querySelectorAll(".bit")];
+    const scoreOutput = document.getElementById("score-output");
+
+    function updateScore() {
+      const candidate = bitButtons.map((button) => button.getAttribute("aria-pressed") === "true" ? 1 : 0);
+      const score = votes.reduce((sum, pair) => {
+        const agrees = candidate[pair.left] === candidate[pair.right];
+        return sum + (agrees ? pair.opposite : pair.same);
+      }, 0);
+      const pattern = candidate.join("");
+      scoreOutput.innerHTML = `Candidate <span class="code">${pattern}</span> has cost <strong>${score}</strong>.`;
+    }
+
+    bitButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const next = button.getAttribute("aria-pressed") !== "true";
+        button.setAttribute("aria-pressed", String(next));
+        button.textContent = next ? "1" : "0";
+        updateScore();
+      });
+    });
+    updateScore();
+  </script>
+  <script>
+    const termTip = document.createElement("div");
+    termTip.className = "term-tip";
+    termTip.id = "term-tip";
+    termTip.setAttribute("role", "tooltip");
+    termTip.hidden = true;
+    document.body.appendChild(termTip);
+
+    function describeTerm(link) {
+      const entry = document.querySelector(link.getAttribute("href"));
+      if (!entry) return false;
+      const definition = entry.querySelector("dd").cloneNode(true);
+      const csNote = definition.querySelector(".cs");
+      const csText = csNote ? csNote.textContent.trim() : "";
+      if (csNote) csNote.remove();
+      const name = document.createElement("b");
+      name.textContent = entry.querySelector("dt").firstChild.textContent.trim();
+      termTip.replaceChildren(name, document.createTextNode(" — " + definition.textContent.trim()));
+      if (csText) {
+        const cs = document.createElement("span");
+        cs.className = "muted";
+        cs.textContent = "CS view: " + csText;
+        termTip.append(document.createElement("br"), cs);
+      }
+      return true;
+    }
+
+    function showTerm(link) {
+      if (!describeTerm(link)) return;
+      termTip.hidden = false;
+      link.setAttribute("aria-describedby", "term-tip");
+      const anchor = link.getBoundingClientRect();
+      const box = termTip.getBoundingClientRect();
+      const left = Math.max(8, Math.min(anchor.left + anchor.width / 2 - box.width / 2, window.innerWidth - box.width - 8));
+      let top = anchor.top - box.height - 8;
+      if (top < 64) top = anchor.bottom + 8;
+      termTip.style.left = left + "px";
+      termTip.style.top = top + "px";
+    }
+
+    function hideTerm(link) {
+      termTip.hidden = true;
+      link.removeAttribute("aria-describedby");
+    }
+
+    document.querySelectorAll("a.term").forEach((link) => {
+      link.addEventListener("mouseenter", () => showTerm(link));
+      link.addEventListener("mouseleave", () => hideTerm(link));
+      link.addEventListener("focus", () => showTerm(link));
+      link.addEventListener("blur", () => hideTerm(link));
+    });
+    window.addEventListener("scroll", () => { termTip.hidden = true; }, { passive: true });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") termTip.hidden = true;
+    });
+  </script>
+</body>
+</html>
