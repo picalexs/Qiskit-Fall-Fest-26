@@ -142,7 +142,7 @@
             <tr><th scope="row">6 · QAOA / training</th><td>Standard, warm-start, multi-angle, formula and transfer.</td><td>Carla + Tudor · report training cost and convergence.</td></tr>
             <tr><th scope="row">7 · Execution</th><td>Frozen ideal/noisy replay; optional IBM paths.</td><td>Alex · preserve logical SNP order.</td></tr>
             <tr><th scope="row">8 · Hardware methods</th><td>Layout, routing, readout, twirling, DD, ZNE and other studies.</td><td>Alex · optional studies, not all applied to the default run.</td></tr>
-            <tr><th scope="row">9 · Evaluation</th><td>Metrics, comparisons, plug-ins and the new shared size study.</td><td><span class="tag tudor">Tudor's next main working area</span></td></tr>
+            <tr><th scope="row">9 · Evaluation</th><td>Metrics, comparisons, plug-ins and the shared size/training studies.</td><td><span class="tag tudor">Your completed evaluation studies</span></td></tr>
             <tr><th scope="row">10 · Scaling research</th><td>Existing large MPS/Kaggle studies and Alex's larger-instance work.</td><td>Supporting research · separate from the new team pilot.</td></tr>
             <tr><th scope="row">11 · Checks</th><td>Correctness checks, method inventory and limits.</td><td>Everyone · run after component changes.</td></tr>
           </tbody>
@@ -227,7 +227,7 @@
     <section id="handoff" aria-labelledby="handoff-title">
       <h2 id="handoff-title">How we continue individually</h2>
       <div class="grid">
-        <div class="card"><span class="tag tudor">Tudor · §9</span><h3>Own the comparison</h3><p>Inspect per-seed results, training status and resource overhead. Add controlled comparisons without changing reads between methods.</p><p class="small">Your older 28–100-SNP ideal studies remain in §10; do not rerun them just to validate this shared pilot.</p></div>
+        <div class="card"><span class="tag tudor">Tudor · §9</span><h3>Current local work completed</h3><p>The shared 8-/12-SNP comparison and training-budget follow-up are done. Use these results to learn and present your contribution.</p><p class="small">Later, evaluate the team's QPU results when available. That is not a blocker to wrapping up your current part. Your older 28–100-SNP studies remain in §10.</p></div>
         <div class="card"><span class="tag">Alexandra · §3</span><h3>Change evidence next</h3><p>Compare a selected weighting rule against this unweighted control. Rebuild J and retrain; keep full-reference scoring fixed.</p></div>
         <div class="card"><span class="tag">Carla · §4 / §6</span><h3>Improve training or circuits</h3><p>Use the 60-/300-evaluation follow-up to investigate remaining multi-angle convergence and pruning trade-offs. Return a circuit, ordered parameters and frozen angles for each agreed dataset.</p></div>
         <div class="card"><span class="tag next">Alex · §7 / §8</span><h3>Move the pilot to hardware</h3><p>Inspect the actual device's routed circuits, then compare standard with one selected variant on the predetermined 8-SNP pilot. Try 12 SNPs after the pilot is sound.</p><p class="small">Save job IDs, backend, shots, calibration context and raw logical samples. Synthetic noise results do not replace this step.</p></div>

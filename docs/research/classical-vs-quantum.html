@@ -347,6 +347,18 @@
     .scope-note { margin: 12px 0; padding: 12px 16px; border: 1px solid var(--cp-border); border-left: 4px solid var(--cp-warning); border-radius: .625rem; background: var(--cp-surface); font-size: .9rem; }
     .scope-note.keep { border-left-color: var(--cp-success); }
     .scope-label { display: inline-block; margin-bottom: 6px; padding: 2px 8px; border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-surface-soft); color: var(--cp-text-muted); font-size: .75rem; font-weight: 700; }
+    .latest-row { display: grid; grid-template-columns: 96px minmax(0,1fr) 64px; gap: 10px; align-items: center; margin: 12px 0; font-size: .9rem; }
+    .latest-track { height: 22px; background: var(--cp-surface-soft); border: 1px solid var(--cp-border); border-radius: .625rem; overflow: hidden; }
+    .latest-fill { height: 100%; background: var(--cp-accent); }
+    .latest-value { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+    .latest-flow { grid-template-columns: repeat(3,minmax(0,1fr)); }
+    @media (max-width: 700px) {
+      #latest-work .grid-2, #latest-work .grid-3, #latest-work .latest-flow { grid-template-columns: minmax(0,1fr); }
+    }
+    .latest-controls { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+    .latest-controls button { font: inherit; cursor: pointer; border: 1px solid var(--cp-border-strong); border-radius: .625rem; padding: 8px 12px; color: var(--cp-text); background: var(--cp-surface); }
+    .latest-controls button[aria-pressed="true"] { color: var(--cp-accent-fg); background: var(--cp-accent); border-color: var(--cp-accent); }
+    .latest-controls button:focus-visible { outline: 3px solid var(--cp-link); outline-offset: 3px; }
 
     @media (max-width: 900px) {
       .gloss, .map, .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -374,7 +386,7 @@
   </header>
 
   <main class="wrap">
-    <div class="card" style="margin-top:20px"><b>Supporting scaling research.</b> These earlier ideal-simulator sweeps are separate from the merged five-SNP experiment. See <a href="team-results.html">the current integrated team results</a> for the actual shared configuration and its limits.</div>
+    <div class="card" style="margin-top:20px"><b>Tudor's local work is complete.</b> Start with the legend, then <a href="#latest-work">the latest 8-/12-SNP and training-budget explanations</a>. The older standard-QAOA scaling study remains below as a separate research experiment. <a href="notebook-guide.html">Final notebook map →</a></div>
     <div class="hero">
       <div>
         <span class="eyebrow tu"><span class="chip">Tudor</span> Page 2 of 3 · classical vs quantum, scaling, simulators</span>
@@ -436,6 +448,127 @@
         <div class="term"><b>Depth p</b>How many times QAOA repeats its two layers (cost, then mixer). Each layer pair has 2 angles: γ and β.<span class="ex">p = 3 → 6 angles.</span></div>
       </div>
     </section>
+
+    <section id="latest-work">
+      <div class="section-head">
+        <span class="eyebrow">Latest work · completed local experiments</span>
+        <h2>How the final notebook extends my original study</h2>
+        <p>The old study asked how standard QAOA scales. The new study asks whether the <b>merged team methods</b> can be compared fairly on the same 8- and 12-SNP inputs. Then we checked whether 60 training evaluations were enough.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card"><h3>Earlier scaling research</h3><p>Standard QAOA at p = 1, 2, 3, up to 100 SNPs in ideal simulators. Formula/angle-transfer training; comparison with classical methods.</p><p class="small muted">Retained in notebook §10. It does not test every teammate variant or a real QPU.</p></div>
+        <div class="card"><h3>Shared 8-/12-SNP study</h3><p>Local search plus standard, warm-start and multi-angle QAOA at p = 1. Three fixed seeds per size, unweighted evidence and no pruning.</p><p class="small muted">Notebook §9. These are different settings from the older five-SNP forest-pruned pilot.</p></div>
+        <div class="card"><h3>60 → 300 training evaluations</h3><p>Same six datasets, same initial starts, same circuits and shots. Only the local optimization budget changes.</p><p class="small muted">Also §9. Answers a training-budget question, not a hardware-speedup question.</p></div>
+      </div>
+      <div class="scope-note keep"><b>What is finished:</b> my shared inputs, classical references, consistent grading, scaling research and controlled training follow-up. Further circuit training or QPU experiments are team follow-ups, not missing pieces of this local deliverable.</div>
+
+      <h3 style="margin-top:24px">1. One puzzle, all methods</h3>
+      <div class="flow latest-flow">
+        <div><b>Generate once</b>Choose N = 8 or 12 and seed = 0, 1 or 2. Reuse that read matrix.</div>
+        <div><b>Build the common cost</b>Use the same full, unpruned pairwise votes and J for every method.</div>
+        <div><b>Find the exact reference</b>Enumerate 256 or 4096 labels. All tied best labels count as optimal.</div>
+        <div><b>Run local search</b>16 restarts, each with up to 128 cost-check work units.</div>
+        <div><b>Train and sample QAOA</b>One local start per circuit, then 512 shots in each simulation mode.</div>
+        <div><b>Grade the results</b>Full cost, optimal-sample rate, MEC, switch errors and recorded effort.</div>
+      </div>
+      <p class="small muted">Read spans stay 2–4 SNPs, coverage 6, error probability 5% and missing probability 10% at both sizes. A seed identifies a reproducible dataset, not an answer supplied to the solver. Hidden truth is used only for grading.</p>
+
+      <div class="grid-2" style="margin-top:16px">
+        <div class="card">
+          <h3>What the classical opponent does</h3>
+          <p>A greedy start places bits using the evidence already placed. Local search checks single-bit flips, takes the best improvement and restarts when stuck. It does not use the hidden truth.</p>
+          <p class="small muted">A cost check is a small CPU operation. A quantum shot is a circuit sample. Their counts are recorded separately; equal counts would not imply equal runtime.</p>
+        </div>
+        <div class="card">
+          <h3>Why warm-start needs an extra accounting line</h3>
+          <p>Warm-start begins near the first classical candidate returned by local search. It does <b>not</b> begin near a revealed exact optimum or hidden truth.</p>
+          <p class="small muted">That classical preparation is real work. The records include its cost checks and time, so an improved quantum distribution is not credited to quantum computation alone.</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top:24px">2. What “one training evaluation” means here</h3>
+      <div class="grid-2">
+        <div class="card">
+          <p><b>Angles → local statevector → average full cost → next angles.</b> COBYLA repeats that loop. An evaluation computes the expected cost of a distribution; it is not one measured shot.</p>
+          <p>For these small circuits we calculate that average exactly on a CPU. No hardware measurements are used for training. Afterwards the angles are frozen and the circuit is sampled.</p>
+          <p class="small muted">The p = 1 analytic formula remains available in the original engine. This shared comparison uses local COBYLA for all three circuit families; the formula is not a trainer for arbitrary variants.</p>
+        </div>
+        <div class="card">
+          <h3>More angles make the search harder</h3>
+          <p>At p = 1, standard and warm-start have two angles. Multi-angle has one per active pair gate and one per qubit mixer.</p>
+          <p>In the 12-SNP seed-1 case that is <b>38 angles instead of 2</b>. A 60-evaluation cap can stop before the larger search has settled.</p>
+          <p class="small muted">An iteration-limit status is not a broken circuit. It says the optimizer exhausted its allotted work before satisfying its stopping criterion.</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top:24px">3. What changed when we allowed more training?</h3>
+      <div class="latest-controls" aria-label="Training budget for the latest ideal results">
+        <button type="button" data-latest-budget="60" aria-pressed="false">60 evaluations</button>
+        <button type="button" data-latest-budget="300" aria-pressed="true">300 evaluations</button>
+      </div>
+      <p class="small muted" id="latest-budget-label">Showing 300-evaluation cap · ideal optimum-shot rate · average over 3 dataset seeds · both charts use a 0–40% scale.</p>
+      <div class="grid-2">
+        <div class="card" data-latest-size="8">
+          <h3>8 SNPs</h3>
+          <div class="latest-row"><span>Standard</span><div class="latest-track"><div class="latest-fill" style="width:9.125%"></div></div><span class="latest-value">3.65%</span></div>
+          <div class="latest-row"><span>Warm-start</span><div class="latest-track"><div class="latest-fill" style="width:75.2%"></div></div><span class="latest-value">30.08%</span></div>
+          <div class="latest-row"><span>Multi-angle</span><div class="latest-track"><div class="latest-fill" style="width:68.85%"></div></div><span class="latest-value">27.54%</span></div>
+        </div>
+        <div class="card" data-latest-size="12">
+          <h3>12 SNPs</h3>
+          <div class="latest-row"><span>Standard</span><div class="latest-track"><div class="latest-fill" style="width:4.225%"></div></div><span class="latest-value">1.69%</span></div>
+          <div class="latest-row"><span>Warm-start</span><div class="latest-track"><div class="latest-fill" style="width:11.075%"></div></div><span class="latest-value">4.43%</span></div>
+          <div class="latest-row"><span>Multi-angle</span><div class="latest-track"><div class="latest-fill" style="width:13.825%"></div></div><span class="latest-value">5.53%</span></div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:16px">
+        <div class="card"><h3>Exact training cost improved</h3><p>Multi-angle's mean expected full cost fell from <b>14.474 → 6.340</b> at 8 SNPs and <b>28.073 → 17.403</b> at 12 SNPs. Lower is better on the same datasets.</p><p class="small muted">Expected cost is the exact distribution average. The shot-success chart is a finite sample, so its rates need not change monotonically—even when the exact objective improves.</p></div>
+        <div class="card"><h3>But convergence is still unresolved</h3><p>All six multi-angle fits reached the <b>300-evaluation limit</b>. Standard QAOA was unchanged. The remaining warm-start fit converged with almost unchanged quality.</p><p class="small muted">This completes the budget experiment: it reveals that the earlier budget undertrained multi-angle. It does not require us to keep increasing the cap until a perfect answer appears.</p></div>
+      </div>
+
+      <h3 style="margin-top:24px">4. How to read the comparison honestly</h3>
+      <div class="grid-3">
+        <div class="card"><b>One hit ≠ a good distribution</b><p>“Best cost” asks whether at least one good answer appeared. “Optimal-shot rate” asks how often good answers appeared. Both matter.</p></div>
+        <div class="card"><b>Shots ≠ restarts</b><p>Local search's 100% / 87.5% rates at 8 / 12 SNPs are per restart, not per quantum shot. They are strong classical references, not direct runtime ratios.</p></div>
+        <div class="card"><b>Three seeds ≠ a universal winner</b><p>We expose between-dataset variation and convergence status. These shallow, small-budget runs do not establish a best algorithm or quantum advantage.</p></div>
+      </div>
+      <div class="scope-note"><b>Simulation modes:</b> these paired studies use ideal Aer and a seeded synthetic 12-qubit line noise model, not live IBM calibration or QPU results. Ordinary notebook panels use the selected <code>RUN_MODE</code>; the training follow-up remains a deliberately local experiment.</div>
+      <details class="deep">
+        <summary>Where to run or inspect this in the final notebook</summary>
+        <div class="body">
+          <p>Read §2 for shared inputs and references, §5 for classical methods, §6 for circuits/training and §9 for both local studies and paired tables. §10 retains the older large-instance research.</p>
+          <pre>RUN_MODE = 'simulator'
+RUN_SHARED_SIZE_STUDY = True
+RUN_TRAINING_FOLLOWUP = True
+FOLLOWUP_TRAIN_EVALS = 300</pre>
+          <p>The standard workflow leaves optional reruns off. Saved follow-up outputs are labelled as a separately executed local run. <code>TRAINING_FOLLOWUP_ARTIFACTS[(8, 0)]</code> holds the predetermined pilot's reads, J, ordered parameters, angles and frozen circuits after rerunning the follow-up.</p>
+          <p><b>My next action is learning/presenting, not more mandatory experimentation.</b> Real-device comparison is a later team milestone; we will grade those results using the same references when they are available.</p>
+        </div>
+      </details>
+    </section>
+    <script>
+      const latestBenchValues = {
+        60: { 8: [3.65, 30.14, 8.07], 12: [1.69, 4.43, 0.65] },
+        300: { 8: [3.65, 30.08, 27.54], 12: [1.69, 4.43, 5.53] }
+      };
+      for (const button of document.querySelectorAll("[data-latest-budget]")) {
+        button.addEventListener("click", () => {
+          const budget = button.dataset.latestBudget;
+          for (const other of document.querySelectorAll("[data-latest-budget]")) {
+            other.setAttribute("aria-pressed", String(other === button));
+          }
+          for (const chart of document.querySelectorAll("[data-latest-size]")) {
+            const values = latestBenchValues[budget][chart.dataset.latestSize];
+            chart.querySelectorAll(".latest-row").forEach((row, index) => {
+              row.querySelector(".latest-fill").style.width = `${values[index] / 40 * 100}%`;
+              row.querySelector(".latest-value").textContent = `${values[index].toFixed(2)}%`;
+            });
+          }
+          document.getElementById("latest-budget-label").textContent =
+            `Showing ${budget}-evaluation cap · ideal optimum-shot rate · average over 3 dataset seeds · both charts use a 0–40% scale.`;
+        });
+      }
+    </script>
 
     <section id="why">
       <div class="section-head">
