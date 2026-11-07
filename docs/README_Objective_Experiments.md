@@ -10,7 +10,7 @@ All experiments use five SNPs and classical exact enumeration. They study the qu
 
 Alexandra Enachescu's objective notebook and all three study scripts are retained. The large generated result archives are intentionally omitted from this integration; the scripts/notebook regenerate the directories listed below. Historical numerical findings in this guide are the author's standalone study, not new combined-benchmark measurements.
 
-[The combined benchmark](../bench/all_together.ipynb) uses `objective_study.py` directly, alongside Carla's pruning/circuit definitions, Tudor's engine and Alex's hardware setup. The helper remains necessary for runnable notebook imports; a broad conversion into notebook-only definitions is deferred. Use repository `requirements.txt` for the combined notebook, or `requirements-objectives.txt` for this classical study alone.
+[The combined notebook](../bench/all_together.ipynb) embeds `objective_study.py`, both study scripts and this notebook's checks as self-contained cells, alongside Carla's pruning/circuit definitions, Tudor's engine and Alex's hardware methods; the grids run only when `RUN_FULL_STUDIES` is enabled. These files remain the standalone originals. Use repository `requirements.txt` for the combined notebook, or `requirements-objectives.txt` for this classical study alone.
 
 All circuit candidates are rescored on full unpruned baseline pairwise evidence and full-read MEC. MEC remains a reference/evaluation objective, not an invented pairwise circuit cost. The combined smoke run does not rerun the full objective grid.
 
