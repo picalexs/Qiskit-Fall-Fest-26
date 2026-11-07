@@ -4,23 +4,24 @@
 
 **Does changing the influence of sequencing reads improve recovery of a known phasing pair?**
 
-All experiments use five SNPs and classical exact enumeration. They study the quality of an objective, not QAOA optimization performance. A minimizer of a chosen cost is not necessarily biological truth.
+The original objective studies use five SNPs and classical exact enumeration; the larger-instance extension runs through 30 SNPs. They study objective quality, not QAOA optimization performance. A minimizer of a chosen cost is not necessarily biological truth.
 
 ## Notebook-first integration
 
-Alexandra Enachescu's objective notebook and all three study scripts are retained. The original objective result archives are not present here; the scripts and notebook generate new results under `results/objectives/`. Historical numerical findings in this guide are the author's standalone study, not new combined-benchmark measurements.
+Alexandra Enachescu's objective notebook and standalone scripts are retained. Saved reliability and larger-instance results are under `results/objectives/`; the scripts can regenerate them. Historical numerical findings in this guide are standalone classical studies, not new combined-benchmark measurements.
 
 [The combined notebook](../../all_together.ipynb) embeds `objective_study.py`, both study scripts and this notebook's checks as self-contained cells, alongside Carla's pruning/circuit definitions, Tudor's engine and Alex's hardware methods; the grids run only when `RUN_FULL_STUDIES` is enabled. These files remain the standalone originals. Use repository `requirements.txt` for the combined notebook, or `requirements-objectives.txt` for this classical study alone.
 
 All circuit candidates are rescored on full unpruned baseline pairwise evidence and full-read MEC. MEC remains a reference/evaluation objective, not an invented pairwise circuit cost. The combined smoke run does not rerun the full objective grid.
 
-Three separate studies are available:
+Four separate studies are available:
 
 | Study | Question | Script / notebook | Results |
 |---|---|---|---|
 | Main grid | Do A, B1, B2, C and MEC differ under IID errors? | `Alexandra_Objective_Variants.ipynb`, `objective_study.py` | `results/objectives/objective_results/` |
 | Reliability sensitivity | Does normalization help when longer reads are less reliable? | `length_error_experiment.py` | `results/objectives/length_error_results/` |
 | Fixed length 3 vs 5 | How does available information change with fixed read length? | `fixed_length_experiment.py` | `results/objectives/fixed_length_results/` |
+| Larger instances | How do the five exact objectives compare at 12–30 SNPs? | `experiments/objectives/alexandra_larger_objectives.py`, `experiments/objectives/alexandra_30_objectives.py` | `results/objectives/alexandra_larger_results/`, `results/objectives/alexandra_30_results/` |
 
 ## 1. Notation
 

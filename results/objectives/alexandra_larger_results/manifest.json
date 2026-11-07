@@ -1,0 +1,28 @@
+{
+  "sizes": [
+    12,
+    16,
+    20
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "realistic_settings": {
+    "error": 0.05,
+    "missing": 0.1
+  },
+  "generator": "experiments/bench/qgd_bench.ipynb::make_instance",
+  "generator_notebook_sha256": "7156462a876133f4c932c1c7fcb3df1046b3901994abe2849ad891ffd807237a",
+  "defaults": {
+    "coverage": 6,
+    "read_len": [
+      2,
+      4
+    ],
+    "gaps": 0
+  },
+  "enumeration": "First SNP fixed to 0; exact over complementary phasing pairs",
+  "tie_policy": "Uniform over ALL exact minimizers; truth only for evaluation"
+}

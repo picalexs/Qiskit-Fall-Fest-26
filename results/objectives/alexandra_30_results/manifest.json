@@ -1,0 +1,21 @@
+{
+  "n_snps": 30,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "settings": {
+    "error": 0.05,
+    "missing": 0.1
+  },
+  "generator": "experiments/bench/qgd_bench.ipynb::make_instance",
+  "coverage": 6,
+  "read_len": [
+    2,
+    4
+  ],
+  "gaps": 0,
+  "solver": "Exact integer-scaled local-factor DP, first SNP fixed to zero",
+  "tie_policy": "All minimizers counted; exact histogram for Hamming modulo complement"
+}
