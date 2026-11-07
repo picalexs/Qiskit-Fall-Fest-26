@@ -2,8 +2,8 @@
 # These compatible ranges allow subsequent stable 2.x releases.
 qiskit>=2.1,<3
 qiskit-aer>=0.17,<0.19
-# Fake-backend snapshots used locally by the combined/hardware notebooks; no account needed.
-qiskit-ibm-runtime>=0.47,<0.49
+# Fake-backend snapshots; combined notebook locally validated with Runtime 0.51.0.
+qiskit-ibm-runtime>=0.47,<0.52
 numpy>=1.26,<3
 scipy>=1.13,<2
 pandas>=2.2,<3
