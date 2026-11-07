@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Quantum Genome Detective: how the four research paths plug into one bench and get compared fairly.">
+  <title>3 · Merge plan — Quantum Genome Detective</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--cp-bg);
+      color: var(--cp-text);
+      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+    }
+    a { color: var(--cp-link); }
+    code, .mono, pre { font-family: Consolas, "Courier New", Courier, monospace; font-size: .92em; }
+    .wrap { width: min(1100px, calc(100% - 36px)); margin: 0 auto; }
+    .topbar { position: sticky; top: 0; z-index: 5; border-bottom: 1px solid var(--cp-border); background: var(--cp-overlay); backdrop-filter: blur(8px); }
+    .topbar-inner { min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .brand { font-size: .92rem; font-weight: 750; }
+    .pages { display: flex; gap: 6px; flex-wrap: wrap; }
+    .pages a { text-decoration: none; font-size: .85rem; padding: 5px 10px; border-radius: .625rem; border: 1px solid var(--cp-border); color: var(--cp-text-muted); background: var(--cp-surface); }
+    .pages a[aria-current="page"] { color: var(--cp-accent-fg); background: var(--cp-accent); border-color: var(--cp-accent); font-weight: 700; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px; border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-surface); color: var(--cp-text-muted); font-size: .8rem; font-weight: 700; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin: 14px 0; font-size: clamp(2.2rem, 5.5vw, 4rem); line-height: 1.05; letter-spacing: -.04em; }
+    h2 { margin: 10px 0 8px; font-size: clamp(1.6rem, 3.3vw, 2.3rem); line-height: 1.15; letter-spacing: -.025em; }
+    h3 { margin-bottom: 6px; font-size: 1.1rem; }
+    .lead { color: var(--cp-text-muted); font-size: 1.15rem; max-width: 640px; }
+    section { padding: 40px 0 8px; }
+    .section-head p { color: var(--cp-text-muted); max-width: 760px; }
+    .card { background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: 16px; box-shadow: 0 0 2px var(--cp-border), 0 1px 2px var(--cp-border); padding: 20px; }
+    .muted { color: var(--cp-text-muted); }
+    .soft { color: var(--cp-text-soft); }
+    .small { font-size: .86rem; }
+    .scroll-x { overflow-x: auto; }
+    .swipe { display: none; font-size: .75rem; color: var(--cp-text-soft); margin-top: 4px; }
+    svg text { font-family: "Segoe UI", Aptos, Calibri, sans-serif; }
+
+    /* person colours (same as page 1) */
+    .tu { --pc: var(--cp-link); }
+    .ca { --pc: var(--cp-accent); }
+    .al { --pc: var(--cp-warning); }
+    .ax { --pc: var(--cp-success); }
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border-radius: 999px; font-size: .78rem; font-weight: 700; border: 1px solid var(--pc, var(--cp-border-strong)); color: var(--cp-text); background: color-mix(in srgb, var(--pc, var(--cp-border)) 14%, var(--cp-surface)); white-space: nowrap; }
+    .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--pc, var(--cp-text-soft)); }
+    .chip.plain::before { display: none; }
+
+    /* terminal */
+    .term { border-radius: .625rem; border: 1px solid var(--cp-border); background: var(--cp-surface-soft); padding: 12px 14px; margin: 0; overflow-x: auto; font-size: .84rem; line-height: 1.55; white-space: pre; }
+    .term .c { color: var(--cp-text-soft); }
+    .term .k { color: var(--cp-accent); font-weight: 700; }
+    .term .f { color: var(--cp-link); }
+
+    /* hero */
+    .hero { padding: 54px 0 20px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 1fr); gap: 34px; align-items: center; }
+    .hero .card h3 { font-size: .95rem; margin-bottom: 10px; }
+    .owns { display: grid; gap: 8px; margin-top: 12px; }
+    .own { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 10px; align-items: center; font-size: .88rem; }
+
+    /* pipeline */
+    .pipeline svg { width: 100%; height: auto; display: block; }
+    .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; font-size: .82rem; color: var(--cp-text-muted); }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend i { width: 18px; height: 12px; border-radius: 3px; display: inline-block; }
+    .legend .sock { border: 2px solid var(--cp-text-soft); }
+    .legend .fixed { border: 1px dashed var(--cp-border-strong); background: var(--cp-surface-soft); }
+
+    /* socket cards */
+    .sockets { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    .sock-card { border-top: 6px solid var(--pc); display: grid; gap: 10px; align-content: start; }
+    .sock-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .sock-head h3 { margin: 0; display: flex; align-items: center; gap: 8px; }
+    .num { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--pc); color: var(--cp-accent-fg); font-size: .82rem; font-weight: 800; }
+    html[data-theme="dark"] .num { color: var(--cp-surface); }
+    .io { display: grid; grid-template-columns: minmax(0, 1fr) 22px minmax(0, 1fr); gap: 6px; align-items: center; }
+    .io > div { border: 1px solid var(--cp-border); border-radius: .625rem; padding: 6px 9px; background: var(--cp-surface-soft); font-size: .8rem; line-height: 1.35; min-height: 100%; }
+    .io > div b { display: block; font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; color: var(--cp-text-soft); }
+    .io i { display: block; font-style: normal; color: var(--cp-text-soft); font-size: .76rem; margin-top: 2px; }
+    .nw { white-space: nowrap; }
+    .io .arrow { border: 0; background: none; text-align: center; font-weight: 800; color: var(--pc); padding: 0; min-height: 0; }
+    .kv { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 4px 10px; font-size: .84rem; align-items: baseline; }
+    .kv .k { font-size: .7rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--pc); }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { font-size: .78rem; padding: 1px 8px; border-radius: .625rem; border: 1px solid var(--cp-border); background: var(--cp-surface); }
+    .tag.built { border-style: dashed; color: var(--cp-text-muted); }
+    .rule { border-left: 4px solid var(--cp-danger); padding: 5px 10px; border-radius: .625rem; background: color-mix(in srgb, var(--cp-danger) 8%, var(--cp-surface)); font-size: .84rem; }
+
+    /* steps */
+    .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; counter-reset: s; }
+    .step { position: relative; display: grid; gap: 10px; align-content: start; }
+    .step h3 { display: flex; align-items: center; gap: 10px; margin: 0; }
+    .step h3::before { counter-increment: s; content: counter(s); display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--cp-accent); color: var(--cp-accent-fg); font-size: .9rem; flex-shrink: 0; }
+
+    /* fairness */
+    .fair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .fair .card { display: grid; gap: 10px; align-content: start; }
+    .fair h3 { margin: 0; display: flex; gap: 8px; align-items: baseline; }
+    .fair h3 .ico { font-size: 1.15rem; }
+    .bars { display: grid; gap: 8px; }
+    .bar { display: grid; grid-template-columns: 116px minmax(0, 1fr) 54px; gap: 8px; align-items: center; font-size: .8rem; }
+    .bar .track { height: 22px; border-radius: 6px; background: var(--cp-surface-soft); border: 1px solid var(--cp-border); display: flex; overflow: hidden; }
+    .bar .seg { height: 100%; display: grid; place-items: center; font-size: .7rem; font-weight: 700; color: var(--cp-text); white-space: nowrap; overflow: hidden; }
+    .seg.ok { background: color-mix(in srgb, var(--cp-success) 45%, var(--cp-surface)); }
+    .seg.bad { background: color-mix(in srgb, var(--cp-text-soft) 28%, var(--cp-surface)); }
+    .seg.train { background: color-mix(in srgb, var(--cp-accent) 35%, var(--cp-surface)); }
+    .seg.samp { background: color-mix(in srgb, var(--cp-link) 30%, var(--cp-surface)); }
+    .bar .v { font-weight: 800; text-align: right; }
+    .bar .v.no { color: var(--cp-danger); }
+    .bar .v.yes { color: var(--cp-success); }
+    .vs { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+    .vs > div { border-radius: .625rem; padding: 8px 10px; font-size: .84rem; border: 1px solid var(--cp-border); }
+    .vs .no { border-color: var(--cp-danger); background: color-mix(in srgb, var(--cp-danger) 7%, var(--cp-surface)); }
+    .vs .yes { border-color: var(--cp-success); background: color-mix(in srgb, var(--cp-success) 9%, var(--cp-surface)); }
+    .vs b { display: block; }
+
+    /* conventions */
+    .conv { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .conv .card { padding: 14px 16px; }
+    .conv .big { font-family: Consolas, "Courier New", Courier, monospace; font-size: 1.05rem; font-weight: 700; color: var(--cp-accent); margin-bottom: 2px; }
+    .conv .what { font-size: .74rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--cp-text-soft); }
+    .conv p { margin: 2px 0 0; font-size: .84rem; color: var(--cp-text-muted); }
+
+    /* results */
+    .cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .cols .card { padding: 14px 16px; }
+    .cols h3 { font-size: .9rem; margin-bottom: 8px; }
+    .cols .tags code { font-size: .78rem; }
+    .metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+    .metric { border-left: 5px solid var(--cp-accent); }
+    .metric .name { font-family: Consolas, "Courier New", Courier, monospace; font-weight: 800; font-size: 1.1rem; }
+    .metric p { margin: 4px 0 0; font-size: .86rem; color: var(--cp-text-muted); }
+    .metric .good { font-size: .76rem; font-weight: 700; color: var(--cp-success); }
+
+    /* ablation grid */
+    .abl { width: 100%; min-width: 700px; border-collapse: separate; border-spacing: 0 6px; font-size: .86rem; }
+    .abl th { font-size: .74rem; letter-spacing: .04em; text-transform: uppercase; color: var(--cp-text-muted); font-weight: 800; padding: 4px 8px; text-align: center; }
+    .abl th:first-child, .abl td:first-child { text-align: left; }
+    .abl td { padding: 8px; text-align: center; background: var(--cp-surface-soft); border-top: 1px solid var(--cp-border); border-bottom: 1px solid var(--cp-border); }
+    .abl td:first-child { border-left: 1px solid var(--cp-border); border-radius: .625rem 0 0 .625rem; font-weight: 700; }
+    .abl td:last-child { border-right: 1px solid var(--cp-border); border-radius: 0 .625rem .625rem 0; text-align: left; color: var(--cp-text-muted); font-size: .8rem; }
+    .dot { display: inline-block; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--cp-border-strong); vertical-align: middle; }
+    .dot.on { background: var(--pc); border-color: var(--pc); }
+    .abl tr.all td { background: var(--cp-accent-soft); }
+
+    /* merge-day timeline */
+    .timeline { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+    .timeline li { position: relative; padding: 14px 12px 12px; border-radius: .625rem; border: 1px solid var(--cp-border); background: var(--cp-surface); font-size: .84rem; }
+    .timeline li b { display: block; font-size: .92rem; margin-bottom: 4px; }
+    .timeline .when { font-size: .7rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--cp-accent); }
+    .timeline li:not(:last-child)::after { content: "›"; position: absolute; right: -9px; top: 50%; transform: translateY(-50%); color: var(--cp-text-soft); font-weight: 800; }
+    .next { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: .625rem; text-decoration: none; font-weight: 700; border: 1px solid var(--cp-border); background: var(--cp-surface); color: var(--cp-text); }
+    .btn.primary { background: var(--cp-accent); border-color: var(--cp-accent); color: var(--cp-accent-fg); }
+    footer { margin-top: 48px; padding: 22px 0 40px; border-top: 1px solid var(--cp-border); color: var(--cp-text-soft); font-size: .85rem; }
+
+    @media (max-width: 900px) {
+      .hero, .fair { grid-template-columns: minmax(0, 1fr); }
+      .steps, .conv, .metrics { grid-template-columns: minmax(0, 1fr); }
+      .cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .timeline { grid-template-columns: minmax(0, 1fr); }
+      .timeline li:not(:last-child)::after { content: "⌄"; right: auto; left: 50%; top: auto; bottom: -14px; transform: translateX(-50%); }
+    }
+    @media (max-width: 560px) {
+      .pipeline svg { min-width: 760px; }
+      .swipe { display: block; }
+      .sockets, .cols { grid-template-columns: minmax(0, 1fr); }
+      .own { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+      .bar { grid-template-columns: 84px minmax(0, 1fr) 44px; }
+      .vs { grid-template-columns: minmax(0, 1fr); }
+      .card { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <div class="brand">🧬 Quantum Genome Detective · research</div>
+      <nav class="pages" aria-label="Research pages">
+        <a href="paths.html">1 · Paths map</a>
+        <a href="classical-vs-quantum.html">2 · Classical vs quantum</a>
+        <a href="merge-plan.html" aria-current="page">3 · Merge plan</a>
+        <a href="../CHALLENGE_EXPLAINED.html">Explainer</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="card" style="margin-top:20px"><b>Current status: notebook integration is merged.</b> Start with <a href="team-results.html">the validated local results</a> and <code>bench/all_together.ipynb</code>. This page is the earlier plug-in design reference; the current merge uses shared adapters to preserve existing teammate notebooks. Real-QPU execution remains pending.</div>
+    <div class="hero">
+      <div>
+        <span class="eyebrow">Page 3 of 3 · putting it together</span>
+        <h1>One bench, five sockets</h1>
+        <p class="lead">Each of us writes <b>one notebook</b>, <code>bench/&lt;name&gt;.ipynb</code>. The engine plugs it in and runs it on the same puzzles, with the same shot budget and the same controls as everything else.</p>
+      </div>
+      <div class="card">
+        <h3>Who fills which socket</h3>
+        <div class="owns">
+          <div class="own"><span class="chip ax">Alexandra</span><span><b>1</b> evidence</span></div>
+          <div class="own"><span class="chip ca">Carla</span><span><b>2</b> circuit · <b>3</b> trainer</span></div>
+          <div class="own"><span class="chip al">Alex</span><span><b>4</b> backend · <b>5</b> post-process</span></div>
+          <div class="own"><span class="chip tu">Tudor</span><span>the frame: puzzles, controls, scoring, plots</span></div>
+        </div>
+      </div>
+    </div>
+
+    <section id="pipeline">
+      <div class="section-head">
+        <span class="eyebrow">1 · The pipeline</span>
+        <h2>Where each socket sits</h2>
+        <p>Solid boxes are sockets you can swap. Dashed boxes are fixed, so every method is generated and scored the same way.</p>
+      </div>
+      <div class="card pipeline">
+        <div class="scroll-x">
+          <svg viewBox="0 0 960 196" role="img" aria-label="Pipeline left to right: puzzle and hidden truth (fixed), 1 evidence (Alexandra), 2 circuit (Carla), 3 trainer (Carla), 4 backend (Alex), 5 post-process (Alex), score (fixed). Arrows carry reads, J, circuit, angles, shots and cleaned shots.">
+            <defs>
+              <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--cp-text-soft)"/></marker>
+            </defs>
+            <g stroke="var(--cp-text-soft)" stroke-width="2" marker-end="url(#ar)">
+              <line x1="120" y1="88" x2="142" y2="88"/><line x1="256" y1="88" x2="278" y2="88"/><line x1="392" y1="88" x2="414" y2="88"/>
+              <line x1="528" y1="88" x2="550" y2="88"/><line x1="664" y1="88" x2="686" y2="88"/><line x1="800" y1="88" x2="822" y2="88"/>
+            </g>
+            <!-- fixed: puzzle -->
+            <rect x="10" y="40" width="110" height="96" rx="12" fill="var(--cp-surface-soft)" stroke="var(--cp-border-strong)" stroke-dasharray="5 4"/>
+            <text x="65" y="74" text-anchor="middle" font-size="14" font-weight="800" fill="var(--cp-text)">Puzzle</text>
+            <text x="65" y="94" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">reads of N SNPs</text>
+            <text x="65" y="110" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">+ hidden truth</text>
+            <!-- 1 evidence -->
+            <rect x="146" y="40" width="110" height="96" rx="12" fill="var(--cp-surface)" stroke="var(--cp-success)" stroke-width="3"/>
+            <circle cx="201" cy="40" r="12" fill="var(--cp-success)"/><text x="201" y="44.5" text-anchor="middle" font-size="12" font-weight="800" fill="var(--cp-surface)">1</text>
+            <text x="201" y="74" text-anchor="middle" font-size="14" font-weight="800" fill="var(--cp-text)">Evidence</text>
+            <text x="201" y="94" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">reads → votes</text>
+            <text x="201" y="110" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">A, D → J</text>
+            <!-- 2 circuit -->
+            <rect x="282" y="40" width="110" height="96" rx="12" fill="var(--cp-surface)" stroke="var(--cp-accent)" stroke-width="3"/>
+            <circle cx="337" cy="40" r="12" fill="var(--cp-accent)"/><text x="337" y="44.5" text-anchor="middle" font-size="12" font-weight="800" fill="var(--cp-surface)">2</text>
+            <text x="337" y="74" text-anchor="middle" font-size="14" font-weight="800" fill="var(--cp-text)">Circuit</text>
+            <text x="337" y="94" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">J, depth p →</text>
+            <text x="337" y="110" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">circuit + knobs</text>
+            <!-- 3 trainer -->
+            <rect x="418" y="40" width="110" height="96" rx="12" fill="var(--cp-surface)" stroke="var(--cp-accent)" stroke-width="3"/>
+            <circle cx="473" cy="40" r="12" fill="var(--cp-accent)"/><text x="473" y="44.5" text-anchor="middle" font-size="12" font-weight="800" fill="var(--cp-surface)">3</text>
+            <text x="473" y="74" text-anchor="middle" font-size="14" font-weight="800" fill="var(--cp-text)">Trainer</text>
+            <text x="473" y="94" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">tunes the knobs</text>
+            <text x="473" y="110" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">→ angles</text>
+            <!-- 4 backend -->
+            <rect x="554" y="40" width="110" height="96" rx="12" fill="var(--cp-surface)" stroke="var(--cp-warning)" stroke-width="3"/>
+            <circle cx="609" cy="40" r="12" fill="var(--cp-warning)"/><text x="609" y="44.5" text-anchor="middle" font-size="12" font-weight="800" fill="var(--cp-surface)">4</text>
+            <text x="609" y="74" text-anchor="middle" font-size="14" font-weight="800" fill="var(--cp-text)">Backend</text>
+            <text x="609" y="94" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">runs the circuit</text>
+            <text x="609" y="110" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">→ shots</text>
+            <!-- 5 postprocess -->
+            <rect x="690" y="40" width="110" height="96" rx="12" fill="var(--cp-surface)" stroke="var(--cp-warning)" stroke-width="3"/>
+            <circle cx="745" cy="40" r="12" fill="var(--cp-warning)"/><text x="745" y="44.5" text-anchor="middle" font-size="12" font-weight="800" fill="var(--cp-surface)">5</text>
+            <text x="745" y="74" text-anchor="middle" font-size="14" font-weight="800" fill="var(--cp-text)">Post-process</text>
+            <text x="745" y="94" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">cleans each shot</text>
+            <text x="745" y="110" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">→ answers</text>
+            <!-- fixed: score -->
+            <rect x="826" y="40" width="120" height="96" rx="12" fill="var(--cp-surface-soft)" stroke="var(--cp-border-strong)" stroke-dasharray="5 4"/>
+            <text x="886" y="74" text-anchor="middle" font-size="14" font-weight="800" fill="var(--cp-text)">Score</text>
+            <text x="886" y="94" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">vs best answer</text>
+            <text x="886" y="110" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">+ vs truth</text>
+            <!-- Config fields -->
+            <g font-family="Consolas, 'Courier New', monospace" font-size="11.5" text-anchor="middle" fill="var(--cp-link)">
+              <text x="201" y="158">evidence=</text><text x="337" y="158">qaoa=</text><text x="473" y="158">trainer=</text>
+              <text x="609" y="158">backend=</text><text x="745" y="158">postprocess=</text>
+            </g>
+            <g font-size="11.5" text-anchor="middle" font-weight="700">
+              <text x="201" y="178" fill="var(--cp-success)">Alexandra</text><text x="405" y="178" fill="var(--cp-accent)">Carla</text>
+              <text x="677" y="178" fill="var(--cp-warning)">Alex</text>
+              <text x="65" y="158" fill="var(--cp-link)">Tudor</text><text x="886" y="158" fill="var(--cp-link)">Tudor</text>
+            </g>
+            <g stroke-width="2" fill="none">
+              <path d="M300 168 h210" stroke="var(--cp-accent)" opacity=".5"/><path d="M572 168 h210" stroke="var(--cp-warning)" opacity=".6"/>
+            </g>
+          </svg>
+        </div>
+        <div class="swipe">↔ swipe to see the whole picture</div>
+        <div class="legend">
+          <span><i class="sock"></i>socket: pick a plug-in by name in <code>Config(...)</code></span>
+          <span><i class="fixed"></i>fixed: same for every method</span>
+          <span>Random guessing, local search and simulated annealing run on every puzzle as controls.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="sockets">
+      <div class="section-head">
+        <span class="eyebrow">2 · The sockets</span>
+        <h2>What goes in, what comes out</h2>
+        <p>Dashed tags are already in the bench. The others are ideas from page 1.</p>
+      </div>
+      <div class="sockets">
+        <article class="card sock-card ax">
+          <div class="sock-head"><h3><span class="num">1</span>Evidence</h3><span class="chip ax">Alexandra</span></div>
+          <div class="io">
+            <div><b>in</b><code>reads</code><i>one row per read: 0 / 1 / −1</i></div>
+            <div class="arrow">→</div>
+            <div><b>out</b><code>A, D</code><i>same / opposite votes per SNP pair</i></div>
+          </div>
+          <div class="kv"><span class="k">Config</span><code>evidence=…</code><span class="k">ideas</span>
+            <div class="tags"><span class="tag built">pairwise</span><span class="tag">read-quality weights</span><span class="tag">MEC-style</span><span class="tag">pruning</span></div>
+          </div>
+          <div class="rule">Changes the scoring itself, so compare with <code>switch_err</code>. See rule C.</div>
+        </article>
+
+        <article class="card sock-card ca">
+          <div class="sock-head"><h3><span class="num">2</span>Circuit</h3><span class="chip ca">Carla</span></div>
+          <div class="io">
+            <div><b>in</b><code>J</code>, depth <code>p</code></div>
+            <div class="arrow">→</div>
+            <div><b>out</b><code>circuit, theta, scale</code><i>no measurements</i></div>
+          </div>
+          <div class="kv"><span class="k">Config</span><code>qaoa=…</code><span class="k">ideas</span>
+            <div class="tags"><span class="tag built">baseline</span><span class="tag">warm start</span><span class="tag">multi-angle</span><span class="tag">counterdiabatic</span></div>
+          </div>
+          <div class="rule">A new circuit runs on Aer automatically: the fast numpy simulator only knows the baseline. More than 2p angles? Ship a matching trainer. Recursive QAOA is a whole method, not a circuit: it needs a new socket.</div>
+        </article>
+
+        <article class="card sock-card ca">
+          <div class="sock-head"><h3><span class="num">3</span>Trainer</h3><span class="chip ca">Carla</span></div>
+          <div class="io">
+            <div><b>in</b><code>J, offset, p</code>, circuit name, <code>ctx</code></div>
+            <div class="arrow">→</div>
+            <div><b>out</b><code>angles, train_shots</code><i>+ optional dict of extra columns</i></div>
+          </div>
+          <div class="kv"><span class="k">Config</span><code>trainer=…</code><span class="k">ideas</span>
+            <div class="tags"><span class="tag built">baseline</span><span class="tag built">cobyla</span><span class="tag">CVaR</span><span class="tag">SPSA</span><span class="tag">angle transfer</span></div>
+            <span class="k">ctx</span><span class="small"><code>ctx["sample"](angles, shots)</code> runs your circuit on the chosen backend</span>
+          </div>
+          <div class="rule">Return every shot you spent. The bench adds them to the cost. See rule A.</div>
+        </article>
+
+        <article class="card sock-card al">
+          <div class="sock-head"><h3><span class="num">4</span>Backend</h3><span class="chip al">Alex</span></div>
+          <div class="io">
+            <div><b>in</b><code>job, shots, seed</code><i>job = bound circuit, J, angles</i></div>
+            <div class="arrow">→</div>
+            <div><b>out</b><code>samples, probs</code><i>one row per shot, SNP 1 first; probs may be None</i></div>
+          </div>
+          <div class="kv"><span class="k">Config</span><code>backend=…</code><span class="k">ideas</span>
+            <div class="tags"><span class="tag built">numpy</span><span class="tag built">aer_sv</span><span class="tag built">aer_mps</span><span class="tag">fake devices + noise</span><span class="tag">real IBM</span></div>
+          </div>
+          <div class="rule">Decode Qiskit bit keys once, SNP 1 first. Qiskit prints the last qubit first.</div>
+        </article>
+
+        <article class="card sock-card al">
+          <div class="sock-head"><h3><span class="num">5</span>Post-process</h3><span class="chip al">Alex</span></div>
+          <div class="io">
+            <div><b>in</b><code>samples, J, offset</code></div>
+            <div class="arrow">→</div>
+            <div><b>out</b><code>samples, extra_evals</code><i>same number of rows</i></div>
+          </div>
+          <div class="kv"><span class="k">Config</span><code>postprocess=…</code><span class="k">ideas</span>
+            <div class="tags"><span class="tag built">none</span><span class="tag">1-flip polish</span><span class="tag">fold twins</span><span class="tag">re-rank</span></div>
+          </div>
+          <div class="rule">Never drop rows, and count every cost you evaluate. See rule B.</div>
+        </article>
+
+        <article class="card sock-card tu">
+          <div class="sock-head"><h3><span class="num">·</span>The frame</h3><span class="chip tu">Tudor</span></div>
+          <div class="io">
+            <div><b>in</b>your plug-in notebook(s)</div>
+            <div class="arrow">→</div>
+            <div><b>out</b>one row per method<i><code>summarize(df)</code> · <code>plot(df)</code></i></div>
+          </div>
+          <div class="kv"><span class="k">gives</span><span class="small">puzzles of any size with known truth · exact optimum (up to 24 SNPs) · random / local / SA controls · ideal simulators up to 100 SNPs</span></div>
+          <div class="rule">Same seeds for every method, so each row is a like-for-like comparison.</div>
+        </article>
+      </div>
+    </section>
+
+    <section id="howto">
+      <div class="section-head">
+        <span class="eyebrow">3 · Write yours</span>
+        <h2>Three steps, one notebook</h2>
+        <p><code>bench/plugin_template.ipynb</code> has a working example of all five sockets, with the inputs and outputs explained above each cell. Copy it and delete what you don't need.</p>
+      </div>
+      <div class="steps">
+        <div class="card step">
+          <h3>Copy the template</h3>
+<pre class="term"><span class="c"># your own notebook: no merge conflicts</span>
+cd bench
+cp plugin_template.ipynb <span class="k">carla</span>.ipynb</pre>
+        </div>
+        <div class="card step">
+          <h3>Register under your name</h3>
+<pre class="term"><span class="c"># the first cell already loads the engine</span>
+@register(<span class="f">"qaoa"</span>, <span class="f">"carla_ws"</span>)
+<span class="k">def</span> warm_start_circuit(J, p=1):
+    ...
+    <span class="k">return</span> qc, theta, scale</pre>
+          <p class="small muted" style="margin:0">Prefix names with your name: a second <code>"ws"</code> would silently replace the first.</p>
+        </div>
+        <div class="card step">
+          <h3>Run it</h3>
+<pre class="term"><span class="k">if not</span> PLUGINS_ONLY:  <span class="c"># skip on merge day</span>
+    cfg = Config(qaoa=<span class="k">"carla_ws"</span>, ps=(1, 2))
+    rows = run_bench([<span class="f">"toy"</span>, 8, 10], 3, cfg)
+    display(summarize(pd.DataFrame(rows)))</pre>
+          <p class="small muted" style="margin:0">About 1–2 minutes on a laptop. Random guessing, local search and annealing race next to yours; the template's section 7 adds the baseline QAOA on the same puzzles.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="fair">
+      <div class="section-head">
+        <span class="eyebrow">4 · Fair play</span>
+        <h2>Four ways to win by accident</h2>
+        <p>Each one makes a method look better without it being better. The bench handles the bookkeeping if you follow these.</p>
+      </div>
+      <div class="fair">
+        <div class="card">
+          <h3><span class="ico">A</span>Training shots count</h3>
+          <p class="small muted" style="margin:0">A trainer that runs the circuit 30 times × 256 shots has used 7,680 shots before the real run starts. <code>tts99</code> includes them.</p>
+          <div class="bars" aria-label="Example: shots needed to be 99% sure of finding the optimum">
+            <div class="bar"><span>closed-form p=1</span><div class="track"><div class="seg samp" style="width:5.4%"></div></div><span class="v">560</span></div>
+            <div class="bar"><span>COBYLA p=1</span><div class="track"><div class="seg train" style="width:73.8%">train 7,680</div><div class="seg samp" style="width:5.4%"></div></div><span class="v">8,240</span></div>
+          </div>
+          <p class="small soft" style="margin:0">Illustrative numbers. Pink = training shots, blue = sampling.</p>
+        </div>
+
+        <div class="card">
+          <h3><span class="ico">B</span>One row per shot</h3>
+          <p class="small muted" style="margin:0">Success rate = optimal rows ÷ all rows. Dropping bad rows makes it look higher, even though no extra answers were found.</p>
+          <div class="bars" aria-label="Example: 2048 shots with 300 optimal. Keeping all rows gives 15 percent; dropping bad rows down to 400 gives 75 percent.">
+            <div class="bar"><span>keep 2,048 rows</span><div class="track"><div class="seg ok" style="width:15%"></div><div class="seg bad" style="width:85%">1,748 not optimal</div></div><span class="v yes">15%</span></div>
+            <div class="bar"><span>drop to 400 rows</span><div class="track"><div class="seg ok" style="width:75%">300 optimal</div><div class="seg bad" style="width:25%"></div></div><span class="v no">75% ✗</span></div>
+          </div>
+          <p class="small soft" style="margin:0">Fix a shot instead of dropping it, and return the costs you evaluated as <code>extra_evals</code>.</p>
+        </div>
+
+        <div class="card">
+          <h3><span class="ico">C</span>New evidence, new "best answer"</h3>
+          <p class="small muted" style="margin:0">Changing how votes are weighted changes which answer scores best. Finding <i>that</i> answer more often says nothing about finding the real haplotype.</p>
+          <div class="vs">
+            <div class="no"><b>✗ P_budget</b>"did we hit the best answer of <i>this</i> scoring?"</div>
+            <div class="yes"><b>✓ switch_err</b>"how many phase switches away from the hidden truth?"</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="ico">D</span>Same puzzles, same budget</h3>
+          <p class="small muted" style="margin:0">The bench gives every method the same seeds, puzzles and shot budget (2,048 by default), and always runs random guessing as the floor.</p>
+          <div class="vs">
+            <div class="yes"><b>✓ one <code>run_bench</code> call</b>all methods side by side in one table</div>
+            <div class="no"><b>✗ different settings</b>another <code>seed</code> or <code>gen</code> means other puzzles: numbers can't be compared</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="conventions">
+      <div class="section-head">
+        <span class="eyebrow">5 · Shared conventions</span>
+        <h2>Six things everyone agrees on</h2>
+        <p>All match the baseline notebook, so its code can move into a plug-in unchanged.</p>
+      </div>
+      <div class="conv">
+        <div class="card"><div class="what">bit order</div><div class="big">x[0] = SNP 1</div><p>Arrays and bitstrings list SNP 1 first.</p></div>
+        <div class="card"><div class="what">reads</div><div class="big">0 · 1 · −1</div><p>−1 means the read has no letter at that SNP.</p></div>
+        <div class="card"><div class="what">votes</div><div class="big">A, D (i &lt; j)</div><p>Same / opposite counts, upper triangle only.</p></div>
+        <div class="card"><div class="what">Ising</div><div class="big">J = (D − A) / 2</div><p>offset = sum(A + D) / 2, z = 1 − 2x.</p></div>
+        <div class="card"><div class="what">angles</div><div class="big">[γ₁…γₚ, β₁…βₚ]</div><p>All gammas first, then all betas.</p></div>
+        <div class="card"><div class="what">cost layer</div><div class="big">RZZ(2γ·J / scale)</div><p>No measurements in the circuit; the backend adds them.</p></div>
+      </div>
+    </section>
+
+    <section id="results">
+      <div class="section-head">
+        <span class="eyebrow">6 · What comes out</span>
+        <h2>One row per method, per puzzle, per depth</h2>
+        <p><code>run_bench</code> returns the rows; <code>pd.DataFrame(rows)</code> makes the table. These columns tell you which pieces made each row.</p>
+      </div>
+      <div class="cols">
+        <div class="card"><h3>Which puzzle</h3><div class="tags"><code class="tag">instance</code><code class="tag">n</code><code class="tag">seed</code><code class="tag">error</code><code class="tag">coverage</code></div></div>
+        <div class="card"><h3>Which pieces</h3><div class="tags"><code class="tag">method</code><code class="tag">evidence</code><code class="tag">builder</code><code class="tag">trainer</code><code class="tag">backend</code><code class="tag">postprocess</code></div></div>
+        <div class="card"><h3>What it cost</h3><div class="tags"><code class="tag">train_shots</code><code class="tag">evals</code><code class="tag">wall_s</code><code class="tag">mem_mb</code></div></div>
+        <div class="card"><h3>If it broke</h3><div class="tags"><code class="tag">fail</code></div><p class="small muted" style="margin:6px 0 0">The error is recorded and the run moves on.</p></div>
+      </div>
+      <div class="metrics">
+        <div class="card metric"><div class="name">P_budget</div><span class="good">higher is better</span><p>Chance of seeing the best answer at least once within the shot budget.</p></div>
+        <div class="card metric"><div class="name">tts99</div><span class="good">lower is better</span><p>Shots needed to be 99% sure of seeing it, <b>including training</b>.</p></div>
+        <div class="card metric"><div class="name">switch_err</div><span class="good">lower is better</span><p>Phase switches between the best answer found and the hidden truth.</p></div>
+      </div>
+    </section>
+
+    <section id="grid">
+      <div class="section-head">
+        <span class="eyebrow">7 · The comparison</span>
+        <h2>Change one thing, then everything</h2>
+        <p>Each row is one <code>run_bench</code> call. Filled dots are swapped sockets; empty ones stay baseline. One change per row tells us what each piece is worth on its own.</p>
+      </div>
+      <div class="card scroll-x">
+        <table class="abl">
+          <thead>
+            <tr><th>Run</th><th>1 evidence</th><th>2 circuit</th><th>3 trainer</th><th>4 backend</th><th>5 post-process</th><th>Main score</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Baseline</td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td>reference line for every plot</td></tr>
+            <tr><td><span class="chip ax">Alexandra</span></td><td class="ax"><span class="dot on"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td>switch_err</td></tr>
+            <tr><td><span class="chip ca">Carla</span></td><td><span class="dot"></span></td><td class="ca"><span class="dot on"></span></td><td class="ca"><span class="dot on"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td>tts99 vs depth p</td></tr>
+            <tr><td><span class="chip al">Alex</span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td class="al"><span class="dot on"></span></td><td class="al"><span class="dot on"></span></td><td>P_budget, noisy vs ideal</td></tr>
+            <tr class="all"><td>All together</td><td class="ax"><span class="dot on"></span></td><td class="ca"><span class="dot on"></span></td><td class="ca"><span class="dot on"></span></td><td class="al"><span class="dot on"></span></td><td class="al"><span class="dot on"></span></td><td>does it add up?</td></tr>
+          </tbody>
+        </table>
+      </div>
+<pre class="term" style="margin-top:12px"><span class="c"># "All together" = bench/all_together.ipynb: load every notebook, pick one name per socket</span>
+QGD_QUIET = PLUGINS_ONLY = True   <span class="c"># skip the engine checks and everyone's own races</span>
+%run qgd_bench.ipynb
+%run alexandra.ipynb
+%run carla.ipynb
+%run alex.ipynb
+
+cfg = Config(ps=(1, 2, 3), evidence=<span class="k">"alexandra_weighted"</span>, qaoa=<span class="k">"carla_ws"</span>,
+             trainer=<span class="k">"carla_cvar"</span>, backend=<span class="k">"alex_fake"</span>, postprocess=<span class="k">"alex_polish"</span>)
+df = pd.DataFrame(run_bench([<span class="f">"toy"</span>, 8, 10, 12, 14, 16], 5, cfg))</pre>
+      <p class="small soft">Plug-in names here are placeholders; use whatever you register. Each notebook loads the engine again, and the engine keeps every plug-in registered so far.</p>
+    </section>
+
+    <section id="merge">
+      <div class="section-head">
+        <span class="eyebrow">8 · Merge day</span>
+        <h2>From four notebooks to one result</h2>
+      </div>
+      <ol class="timeline">
+        <li><span class="when">each of us</span><b>Own branch, own notebook</b><code>user/&lt;name&gt;</code> touches only <code>bench/&lt;name&gt;.ipynb</code>.</li>
+        <li><span class="when">each of us</span><b>Smoke test</b><code>run_bench(["toy", 8, 10], 1, cfg)</code> runs in seconds without a <code>fail</code> column.</li>
+        <li><span class="when">together</span><b>Merge to main</b>Separate notebooks, so no conflicts. <code>qgd_bench.ipynb</code> opened on its own still passes its 8 checks.</li>
+        <li><span class="when">Tudor</span><b>Run the grid</b>The 5 rows above, same seeds. Big N on Kaggle with the plug-in notebooks bundled in.</li>
+        <li><span class="when">together</span><b>One plot per question</b>Each owner reads their row against the baseline and writes the conclusion or limitation.</li>
+      </ol>
+      <div class="next">
+        <a class="btn primary" href="paths.html">← Back to page 1: paths map</a>
+        <a class="btn" href="classical-vs-quantum.html">Page 2: classical vs quantum</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    Based on <code>bench/qgd_bench.ipynb</code> (the engine) and <code>bench/plugin_template.ipynb</code>. Every <code>Config</code> field is explained in the engine, section 8.1.
+  </footer>
+</body>
+</html>

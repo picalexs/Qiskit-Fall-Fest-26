@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tudor's methods and team handoffs</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--cp-bg); color: var(--cp-text); font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.5; }
+    main { width: min(1080px, calc(100% - 32px)); margin: 32px auto 48px; }
+    a { color: var(--cp-link); }
+    nav { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; font-size: .9rem; }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.12; margin: 8px 0 12px; }
+    h2 { font-size: 1.4rem; margin: 28px 0 12px; }
+    h3 { font-size: 1.15rem; margin: 8px 0; }
+    p { margin: 8px 0; }
+    .muted, .note { color: var(--cp-text-muted); }
+    .note, .where { font-size: .85rem; }
+    code, .where { font-family: Consolas, "Courier New", Courier, monospace; overflow-wrap: anywhere; }
+    .eyebrow { color: var(--cp-accent); font-weight: 700; font-size: .85rem; }
+    .card, .handoff, details { padding: 20px; border: 1px solid var(--cp-border); border-radius: 16px; background: var(--cp-surface); box-shadow: 0 0 2px var(--cp-border), 0 1px 2px var(--cp-border); }
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .tag { display: inline-block; padding: 3px 8px; border: 1px solid var(--cp-border-strong); border-radius: .625rem; font-size: .78rem; font-weight: 650; }
+    .tag.in { color: var(--cp-accent); border-color: var(--cp-accent); background: var(--cp-accent-soft); }
+    .tag.out { color: var(--cp-link); border-color: var(--cp-link); background: var(--cp-surface-soft); }
+    .tag.keep { color: var(--cp-success); border-color: var(--cp-success); }
+    .tag.optional { color: var(--cp-text-muted); border-style: dashed; }
+    .io { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 4px 12px; font-size: .9rem; margin: 12px 0; }
+    .io b { color: var(--cp-text-muted); font-size: .8rem; }
+    .where { border-top: 1px solid var(--cp-border); padding-top: 12px; margin-top: 12px; color: var(--cp-text-soft); }
+    .pipeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+    .step { padding: 12px; border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-surface); }
+    .step strong { display: block; margin: 4px 0; }
+    .step small { color: var(--cp-text-muted); }
+    .handoff { margin-top: 16px; border-left: 4px solid var(--cp-accent); }
+    .handoff p { margin: 0; }
+    summary { cursor: pointer; font-weight: 700; }
+    .optional-list { display: grid; gap: 12px; padding-top: 16px; }
+    .optional-list p { margin: 4px 0 0; }
+    @media (max-width: 760px) { .pipeline { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 580px) { .cards { grid-template-columns: minmax(0, 1fr); } .card { padding: 16px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <nav aria-label="Research pages">
+      <a href="team-results.html">Merged team results</a>
+      <a href="classical-vs-quantum.html">Detailed explanation</a>
+      <a href="paths.html">Team roles</a>
+      <a href="merge-plan.html">Plug-in contracts</a>
+    </nav>
+    <header>
+      <span class="eyebrow">Tudor only · focused hackathon scope</span>
+      <h1>My methods &amp; where they connect</h1>
+      <p class="muted">My job: provide shared test puzzles, a classical reference and an honest comparison of the team's quantum results.</p>
+      <div class="tags" aria-label="Tag legend">
+        <span class="tag keep">KEEP = main merged notebook</span>
+        <span class="tag in">IN = receive teammate work</span>
+        <span class="tag out">OUT = my work is used by others</span>
+        <span class="tag optional">OPTIONAL = supporting research</span>
+      </div>
+      <p class="note">The small local integration now runs in <code>bench/all_together.ipynb</code> through <code>shared_adapters.ipynb</code>. IN/OUT tags describe data handoffs, not unfinished assignments. Selected pairwise objectives, pruning and QAOA variants are bridged; real-QPU execution and standalone mitigation remain separate next steps.</p>
+    </header>
+
+    <section aria-labelledby="pipeline-title">
+      <h2 id="pipeline-title">The shared path</h2>
+      <div class="pipeline" aria-label="Puzzles to evidence to quantum circuit to samples to comparison">
+        <div class="step"><small>1 · Tudor</small><strong>Shared puzzles</strong><small>same reads and seeds</small></div>
+        <div class="step"><small>2 · Alexandra</small><strong>Evidence → J</strong><small>selected weighting / pruning</small></div>
+        <div class="step"><small>3 · Carla</small><strong>Circuit + angles</strong><small>selected QAOA method</small></div>
+        <div class="step"><small>4 · Alex</small><strong>Execution</strong><small>layout, QPU, optional polishing</small></div>
+        <div class="step"><small>5 · Tudor</small><strong>Compare</strong><small>classical vs quantum results</small></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="methods-title">
+      <h2 id="methods-title">Methods to keep</h2>
+      <div class="cards">
+        <article class="card">
+          <span class="tag keep">KEEP · 1</span>
+          <h3>Shared test puzzles</h3>
+          <p>Reproduce the supplied toy, then use a few fixed larger puzzles. Hidden truth is for grading only.</p>
+          <div class="io"><b>IN</b><span>Size, seed and read-error settings.</span><b>OUT</b><span>Identical reads for every method; truth kept out of solver inputs.</span></div>
+          <div class="tags"><span class="tag out">OUT → Alexandra: test reads</span><span class="tag out">OUT → Carla / Alex: shared instances</span></div>
+          <div class="where">make_instance · engine §2 · experiments §1–3</div>
+        </article>
+        <article class="card">
+          <span class="tag keep">KEEP · 2</span>
+          <h3>Common cost adapter</h3>
+          <p>Convert same/opposite read votes into J and offset. Classical and quantum methods use the same selected objective.</p>
+          <div class="io"><b>IN</b><span>Reads → Alexandra's pairwise-compatible A, D votes.</span><b>OUT</b><span>J and offset for scoring and circuit construction.</span></div>
+          <div class="tags"><span class="tag in">IN ← Alexandra: evidence plug-in</span><span class="tag out">OUT → Carla: circuit couplings</span><span class="tag out">OUT → shared evaluator: cost</span></div>
+          <div class="where">ising · costs · Config(evidence=…) · engine §3</div>
+        </article>
+        <article class="card">
+          <span class="tag keep">KEEP · 3</span>
+          <h3>Exact small-puzzle reference</h3>
+          <p>Enumerate all answers at the selected small sizes. This tells us the true best cost and all tied optima.</p>
+          <div class="io"><b>IN</b><span>The selected J and offset.</span><b>OUT</b><span>Exact optimum used to grade every candidate.</span></div>
+          <div class="tags"><span class="tag in">IN ← Alexandra: objective choice</span><span class="tag out">OUT → all teammates: reference score</span></div>
+          <div class="where">diag_energies · engine §4.1</div>
+        </article>
+        <article class="card">
+          <span class="tag keep">KEEP · 4</span>
+          <h3>Classical local search</h3>
+          <p>Build a greedy answer, improve it by flipping bits, and restart when stuck. This is the main classical opponent.</p>
+          <div class="io"><b>IN</b><span>J, offset, seed and cost-evaluation budget.</span><b>OUT</b><span>Answers, success across runs and classical runtime.</span></div>
+          <div class="tags"><span class="tag in">IN ← Alexandra: same selected cost</span><span class="tag out">OUT → team results: classical benchmark</span></div>
+          <div class="where">greedy_local_search · engine §5.2</div>
+        </article>
+        <article class="card">
+          <span class="tag keep">KEEP · 5</span>
+          <h3>Ideal quantum reference</h3>
+          <p>Simulate the selected small circuit locally before hardware execution. Establish what it should do without device noise.</p>
+          <div class="io"><b>IN</b><span>Carla's circuit and trained angles.</span><b>OUT</b><span>Ideal samples / probabilities for comparison with Alex's hardware run.</span></div>
+          <div class="tags"><span class="tag in">IN ← Carla: circuit + angles</span><span class="tag out">OUT → Alex: ideal comparison</span></div>
+          <div class="where">qaoa_state / aer_sv · engine §6.2, §6.6</div>
+        </article>
+        <article class="card">
+          <span class="tag keep">KEEP · 6</span>
+          <h3>Grade measured answers</h3>
+          <p>Score best cost, optimal-sample rate and switch errors when truth is known. Keep raw and polished results separate.</p>
+          <div class="io"><b>IN</b><span>Alex's decoded samples, one row per shot in SNP order; optional polished samples.</span><b>OUT</b><span>Comparable answer-quality metrics with shots and extra classical work recorded.</span></div>
+          <div class="tags"><span class="tag in">IN ← Alex: samples + shot count</span><span class="tag in">IN ← Alex: optional post-processing</span><span class="tag out">OUT → all teammates: evaluation</span></div>
+          <div class="where">costs · switch_errors · engine §7–8</div>
+        </article>
+        <article class="card">
+          <span class="tag keep">KEEP · 7</span>
+          <h3>Run and summarize comparisons</h3>
+          <p>Run baseline and selected variants on shared puzzles. Show individual changes before the combined result.</p>
+          <div class="io"><b>IN</b><span>Teammate definitions loaded by shared adapters; named plug-ins remain an extension path in the engine.</span><b>OUT</b><span>One results table and a few comparison plots for the merged notebook.</span></div>
+          <div class="tags"><span class="tag in">IN ← Alexandra / Carla / Alex: plug-ins</span><span class="tag out">OUT → merged notebook: runner + results</span></div>
+          <div class="where">all_together.ipynb · shared_adapters.ipynb · engine §8</div>
+        </article>
+        <aside class="card">
+          <span class="tag keep">KEEP · comparison rules</span>
+          <h3>Two checks before merging</h3>
+          <p><b>Different objectives?</b> Recompute each optimum and grade both methods on a common reference metric. Their own cost numbers are not interchangeable.</p>
+          <p><b>Different execution?</b> Compare ideal and hardware results with the same reads, circuit and frozen angles. Record QPU shots and CPU runtime separately.</p>
+          <p class="note">One QPU shot is not the same amount of time as one classical cost check.</p>
+        </aside>
+      </div>
+      <div class="handoff">
+        <p><b>Interface boundary:</b> the current evidence slot returns A, D for a pairwise Ising cost. A full-read MEC objective or a whole recursive-QAOA solver is not automatically a drop-in replacement; agree on the interface before integrating it.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="optional-title">
+      <h2 id="optional-title">Optional methods · candidates to remove later</h2>
+      <p class="muted"><b>Nothing is cut yet.</b> These methods stay in the notebooks and are listed here for the scope decision. “Optional” means the focused QPU demo does not depend on them.</p>
+      <div class="cards">
+        <article class="card">
+          <span class="tag optional">OPTIONAL · existing training helper</span>
+          <h3>Depth-1 formula training</h3>
+          <p>Calculate standard QAOA's expected cost directly; solve for β and search γ without simulating the full state.</p>
+          <div class="tags"><span class="tag out">OUT → Carla: reference / starting angles</span></div>
+          <p class="note"><b>Why optional:</b> the evaluator can accept Carla's trained angles. Cheap enough to keep, but only fits the standard depth-1 circuit.</p>
+          <div class="where">train_p1 · engine §6.3</div>
+        </article>
+        <article class="card">
+          <span class="tag optional">OPTIONAL · training study</span>
+          <h3>Angle transfer</h3>
+          <p>Train on small puzzles and reuse representative angles on larger puzzles from the same family.</p>
+          <div class="tags"><span class="tag in">IN ← Carla: coordinate selected training</span><span class="tag out">OUT → Carla: transferred-angle reference</span></div>
+          <p class="note"><b>Why optional:</b> a separate training investigation is not needed to compare the final selected methods.</p>
+          <div class="where">train_transfer · engine §6.4 · experiments §4</div>
+        </article>
+        <article class="card">
+          <span class="tag optional">CANDIDATE TO REMOVE · main demo only</span>
+          <h3>Large-circuit MPS simulation</h3>
+          <p>Use a compact classical representation to simulate shallow, locally connected QAOA beyond statevector sizes.</p>
+          <div class="tags"><span class="tag in">IN ← Carla: circuit + angles</span><span class="tag out">OUT → team: ideal scaling reference</span></div>
+          <p class="note"><b>Why optional:</b> 100-qubit runs, memory sweeps and swap tuning are not needed for small-circuit QPU comparisons. New variants may not remain easy for MPS.</p>
+          <div class="where">aer_mps · engine §6.6 · experiments §6, §8</div>
+        </article>
+        <article class="card">
+          <span class="tag optional">CANDIDATE TO REMOVE · main demo only</span>
+          <h3>Band dynamic programming</h3>
+          <p>Find the exact optimum for large short-read puzzles by retaining only a small moving window of SNPs.</p>
+          <div class="tags"><span class="tag in">IN ← Alexandra: pairwise J</span><span class="tag out">OUT → evaluator: large-instance optimum</span></div>
+          <p class="note"><b>Why optional:</b> enumeration already provides the optimum for the small shared puzzles. Keep the finding that short-read instances can be classically easy.</p>
+          <div class="where">banded_exact · engine §4.2 · experiments §7</div>
+        </article>
+        <article class="card">
+          <span class="tag optional">CANDIDATE TO REMOVE · main demo only</span>
+          <h3>Full Kaggle scaling sweeps</h3>
+          <p>Repeat the race across many sizes and seeds, then plot median performance as puzzles grow.</p>
+          <div class="tags"><span class="tag in">IN ← all teammates: selected plug-ins for new runs</span><span class="tag out">OUT → team: scaling plots</span></div>
+          <p class="note"><b>Why optional:</b> a few fixed shared sizes suffice for the focused demo. Recorded sweeps remain supporting evidence; they used the existing baseline methods.</p>
+          <div class="where">run_bench · experiments §9 · BIG toggle</div>
+        </article>
+        <article class="card">
+          <span class="tag optional">SHORTEN · reference method</span>
+          <h3>Random guessing</h3>
+          <p>Sample uniformly random bit strings. Shows why finding an optimum on the five-SNP toy is not impressive.</p>
+          <div class="tags"><span class="tag out">OUT → team comparison: simplest control</span></div>
+          <p class="note"><b>Why optional:</b> a short probability calculation can replace a full experimental series; retain the toy explanation.</p>
+          <div class="where">run_instance: random · experiments §2</div>
+        </article>
+        <article class="card">
+          <span class="tag optional">CANDIDATE TO REMOVE · second classical opponent</span>
+          <h3>Simulated annealing</h3>
+          <p>Propose bit flips, sometimes accepting worse answers early; gradually become more selective.</p>
+          <div class="tags"><span class="tag in">IN ← Alexandra: same selected cost</span><span class="tag out">OUT → team results: extra classical benchmark</span></div>
+          <p class="note"><b>Why optional:</b> local search is already the main classical opponent. Keep annealing if it materially changes the conclusion.</p>
+          <div class="where">simulated_annealing · engine §5.1</div>
+        </article>
+        <article class="card">
+          <span class="tag optional">CANDIDATE TO REMOVE · detailed extrapolation</span>
+          <h3>TTS99 analysis</h3>
+          <p>Estimate how many attempts would give a 99% chance of seeing an optimum, using an estimated success rate.</p>
+          <div class="tags"><span class="tag in">IN ← Alex: sampled outcomes / shot accounting</span><span class="tag out">OUT → team: secondary effort estimate</span></div>
+          <p class="note"><b>Why optional:</b> limited hardware samples make extrapolations uncertain. Prioritize observed success and answer quality; TTS99 in tries is not hardware time.</p>
+          <div class="where">tts99 · tts99_runs · engine §7 · experiments §5, §9</div>
+        </article>
+      </div>
+    </section>
+    <footer>
+      <p class="note">Implementation: <code>bench/qgd_bench.ipynb</code> · experiments: <code>bench/tudor_classical_vs_quantum.ipynb</code> · teammate interfaces: <code>bench/plugin_template.ipynb</code>.</p>
+    </footer>
+  </main>
+</body>
+</html>

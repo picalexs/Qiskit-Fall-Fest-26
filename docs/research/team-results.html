@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quantum Genome Detective · merged team results</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--cp-bg); color: var(--cp-text); font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.5; }
+    main { width: min(1080px, calc(100% - 32px)); margin: 32px auto 48px; }
+    a { color: var(--cp-link); }
+    nav { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; font-size: .9rem; }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.12; margin: 12px 0; }
+    h2 { margin: 32px 0 12px; font-size: 1.5rem; }
+    h3 { margin: 0 0 8px; font-size: 1.1rem; }
+    p { margin: 8px 0; }
+    code { font-family: Consolas, "Courier New", Courier, monospace; overflow-wrap: anywhere; }
+    .muted, .small { color: var(--cp-text-muted); }
+    .small { font-size: .86rem; }
+    .card, .notice { border: 1px solid var(--cp-border); border-radius: 16px; background: var(--cp-surface); padding: 20px; box-shadow: 0 0 2px var(--cp-border), 0 1px 2px var(--cp-border); }
+    .notice { border-left: 4px solid var(--cp-warning); margin: 16px 0; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag { border: 1px solid var(--cp-border); border-radius: .625rem; padding: 3px 8px; font-size: .78rem; font-weight: 700; background: var(--cp-surface-soft); }
+    .tag.done { border-color: var(--cp-success); color: var(--cp-success); }
+    .tag.pending { border-color: var(--cp-warning); }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .pipeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+    .step { padding: 12px; border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-surface); }
+    .step b { display: block; margin: 4px 0; }
+    .step small { color: var(--cp-text-muted); }
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    button { font: inherit; cursor: pointer; border: 1px solid var(--cp-border-strong); border-radius: .625rem; padding: 8px 12px; background: var(--cp-surface); color: var(--cp-text); }
+    button[aria-pressed="true"] { background: var(--cp-accent); color: var(--cp-accent-fg); border-color: var(--cp-accent); }
+    button:focus-visible { outline: 3px solid var(--cp-link); outline-offset: 3px; }
+    .bar-row { display: grid; grid-template-columns: 112px minmax(0, 1fr) 62px; gap: 12px; align-items: center; margin: 16px 0; font-size: .9rem; }
+    .track { height: 24px; border-radius: .625rem; overflow: hidden; background: var(--cp-surface-soft); border: 1px solid var(--cp-border); }
+    .bar { height: 100%; background: var(--cp-accent); }
+    .bar-value { text-align: right; font-variant-numeric: tabular-nums; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid var(--cp-border); }
+    th { background: var(--cp-surface-soft); }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .big { font-size: 2rem; font-weight: 750; color: var(--cp-accent); }
+    details { margin-top: 16px; }
+    summary { cursor: pointer; font-weight: 700; }
+    footer { margin-top: 32px; border-top: 1px solid var(--cp-border); padding-top: 16px; }
+    @media (max-width: 760px) { .pipeline { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 580px) { .grid { grid-template-columns: minmax(0, 1fr); } .bar-row { grid-template-columns: 90px minmax(0, 1fr) 58px; gap: 8px; } .card { padding: 16px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <nav aria-label="Team research">
+      <a href="../../bench/all_together.ipynb">Run the merged notebook</a>
+      <a href="tudor-methods.html">Tudor's methods &amp; handoffs</a>
+      <a href="paths.html">Team research paths</a>
+      <a href="classical-vs-quantum.html">Scaling research</a>
+      <a href="merge-plan.html">Plug-in reference</a>
+    </nav>
+    <header>
+      <div class="tags"><span class="tag done">Merged + locally validated</span><span class="tag">Ideal / noisy simulation</span><span class="tag pending">Real QPU: not run</span></div>
+      <h1>Four tracks. One shared experiment.</h1>
+      <p class="muted">A small integration check from <code>bench/all_together.ipynb</code>, saved at notebook commit <code>bc5c060</code>. This page shows that run, not the earlier large scaling sweeps.</p>
+      <div class="notice"><b>What it establishes:</b> the pieces run together and use common scores. <b>What it does not establish:</b> a best overall method, quantum advantage, or real-device performance.</div>
+    </header>
+
+    <section aria-labelledby="flow-title">
+      <h2 id="flow-title">Who contributes what</h2>
+      <div class="pipeline" aria-label="Shared reads, evidence, circuit, execution and evaluation">
+        <div class="step"><small>Tudor</small><b>Shared reads</b><small>5 SNPs · 9 reads</small></div>
+        <div class="step"><small>Alexandra + Carla</small><b>Evidence + pruning</b><small>baseline votes → forest</small></div>
+        <div class="step"><small>Carla</small><b>QAOA variants</b><small>standard / warm / multi-angle</small></div>
+        <div class="step"><small>Alex</small><b>Frozen execution</b><small>ideal vs fake-device noise</small></div>
+        <div class="step"><small>Tudor + Alexandra</small><b>Common scoring</b><small>full pairwise cost + MEC</small></div>
+      </div>
+      <p class="small">The shared adapter loads existing definitions without rerunning every standalone study. The main experiment fits locally, freezes angles, then samples each circuit.</p>
+    </section>
+
+    <section aria-labelledby="setup-title">
+      <h2 id="setup-title">The exact setup</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Pruning is selected, not automatically “better”</h3>
+          <div class="big">9 → 4 links</div>
+          <p>Baseline pairwise evidence, then Carla's maximum-spanning-forest rule. The graph stays connected.</p>
+          <p class="small">On this toy, every pruned minimizer is still a full-model minimizer. That is checked, not guaranteed for other inputs. The native pruned optimum is 0; the full pairwise and MEC optima are both 1.</p>
+        </div>
+        <div class="card">
+          <h3>Small, fixed replay</h3>
+          <p><b>Depth:</b> p = 1. <b>Sampling:</b> 512 shots per quantum method per mode.</p>
+          <p><b>Training:</b> local statevector COBYLA, one start, at most 60 evaluations. Warm start comes from a classical candidate, not a revealed optimum.</p>
+          <p class="small"><b>Noisy mode:</b> FakeManilaV2 snapshot + Aer, compilation seed 7 and sampling seed 72. No readout mitigation, no live calibration, no QPU job.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="success-title">
+      <h2 id="success-title">How often did a shot reach the full-model optimum?</h2>
+      <div class="card">
+        <div class="controls" aria-label="Choose simulation mode">
+          <button type="button" data-mode="ideal" aria-pressed="true">Ideal simulation</button>
+          <button type="button" data-mode="noisy" aria-pressed="false">Noisy simulation · not QPU</button>
+        </div>
+        <div id="bars" aria-live="polite">
+          <div class="bar-row"><span>Standard</span><div class="track"><div class="bar" style="width:5.6640625%"></div></div><span class="bar-value">5.66%</span></div>
+          <div class="bar-row"><span>Warm-start</span><div class="track"><div class="bar" style="width:57.6171875%"></div></div><span class="bar-value">57.62%</span></div>
+          <div class="bar-row"><span>Multi-angle</span><div class="track"><div class="bar" style="width:46.6796875%"></div></div><span class="bar-value">46.68%</span></div>
+        </div>
+        <p class="small" id="mode-note">Observed ideal samples: 29 / 512 standard, 295 / 512 warm-start, 239 / 512 multi-angle.</p>
+      </div>
+      <div class="notice"><b>Classical reference:</b> local search returned a full-optimal answer in all 16 restarts. Restarts and quantum shots are different units; this is not a matched time or total-work comparison.</div>
+      <p class="small">Warm-start has the highest quantum observed success in this run. Standard's small noisy increase is not evidence that noise helps: there is only one sampled run per mode. Multi-angle hit its training limit.</p>
+    </section>
+
+    <section aria-labelledby="cost-title">
+      <h2 id="cost-title">Answer quality and compiled resources</h2>
+      <div class="card table-wrap">
+        <table>
+          <caption class="small">Mean costs: lower is better. Quantum results are 512 shots each.</caption>
+          <thead><tr><th scope="col">Method</th><th scope="col">Mode</th><th scope="col" class="num">Full mean cost</th><th scope="col" class="num">MEC mean</th><th scope="col" class="num">2-qubit gates</th><th scope="col" class="num">Depth</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Local search</th><td>Classical · 16 restarts</td><td class="num">1.0000</td><td class="num">1.0000</td><td class="num">—</td><td class="num">—</td></tr>
+            <tr><th scope="row">Standard</th><td>Ideal</td><td class="num">11.3867</td><td class="num">5.8555</td><td class="num">4</td><td class="num">7</td></tr>
+            <tr><th scope="row">Standard</th><td>Noisy simulator</td><td class="num">11.4785</td><td class="num">5.9277</td><td class="num">11</td><td class="num">29</td></tr>
+            <tr><th scope="row">Warm-start</th><td>Ideal</td><td class="num">5.0488</td><td class="num">2.8887</td><td class="num">4</td><td class="num">9</td></tr>
+            <tr><th scope="row">Warm-start</th><td>Noisy simulator</td><td class="num">6.7793</td><td class="num">3.7402</td><td class="num">11</td><td class="num">30</td></tr>
+            <tr><th scope="row">Multi-angle</th><td>Ideal</td><td class="num">5.5938</td><td class="num">3.2734</td><td class="num">4</td><td class="num">7</td></tr>
+            <tr><th scope="row">Multi-angle</th><td>Noisy simulator</td><td class="num">7.2129</td><td class="num">4.0371</td><td class="num">11</td><td class="num">29</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small">All answers are rescored on the same full, unpruned references. Optimizing the smaller pruned cost is not the same as optimizing the full cost. Ideal circuits use RZZ gates directly; hardware compilation decomposes and routes them, so gate counts across modes use different native gates.</p>
+    </section>
+
+    <section aria-labelledby="objective-title">
+      <h2 id="objective-title">Objective choices and training status</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Alexandra's five scoring rules</h3>
+          <p>Baseline pairwise, per-read weighting, per-site weighting, deduplication and full-read MEC.</p>
+          <p><b>On this toy:</b> all five select the same two optimum labels, <code>01101</code> and <code>10010</code>.</p>
+          <p class="small">This does not rank them on harder data. The integration includes a separate counterexample where weighting changes the optimum. MEC is a common evaluation metric here, not the RZZ Hamiltonian.</p>
+        </div>
+        <div class="card table-wrap">
+          <h3>Carla's local fits</h3>
+          <table>
+            <thead><tr><th scope="col">Method</th><th scope="col" class="num">Angles</th><th scope="col" class="num">Evaluations</th><th scope="col">Status</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Standard</th><td class="num">2</td><td class="num">34</td><td>Converged locally</td></tr>
+              <tr><th scope="row">Warm-start</th><td class="num">2</td><td class="num">33</td><td>Converged locally</td></tr>
+              <tr><th scope="row">Multi-angle</th><td class="num">9</td><td class="num">60</td><td>Iteration limit</td></tr>
+            </tbody>
+          </table>
+          <p class="small">Convergence does not mean a global optimum. Multi-angle's larger parameter count needs more training investigation before drawing a ranking.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="status-title">
+      <h2 id="status-title">What is ready, what comes next</h2>
+      <div class="grid">
+        <div class="card">
+          <span class="tag done">Ready locally</span>
+          <p>All four tracks preserved; shared objective/pruning adapters; standard, warm-start and multi-angle replay; full-reference scoring; small ideal/noisy comparison.</p>
+          <p class="small">Checks cover baseline labels, bit order, fractional weights, objective disagreement, parameter binding and fully pruned graphs.</p>
+        </div>
+        <div class="card">
+          <span class="tag pending">Next · not done</span>
+          <p>Select evidence and circuits using controlled comparisons, check more seeds and unpruned controls, then add real-QPU submission/retrieval with frozen angles.</p>
+          <p class="small">Alex's standalone mitigation studies are retained but are not applied in this combined run. Larger hardware cases, real-device results and recursive QAOA are not validated here.</p>
+        </div>
+      </div>
+      <details class="card">
+        <summary>Notebook links and reproducibility</summary>
+        <p><a href="../../bench/all_together.ipynb">Combined experiment</a> · <a href="../../bench/shared_adapters.ipynb">Shared adapters</a> · <a href="../Alexandra_Objective_Variants.ipynb">Objective study</a> · <a href="../Quantum_Genome_Detective_Lab.ipynb">Pruning / QAOA variants</a> · <a href="../hardware_experiments/README.md">Hardware studies</a>.</p>
+        <p class="small">Saved local environment includes Qiskit 2.5.0, Aer 0.17.2 and IBM Runtime 0.51.0. Values above are the saved integration run, not live measurements. Rerunning with another environment or seed can change sampled outcomes.</p>
+      </details>
+    </section>
+    <footer class="small">Quantum Genome Detective · notebook-first team integration · no quantum-advantage or clinical claim.</footer>
+  </main>
+  <script>
+    const successCounts = { ideal: [29, 295, 239], noisy: [33, 226, 185] };
+    const names = ["standard", "warm-start", "multi-angle"];
+    const rows = [...document.querySelectorAll("#bars .bar-row")];
+    for (const button of document.querySelectorAll("[data-mode]")) {
+      button.addEventListener("click", () => {
+        const mode = button.dataset.mode;
+        const counts = successCounts[mode];
+        for (const other of document.querySelectorAll("[data-mode]")) {
+          other.setAttribute("aria-pressed", String(other === button));
+        }
+        rows.forEach((row, index) => {
+          const percent = counts[index] / 512 * 100;
+          row.querySelector(".bar").style.width = `${percent}%`;
+          row.querySelector(".bar-value").textContent = `${percent.toFixed(2)}%`;
+        });
+        document.getElementById("mode-note").textContent =
+          `Observed ${mode === "ideal" ? "ideal" : "noisy simulator (not QPU)"} samples: ` +
+          counts.map((count, index) => `${count} / 512 ${names[index]}`).join(", ") + ".";
+      });
+    }
+  </script>
+</body>
+</html>

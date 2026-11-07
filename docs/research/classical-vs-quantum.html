@@ -1,0 +1,1870 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Quantum Genome Detective: a fair race between QAOA and classical solvers as the number of SNPs grows.">
+  <title>2 · Classical vs quantum — Quantum Genome Detective</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--cp-bg);
+      color: var(--cp-text);
+      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+    }
+    a { color: var(--cp-link); }
+    code, .mono { font-family: Consolas, "Courier New", Courier, monospace; font-size: .92em; }
+    .wrap { width: min(1100px, calc(100% - 36px)); margin: 0 auto; }
+    .topbar { position: sticky; top: 0; z-index: 5; border-bottom: 1px solid var(--cp-border); background: var(--cp-overlay); backdrop-filter: blur(8px); }
+    .topbar-inner { min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .brand { font-size: .92rem; font-weight: 750; }
+    .pages { display: flex; gap: 6px; flex-wrap: wrap; }
+    .pages a { text-decoration: none; font-size: .85rem; padding: 5px 10px; border-radius: .625rem; border: 1px solid var(--cp-border); color: var(--cp-text-muted); background: var(--cp-surface); }
+    .pages a[aria-current="page"] { color: var(--cp-accent-fg); background: var(--cp-accent); border-color: var(--cp-accent); font-weight: 700; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px; border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-surface); color: var(--cp-text-muted); font-size: .8rem; font-weight: 700; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin: 14px 0; font-size: clamp(2.2rem, 5.5vw, 4rem); line-height: 1.05; letter-spacing: -.04em; }
+    h2 { margin: 10px 0 8px; font-size: clamp(1.6rem, 3.3vw, 2.3rem); line-height: 1.15; letter-spacing: -.025em; }
+    h3 { margin-bottom: 6px; font-size: 1.1rem; }
+    .lead { color: var(--cp-text-muted); font-size: 1.15rem; max-width: 640px; }
+    section { padding: 40px 0 8px; }
+    .section-head p { color: var(--cp-text-muted); max-width: 760px; }
+    .card { background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: 16px; box-shadow: 0 0 2px var(--cp-border), 0 1px 2px var(--cp-border); padding: 20px; }
+    .muted { color: var(--cp-text-muted); }
+    .small { font-size: .86rem; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    svg text { font-family: "Segoe UI", Aptos, Calibri, sans-serif; }
+    .tu { --pc: var(--cp-link); }
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border-radius: 999px; font-size: .78rem; font-weight: 700; border: 1px solid var(--pc, var(--cp-border-strong)); color: var(--cp-text); background: color-mix(in srgb, var(--pc, var(--cp-border)) 14%, var(--cp-surface)); white-space: nowrap; }
+    .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--pc, var(--cp-text-soft)); }
+    .chip.plain::before { display: none; }
+
+    /* hero */
+    .hero { padding: 54px 0 20px; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(300px, .95fr); gap: 34px; align-items: center; }
+    .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .stat { border-top: 5px solid var(--sc, var(--cp-link)); }
+    .stat .big { font-size: 2.1rem; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; }
+    .stat .lbl { color: var(--cp-text-muted); font-size: .84rem; line-height: 1.35; margin-top: 4px; }
+
+    /* method colours (shared by charts, legends and cards) */
+    .m-random { --mc: var(--cp-text-soft); --pc: var(--cp-text-soft); }
+    .m-brute { --mc: var(--cp-success); --pc: var(--cp-success); }
+    .m-local { --mc: var(--cp-link); --pc: var(--cp-link); }
+    .m-sa { --mc: var(--cp-warning); --pc: var(--cp-warning); }
+    .m-qaoa-p1 { --mc: color-mix(in srgb, var(--cp-accent) 38%, var(--cp-surface)); --pc: var(--mc); }
+    .m-qaoa-p2 { --mc: color-mix(in srgb, var(--cp-accent) 68%, var(--cp-surface)); --pc: var(--mc); }
+    .m-qaoa-p3 { --mc: var(--cp-accent); --pc: var(--cp-accent); }
+    .m-dp { --mc: var(--cp-success); --pc: var(--cp-success); }
+    .m-bad { --mc: var(--cp-danger); --pc: var(--cp-danger); }
+
+    /* charts */
+    .panel { border: 1px solid var(--cp-border); border-radius: .625rem; padding: 14px; background: var(--cp-surface-soft); }
+    .panel h3 { font-size: 1rem; margin-bottom: 2px; }
+    .panel .sub { font-size: .8rem; color: var(--cp-text-muted); margin-bottom: 8px; }
+    .panel .cap { font-size: .82rem; color: var(--cp-text-muted); margin: 8px 0 0; }
+    .legend { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 4px; }
+    .chart svg, .viz svg { width: 100%; height: auto; display: block; }
+    .chart .grid { stroke: var(--cp-border); stroke-width: 1; }
+    .chart .base, .chart .tick { stroke: var(--cp-border-strong); stroke-width: 1; }
+    .chart text { fill: var(--cp-text-muted); font-size: 11px; }
+    .chart .lab { fill: var(--cp-text-soft); font-size: 11.5px; font-weight: 600; }
+    .series path { fill: none; stroke: var(--mc); stroke-width: 2.6; stroke-linejoin: round; stroke-linecap: round; }
+    .series path.dash { stroke-dasharray: 6 5; }
+    .series circle { fill: var(--mc); stroke: var(--cp-surface-soft); stroke-width: 1.5; }
+    .ref line { stroke: var(--cp-text-soft); stroke-width: 1.2; stroke-dasharray: 3 4; }
+    .ref text { fill: var(--cp-text-soft); font-size: 11px; font-weight: 700; }
+    .bar rect { fill: var(--mc); }
+    .bar text.v { fill: var(--cp-text); font-size: 11.5px; font-weight: 700; }
+    .shade { fill: var(--cp-accent-soft); }
+    .swipe { display: none; font-size: .75rem; color: var(--cp-text-soft); margin-top: 4px; }
+
+    /* static illustrations */
+    .s-text { fill: var(--cp-text); font-size: 12px; font-weight: 700; }
+    .s-muted { fill: var(--cp-text-muted); font-size: 11.5px; }
+    .s-big { fill: var(--cp-text); font-size: 15px; font-weight: 800; }
+    .a0 { fill: color-mix(in srgb, var(--cp-link) 22%, var(--cp-surface)); stroke: var(--cp-link); }
+    .a1 { fill: color-mix(in srgb, var(--cp-accent) 22%, var(--cp-surface)); stroke: var(--cp-accent); }
+    .aerr { fill: color-mix(in srgb, var(--cp-danger) 30%, var(--cp-surface)); stroke: var(--cp-danger); stroke-width: 2.4; }
+    .amiss { fill: var(--cp-surface); stroke: var(--cp-border-strong); stroke-dasharray: 3 3; }
+    .bit { fill: var(--cp-text); font-size: 13px; font-weight: 800; text-anchor: middle; }
+    .read-outline { fill: none; stroke: var(--cp-text-soft); stroke-width: 1.4; }
+    .wrong { fill: none; stroke: var(--cp-danger); stroke-width: 2.6; }
+    .switch-mark { fill: var(--cp-accent); }
+    .cell-on { fill: var(--cp-accent); }
+    .cell-diag { fill: var(--cp-border-strong); }
+    .cell-off { fill: var(--cp-surface); stroke: var(--cp-border); }
+    .snp { fill: var(--cp-surface); stroke: var(--cp-text-soft); stroke-width: 1.5; }
+    .arc { fill: none; stroke: var(--cp-accent); stroke-width: 1.4; opacity: .55; }
+    .win { fill: color-mix(in srgb, var(--cp-success) 16%, transparent); stroke: var(--cp-success); stroke-width: 2; }
+    .done { fill: color-mix(in srgb, var(--cp-success) 45%, var(--cp-surface)); stroke: var(--cp-success); stroke-width: 1.5; }
+    .arrow { stroke: var(--cp-success); stroke-width: 2.4; fill: none; }
+    .arrowhead { fill: var(--cp-success); }
+
+    /* cards */
+    .contest { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .who { border-top: 5px solid var(--mc); display: grid; gap: 4px; align-content: start; }
+    .who .icon { font-size: 1.5rem; line-height: 1; }
+    .who b { font-size: 1rem; }
+    .who .what { color: var(--cp-text-muted); font-size: .86rem; line-height: 1.4; }
+    .who .cost { font-size: .78rem; font-weight: 700; color: var(--cp-text-soft); }
+    .rules { margin-top: 14px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .rule { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; align-items: start; padding: 14px; border-radius: .625rem; border: 1px solid var(--cp-border); background: var(--cp-surface); font-size: .88rem; }
+    .rule .n { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--cp-link); color: var(--cp-accent-fg); font-weight: 800; }
+    html[data-theme="dark"] .rule .n { color: var(--cp-surface); }
+    .knobs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .formula { font-family: Consolas, "Courier New", Courier, monospace; font-size: .9rem; padding: 10px 12px; border-radius: .625rem; background: var(--cp-surface-soft); border: 1px solid var(--cp-border); overflow-x: auto; white-space: nowrap; }
+    .ticks { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; font-size: .9rem; }
+    .ticks li { padding-left: 24px; position: relative; }
+    .ticks li::before { content: "✓"; position: absolute; left: 0; color: var(--cp-success); font-weight: 800; }
+    .banner { display: flex; gap: 12px; align-items: center; padding: 12px 16px; border-radius: .625rem; border: 1px solid var(--cp-success); background: color-mix(in srgb, var(--cp-success) 10%, var(--cp-surface)); font-size: .9rem; margin-bottom: 14px; }
+    .banner b { white-space: nowrap; }
+    .claims { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .claim { border-top: 6px solid var(--pc); display: grid; gap: 8px; align-content: start; }
+    .claim .verdict { font-size: .74rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--pc); }
+    .claim h3 { margin: 0; font-size: 1.08rem; line-height: 1.3; }
+    .claim p { margin: 0; color: var(--cp-text-muted); font-size: .88rem; }
+    .ok { --pc: var(--cp-success); }
+    .meh { --pc: var(--cp-warning); }
+    .limit { --pc: var(--cp-danger); }
+    .not { border-left: 5px solid var(--cp-warning); margin-top: 14px; }
+    .not ul { margin: 6px 0 0; padding-left: 20px; color: var(--cp-text-muted); font-size: .9rem; }
+    .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .metric .k { font-family: Consolas, "Courier New", Courier, monospace; font-weight: 700; color: var(--cp-link); font-size: .9rem; }
+    .metric p { margin: 4px 0 0; font-size: .86rem; color: var(--cp-text-muted); }
+    .metric .q { font-weight: 700; font-size: .95rem; color: var(--cp-text); }
+    pre { margin: 0; padding: 14px 16px; border-radius: .625rem; background: var(--cp-surface-soft); border: 1px solid var(--cp-border); overflow-x: auto; font-family: Consolas, "Courier New", Courier, monospace; font-size: .84rem; line-height: 1.55; }
+    pre .c { color: var(--cp-text-soft); }
+    .next { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: .625rem; text-decoration: none; font-weight: 700; border: 1px solid var(--cp-border); background: var(--cp-surface); color: var(--cp-text); }
+    .btn.primary { background: var(--cp-accent); border-color: var(--cp-accent); color: var(--cp-accent-fg); }
+    footer { margin-top: 48px; padding: 22px 0 40px; border-top: 1px solid var(--cp-border); color: var(--cp-text-soft); font-size: .85rem; }
+
+    @media (max-width: 900px) {
+      .hero, .grid-2, .claims { grid-template-columns: minmax(0, 1fr); }
+      .contest, .rules, .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 560px) {
+      .stats, .contest, .rules, .grid-3, .metrics { grid-template-columns: minmax(0, 1fr); }
+      .card { padding: 16px; }
+      .banner { flex-direction: column; align-items: flex-start; }
+      .scroll-x { overflow-x: auto; }
+      .scroll-x svg.wide { min-width: 470px; }
+      .scroll-x svg.xwide { min-width: 720px; }
+      .swipe { display: block; }
+    }
+
+    /* ---------- v2: deep-dive page ---------- */
+    .still *, .still *::before, .still *::after { transition: none !important; animation: none !important; }
+    .step-n { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 999px; background: var(--cp-accent); color: var(--cp-accent-fg); font-weight: 800; font-size: .8rem; }
+    .section-head .eyebrow { margin-bottom: 4px; }
+    .why-box { border-left: 5px solid var(--cp-accent); background: var(--cp-accent-soft); border-radius: .625rem; padding: 12px 16px; margin: 0 0 16px; font-size: .95rem; max-width: 860px; }
+    .why-box b { color: var(--cp-text); }
+
+    /* glossary */
+    .gloss { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .gloss .term { padding: 12px 14px; border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-surface); font-size: .86rem; line-height: 1.45; }
+    .gloss .term > b:first-child { display: block; font-size: .95rem; margin-bottom: 2px; }
+    .gloss .term .ex { display: block; margin-top: 4px; color: var(--cp-text-soft); font-size: .8rem; }
+
+    /* map */
+    .map { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; counter-reset: tile; }
+    .tile { display: grid; gap: 4px; align-content: start; padding: 12px 14px; border-radius: .625rem; border: 1px solid var(--cp-border); background: var(--cp-surface); text-decoration: none; color: var(--cp-text); transition: border-color .15s, transform .15s; }
+    .tile:hover, .tile:focus-visible { border-color: var(--cp-accent); transform: translateY(-2px); }
+    .tile .top { display: flex; align-items: center; gap: 8px; font-weight: 800; }
+    .tile .q { color: var(--cp-text-muted); font-size: .84rem; line-height: 1.4; }
+    .tile .nb { font-size: .74rem; color: var(--cp-text-soft); font-family: Consolas, "Courier New", Courier, monospace; }
+    .map-arrow { grid-column: 1 / -1; text-align: center; color: var(--cp-text-soft); font-size: .8rem; margin: -2px 0; }
+
+    /* facts strip: what / adds / where / limit */
+    .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0 0 16px; }
+    .facts .f { border: 1px solid var(--cp-border); border-top: 4px solid var(--fc); border-radius: .625rem; background: var(--cp-surface); padding: 9px 12px; font-size: .85rem; line-height: 1.45; }
+    .facts .f .k { display: block; font-size: .7rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--fc); margin-bottom: 2px; }
+    .f-what { --fc: var(--cp-link); }
+    .f-adds { --fc: var(--cp-success); }
+    .f-where { --fc: var(--cp-text-soft); }
+    .f-limit { --fc: var(--cp-warning); }
+    .f-where code { font-size: .82rem; }
+
+    /* deep-dive details */
+    details.deep { margin-top: 12px; border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-surface); }
+    details.deep > summary { cursor: pointer; padding: 10px 14px; font-weight: 700; font-size: .92rem; list-style: none; display: flex; gap: 8px; align-items: center; }
+    details.deep > summary::-webkit-details-marker { display: none; }
+    details.deep > summary::before { content: "▸"; color: var(--cp-accent); transition: transform .15s; }
+    details.deep[open] > summary::before { transform: rotate(90deg); }
+    details.deep .body { padding: 0 16px 14px; font-size: .9rem; color: var(--cp-text-muted); }
+    details.deep .body b, details.deep .body strong { color: var(--cp-text); }
+    details.deep .body ul, details.deep .body ol { margin: 6px 0; padding-left: 20px; }
+
+    /* tables */
+    table.t { width: 100%; border-collapse: collapse; font-size: .87rem; }
+    table.t th, table.t td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--cp-border); vertical-align: top; }
+    table.t th { font-size: .74rem; letter-spacing: .05em; text-transform: uppercase; color: var(--cp-text-soft); }
+    table.t td.num, table.t th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    table.t tr.hl td { background: var(--cp-accent-soft); font-weight: 700; }
+    .tbl { overflow-x: auto; }
+
+    /* animation player */
+    .player { border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-surface-soft); padding: 14px; }
+    .player h3 { font-size: 1rem; margin-bottom: 2px; }
+    .player .sub { font-size: .8rem; color: var(--cp-text-muted); margin-bottom: 8px; }
+    .player .viz svg { max-width: 820px; margin-inline: auto; }
+    #a-gen .viz svg { max-width: 600px; }
+    .pcap { min-height: 3.2em; margin: 10px 0 0; padding: 9px 12px; border-radius: .625rem; background: var(--cp-surface); border: 1px solid var(--cp-border); font-size: .9rem; line-height: 1.5; }
+    .pcap b { color: var(--cp-text); }
+    .ctl { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+    .ctl button, .seg button, .presets button, .swbtns button { font: inherit; font-size: .84rem; padding: 5px 10px; border-radius: .625rem; border: 1px solid var(--cp-border); background: var(--cp-surface); color: var(--cp-text); cursor: pointer; }
+    .ctl button:hover, .seg button:hover, .presets button:hover, .swbtns button:hover { border-color: var(--cp-accent); }
+    .ctl button:focus-visible, .seg button:focus-visible, .presets button:focus-visible, .swbtns button:focus-visible, .ctl input:focus-visible { outline: 2px solid var(--cp-accent); outline-offset: 2px; }
+    .ctl .play { background: var(--cp-accent); border-color: var(--cp-accent); color: var(--cp-accent-fg); font-weight: 700; min-width: 84px; }
+    .ctl input[type="range"] { flex: 1 1 140px; accent-color: var(--cp-accent); }
+    .ctl .prog { font-size: .78rem; color: var(--cp-text-soft); font-variant-numeric: tabular-nums; min-width: 78px; text-align: right; }
+    .seg { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+    .seg button[aria-pressed="true"], .presets button[aria-pressed="true"] { background: var(--cp-accent); border-color: var(--cp-accent); color: var(--cp-accent-fg); font-weight: 700; }
+    .presets, .swbtns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .readout { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+    .readout div { padding: 8px 10px; border-radius: .625rem; border: 1px solid var(--cp-border); background: var(--cp-surface); font-size: .8rem; color: var(--cp-text-muted); }
+    .readout b { display: block; font-size: 1.15rem; color: var(--cp-text); }
+
+    /* animation shapes */
+    .cur { fill: none; stroke: var(--cp-accent); stroke-width: 2.6; }
+    .src { fill: none; stroke: var(--cp-accent); stroke-width: 2; stroke-dasharray: 4 3; }
+    .ghost { opacity: .25; }
+    .jneg { fill: var(--cp-link); }
+    .jpos { fill: var(--cp-accent); }
+    .jzero { fill: var(--cp-surface); stroke: var(--cp-border-strong); stroke-dasharray: 2 2; }
+    .newcell { stroke: var(--cp-text); stroke-width: 2; }
+    .mcell { fill: var(--cp-surface); stroke: var(--cp-border); }
+    .arcneg { fill: none; stroke: var(--cp-link); }
+    .arcpos { fill: none; stroke: var(--cp-accent); }
+    .vbox rect { fill: var(--cp-surface); stroke: var(--cp-border-strong); }
+    .vbox.best rect { fill: color-mix(in srgb, var(--cp-success) 22%, var(--cp-surface)); stroke: var(--cp-success); stroke-width: 2; }
+    .vbox text { fill: var(--cp-text); font-size: 11px; text-anchor: middle; }
+    .vbox .st { font-family: Consolas, "Courier New", Courier, monospace; font-weight: 700; }
+    .prop-ok { fill: none; stroke: var(--cp-success); stroke-width: 3; }
+    .prop-up { fill: none; stroke: var(--cp-warning); stroke-width: 3; }
+    .prop-rej { fill: none; stroke: var(--cp-danger); stroke-width: 3; stroke-dasharray: 4 3; }
+    .pathline { fill: none; stroke: var(--mc, var(--cp-link)); stroke-width: 2; }
+    .tline { fill: none; stroke: var(--cp-text-soft); stroke-width: 1.5; stroke-dasharray: 5 4; }
+    .optline { stroke: var(--cp-success); stroke-width: 1.5; stroke-dasharray: 4 4; }
+    .dot { fill: var(--cp-accent); stroke: var(--cp-surface); stroke-width: 1.5; }
+    .qbar { fill: color-mix(in srgb, var(--cp-text-soft) 55%, var(--cp-surface)); transform-box: fill-box; transform-origin: bottom; transition: transform .6s ease; }
+    .qbar.opt { fill: var(--cp-accent); }
+    .uni { stroke: var(--cp-text-soft); stroke-width: 1.2; stroke-dasharray: 4 4; }
+    .heat { fill: var(--cp-accent); }
+    .scan { stroke: var(--cp-text); stroke-width: 1.5; }
+    .star { fill: var(--cp-warning); stroke: var(--cp-text); stroke-width: 1; }
+    .gate { fill: var(--cp-surface); stroke: var(--cp-border-strong); stroke-width: 1.4; }
+    .gate-c { fill: var(--cp-accent-soft); stroke: var(--cp-accent); stroke-width: 1.4; }
+    .gate-m { fill: color-mix(in srgb, var(--cp-link) 14%, var(--cp-surface)); stroke: var(--cp-link); stroke-width: 1.4; }
+    .wire { stroke: var(--cp-border-strong); stroke-width: 1.4; }
+    .zz { stroke: var(--cp-accent); stroke-width: 2; }
+    .zzdot { fill: var(--cp-accent); }
+    .membar-sv { fill: var(--cp-danger); }
+    .membar-mps { fill: var(--cp-success); }
+    .swbox { cursor: pointer; }
+    .swbox:focus-visible rect { stroke: var(--cp-text); stroke-width: 2.5; }
+    .sw-count { fill: var(--cp-accent); }
+    .sw-skip { stroke: var(--cp-text-soft); stroke-width: 2; stroke-dasharray: 3 3; }
+    .sw-hit { stroke: var(--cp-accent); stroke-width: 4; }
+    .gapmark { fill: color-mix(in srgb, var(--cp-warning) 25%, transparent); stroke: var(--cp-warning); stroke-dasharray: 3 3; }
+
+    /* flow + notebooks */
+    .flow { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; counter-reset: fl; }
+    .flow div { position: relative; padding: 10px 12px; border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-surface); font-size: .84rem; line-height: 1.4; }
+    .flow div::before { counter-increment: fl; content: counter(fl); display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--cp-link); color: var(--cp-accent-fg); font-weight: 800; font-size: .75rem; margin-bottom: 4px; }
+    html[data-theme="dark"] .flow div::before { color: var(--cp-surface); }
+    .flow b { display: block; }
+    .nbs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .nb { border-top: 5px solid var(--pc, var(--cp-link)); display: grid; gap: 6px; align-content: start; }
+    .nb .file { font-family: Consolas, "Courier New", Courier, monospace; font-weight: 700; font-size: .9rem; }
+    .nb p { margin: 0; font-size: .87rem; color: var(--cp-text-muted); }
+    .kpi { font-variant-numeric: tabular-nums; }
+    .scope-note { margin: 12px 0; padding: 12px 16px; border: 1px solid var(--cp-border); border-left: 4px solid var(--cp-warning); border-radius: .625rem; background: var(--cp-surface); font-size: .9rem; }
+    .scope-note.keep { border-left-color: var(--cp-success); }
+    .scope-label { display: inline-block; margin-bottom: 6px; padding: 2px 8px; border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-surface-soft); color: var(--cp-text-muted); font-size: .75rem; font-weight: 700; }
+
+    @media (max-width: 900px) {
+      .gloss, .map, .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .nbs { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .gloss, .map, .facts, .readout { grid-template-columns: minmax(0, 1fr); }
+      .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .ctl .prog { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <div class="brand">🧬 Quantum Genome Detective · research</div>
+      <nav class="pages" aria-label="Research pages">
+        <a href="paths.html">1 · Paths map</a>
+        <a href="classical-vs-quantum.html" aria-current="page">2 · Classical vs quantum</a>
+        <a href="merge-plan.html">3 · Merge plan</a>
+        <a href="../CHALLENGE_EXPLAINED.html">Explainer</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="card" style="margin-top:20px"><b>Supporting scaling research.</b> These earlier ideal-simulator sweeps are separate from the merged five-SNP experiment. See <a href="team-results.html">the current integrated team results</a> for the actual shared configuration and its limits.</div>
+    <div class="hero">
+      <div>
+        <span class="eyebrow tu"><span class="chip">Tudor</span> Page 2 of 3 · classical vs quantum, scaling, simulators</span>
+        <h1>Is QAOA really better? A fair race, explained piece by piece.</h1>
+        <p class="lead">My track answers one question: <b>when the puzzle grows, does QAOA beat classical methods?</b> This page walks through every part I built, in the order the data flows, with an animation for each idea.</p>
+        <p class="small muted">Tip: every animation has ▶ Play, step buttons and a slider. Add <code>?still</code> to the address to see the final frames only.</p>
+        <p class="small"><a href="tudor-methods.html">Short version: my methods and teammate handoffs →</a></p>
+      </div>
+      <div class="stats" aria-label="Headline numbers">
+        <div class="card stat" style="--sc: var(--cp-accent)"><div class="big">3.9×</div><div class="lbl">fewer tries than local search at 32 SNPs (QAOA p=3, ideal simulator, median of 5 puzzles, training included)</div></div>
+        <div class="card stat" style="--sc: var(--cp-link)"><div class="big">0</div><div class="lbl">shots spent on training: a formula for p=1, reused angles for p=2, 3</div></div>
+        <div class="card stat" style="--sc: var(--cp-success)"><div class="big">2.2 s</div><div class="lbl">to simulate 100-SNP QAOA (p=3, 2048 shots) on a laptop with a matrix product state</div></div>
+        <div class="card stat" style="--sc: var(--cp-warning)"><div class="big">0.15 s</div><div class="lbl">for the exact best answer of a 2000-SNP puzzle (band dynamic programming)</div></div>
+      </div>
+    </div>
+
+    <section id="hackathon-scope" aria-labelledby="scope-title">
+      <div class="section-head">
+        <span class="eyebrow">Tudor only · merge / QPU scope</span>
+        <h2 id="scope-title">What to keep, and what is not necessary</h2>
+        <p>These are scope recommendations for <b>my track only</b>, not cuts to teammates' work. Everything below remains available; optional research does not need to run in the main merged notebook.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <span class="scope-label">KEEP · core contribution</span>
+          <h3>Evaluate the merged method</h3>
+          <p>Baseline reproduction, a few shared puzzles, the <a href="#referee">small-instance exact optimum</a>, <a href="#a-local">local search</a>, a small ideal simulator, and consistent decoding and metrics.</p>
+          <p class="small muted" style="margin-bottom:0">Report best cost, observed optimal-sample rate and switch errors when truth is known. Record QPU shots and classical runtime separately.</p>
+        </div>
+        <div class="card">
+          <span class="scope-label">SHORTEN · useful reference</span>
+          <h3>Keep the idea, not a full study</h3>
+          <p><a href="#why">Random guessing</a>: a short reference explains why the toy is easy. The p = 1 formula can stay as an existing helper. Detailed engine walkthroughs need not appear in the presentation.</p>
+          <p class="small muted" style="margin-bottom:0">The evaluator should accept Carla's selected circuit and angles rather than require my training approach.</p>
+        </div>
+        <div class="card">
+          <span class="scope-label">NOT NECESSARY · main merge / QPU demo</span>
+          <h3>Keep as supporting research</h3>
+          <p><a href="#a-dp">Large-scale DP</a>, <a href="#a-sa">annealing</a>, <a href="#angle-transfer">angle-transfer studies</a>, <a href="#mps-scope">large MPS and simulator tuning</a>, <a href="#a-tts">TTS99 extrapolations</a>, and <a href="#scaling-scope">full Kaggle scaling grids</a>.</p>
+          <p class="small muted" style="margin-bottom:0">Optional means not required for the focused demo, not incorrect or useless. No code or results have been removed.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="glossary">
+      <div class="section-head">
+        <span class="eyebrow">Legend · read this once</span>
+        <h2>Eight words used everywhere below</h2>
+        <p>Biology words come from the <a href="../CHALLENGE_EXPLAINED.html">challenge explainer</a>. Here they are in one line each.</p>
+      </div>
+      <div class="gloss">
+        <div class="term"><b>SNP</b>A DNA position where people differ. Each SNP has two possible letters, written <code>0</code> and <code>1</code>.<span class="ex">“20 SNPs” = a puzzle with 20 positions.</span></div>
+        <div class="term"><b>Read</b>A short piece of DNA from the sequencer. It covers 2–4 neighbouring SNPs and comes from one copy, but we are not told which.<span class="ex">May hold a wrong letter or a missing one (–).</span></div>
+        <div class="term"><b>Copy A / copy B</b>The two chromosome copies (haplotypes). At every SNP, B has the opposite letter of A.<span class="ex">A = 0110 → B = 1001.</span></div>
+        <div class="term"><b>Answer x</b>Our guess for copy A: one bit per SNP. x and its mirror 1 − x mean the same split. Best answers come in pairs; ties or unlinked blocks can give more than two.<span class="ex">0110 and 1001 are the same answer.</span></div>
+        <div class="term"><b>Cost</b>How many read votes the answer disagrees with. Lower is better. The lowest possible cost is the <b>optimum</b>.<span class="ex">cost 0 = every read agrees.</span></div>
+        <div class="term"><b>J and offset</b>The cost written as numbers on SNP pairs: cost = offset + Σ J<sub>ij</sub> z<sub>i</sub> z<sub>j</sub>, with z = +1 for letter 0 and −1 for letter 1.<span class="ex">offset = the notebook's c₀.</span></div>
+        <div class="term"><b>Try / shot</b>One attempt that produces one answer. For QAOA, one shot = run the circuit once and measure.<span class="ex">Everyone gets the same budget: 2048 tries.</span></div>
+        <div class="term"><b>Depth p</b>How many times QAOA repeats its two layers (cost, then mixer). Each layer pair has 2 angles: γ and β.<span class="ex">p = 3 → 6 angles.</span></div>
+      </div>
+    </section>
+
+    <section id="why">
+      <div class="section-head">
+        <span class="eyebrow">The question</span>
+        <h2>At 5 SNPs, random guessing already wins</h2>
+        <p>The notebook's puzzle has 2<sup>5</sup> = 32 possible answers, and QAOA gets 2048 shots. Even blind guessing hits the best answer. To learn anything, the puzzle must be <b>bigger than the budget</b>, so I built everything needed to grow it to 100 SNPs.</p>
+      </div>
+      <div class="grid-2">
+        <div class="panel">
+          <h3>Chance that 2048 random guesses hit the best answer</h3>
+          <div class="sub">line = formula 1 − (1 − 2/2<sup>N</sup>)<sup>2048</sup>, assuming exactly two optima · dots = race estimates using each puzzle's optima</div>
+          <div class="chart" id="ch-random"></div>
+          <p class="cap">Up to about 12 SNPs, “found the optimum” proves nothing. From 16 SNPs on, a method must <b>concentrate</b> its tries on good answers.</p>
+        </div>
+        <div class="panel">
+          <h3>Possible answers vs the budget</h3>
+          <div class="sub">every extra SNP doubles the number of answers</div>
+          <div class="chart" id="ch-space"></div>
+          <p class="cap">2<sup>N</sup> answers. This illustration assumes two optima (an answer and its mirror); ties can add more. The budget stays 2048.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="map">
+      <div class="section-head">
+        <span class="eyebrow">Map · the whole track</span>
+        <h2>Eight pieces, one pipeline</h2>
+        <p>Each tile is one section below and one part of the engine notebook. Data flows left to right, top to bottom.</p>
+      </div>
+      <div class="map">
+        <a class="tile" href="#puzzles"><span class="top"><span class="step-n">1</span>Puzzles</span><span class="q">Where do test puzzles of any size come from?</span><span class="nb">engine 2.2</span></a>
+        <a class="tile" href="#cost"><span class="top"><span class="step-n">2</span>Cost</span><span class="q">How do reads become J and offset?</span><span class="nb">engine 3</span></a>
+        <a class="tile" href="#referee"><span class="top"><span class="step-n">3</span>Referee</span><span class="q">What is the true best cost, even at 2000 SNPs?</span><span class="nb">engine 4</span></a>
+        <a class="tile" href="#classical"><span class="top"><span class="step-n">4</span>Classical</span><span class="q">Who does QAOA race against?</span><span class="nb">engine 5</span></a>
+        <a class="tile" href="#qaoa"><span class="top"><span class="step-n">5</span>QAOA</span><span class="q">How do we choose angles without spending shots?</span><span class="nb">engine 6.1–6.5</span></a>
+        <a class="tile" href="#sims"><span class="top"><span class="step-n">6</span>Simulators</span><span class="q">How do 100 qubits fit on a laptop?</span><span class="nb">engine 6.2, 6.6</span></a>
+        <a class="tile" href="#grading"><span class="top"><span class="step-n">7</span>Grading</span><span class="q">How do we score a method fairly?</span><span class="nb">engine 7</span></a>
+        <a class="tile" href="#race"><span class="top"><span class="step-n">8</span>Race</span><span class="q">Who wins at each size, and by how much?</span><span class="nb">engine 8 · experiments 5, 8, 9</span></a>
+      </div>
+      <div class="grid-2" style="margin-top:16px">
+        <div class="card">
+          <h3>What my track adds to the baseline notebook</h3>
+          <ul class="ticks">
+            <li>Puzzles of any size with a known hidden answer (the notebook has one 5-SNP puzzle).</li>
+            <li>An exact referee: brute force to 24 SNPs, band dynamic programming beyond.</li>
+            <li>Two classical opponents held to the same 2048-try budget.</li>
+            <li>Zero-shot QAOA training: a formula for p = 1, reused angles for p = 2, 3.</li>
+            <li>Simulators that reach 100 qubits.</li>
+            <li>Fair grading: training and post-processing count as tries; switch errors vs the truth.</li>
+            <li>Sockets, so Carla's, Alex's and Alexandra's parts plug into the same race.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>How each section is laid out</h3>
+          <div class="facts" style="grid-template-columns:1fr 1fr;margin:8px 0 0">
+            <div class="f f-what"><span class="k">What</span>the piece in one sentence</div>
+            <div class="f f-adds"><span class="k">Adds</span>why the race needs it</div>
+            <div class="f f-where"><span class="k">Where</span>the notebook part and the check that tests it</div>
+            <div class="f f-limit"><span class="k">Limit</span>what it does not do</div>
+          </div>
+          <p class="small muted" style="margin:10px 0 0">Then an animation, and a “Every detail” box with the exact rules from the code.</p>
+        </div>
+      </div>
+    </section>
+    <section id="puzzles">
+      <div class="section-head">
+        <span class="eyebrow"><span class="step-n">1</span> Puzzles</span>
+        <h2>Fake reads from a hidden answer we know</h2>
+      </div>
+      <div class="why-box"><b>Why I needed this:</b> the notebook has one 5-SNP teaching puzzle with a revealed pair of copies. To measure scaling, the race needs many puzzles of every size, each with a hidden answer kept only for grading.</div>
+      <div class="facts">
+        <div class="f f-what"><span class="k">What</span><code>make_instance(n, …)</code> picks a hidden copy A, then samples reads from A and its mirror B, like a sequencer.</div>
+        <div class="f f-adds"><span class="k">Adds</span>Puzzles from 8 to 2000 SNPs, each with the truth stored for grading only. Solvers never see it.</div>
+        <div class="f f-where"><span class="k">Where</span>engine 2.2 · experiments part 3 · seed k = puzzle k</div>
+        <div class="f f-limit"><span class="k">Limit</span>Reads are short (2–4 SNPs), so links stay local. Real long reads would look different.</div>
+      </div>
+      <div class="player" id="a-gen">
+        <h3>Watch a 10-SNP puzzle being made</h3>
+        <div class="sub">real output of <code>make_instance</code> (seed 18) · blue = letter 0 · rose = letter 1 · red = sequencing error · dashed = letter not read</div>
+        <div class="viz"><svg viewBox="0 0 500 404" role="img" aria-label="Animation: a hidden pair of copies with 10 SNPs, and eight reads copied from them one by one. One letter is wrong and two are missing. At the end the copies are hidden."></svg></div>
+        <p class="pcap" aria-live="polite"></p>
+        <div class="ctl"></div>
+      </div>
+      <div class="knobs" aria-label="Generator settings">
+        <span class="chip plain">N SNPs: 8 → 2000</span>
+        <span class="chip plain">coverage: each SNP read ≈ 6 times</span>
+        <span class="chip plain">read length: 2–4 SNPs</span>
+        <span class="chip plain">errors: 5% (realistic) or 0</span>
+        <span class="chip plain">missing: 10% (realistic) or 0</span>
+        <span class="chip plain">gaps: optional unlinked blocks</span>
+        <span class="chip plain">size “toy” = the notebook's exact 5-SNP reads</span>
+      </div>
+      <details class="deep">
+        <summary>Every detail: the six steps of make_instance</summary>
+        <div class="body">
+          <ol>
+            <li><b>Hidden answer.</b> <code>truth</code> = N random letters (copy A). Copy B = <code>1 − truth</code>.</li>
+            <li><b>How many reads.</b> Enough to see each SNP about <code>coverage</code> times: ⌈coverage · N / average read length⌉. The demo above uses coverage 2.4, so 8 reads; the race uses 6.</li>
+            <li><b>Each read.</b> A random start, a random length in <code>read_len</code>, a random copy (A or B). Copy its letters.</li>
+            <li><b>Mistakes.</b> Each letter flips with probability <code>error</code> and is hidden (−1) with probability <code>missing</code>.</li>
+            <li><b>Gaps.</b> Optional cut points no read crosses. The blocks on each side can flip independently, and nobody can phase them. Grading skips those boundaries (section 7).</li>
+            <li><b>Repair.</b> If two neighbouring SNPs inside a block share no read, add a 2-SNP read for them, so every block stays connected.</li>
+          </ol>
+          <p>Puzzle k of every size uses seed k, so every method sees exactly the same puzzles and reruns give identical numbers.</p>
+        </div>
+      </details>
+    </section>
+
+    <section id="cost">
+      <div class="section-head">
+        <span class="eyebrow"><span class="step-n">2</span> Cost</span>
+        <h2>Reads vote on pairs; votes become J and offset</h2>
+      </div>
+      <div class="why-box"><b>Why it matters:</b> every method, classical or quantum, minimises the same cost. I reuse the notebook's exact formulas, so a puzzle of any size gives the same kind of J and offset the baseline QAOA uses.</div>
+      <div class="facts">
+        <div class="f f-what"><span class="k">What</span><code>pairwise_evidence</code> counts votes A (same) and D (different); <code>ising</code> turns them into J = (D − A)/2 and offset = Σ(A + D)/2.</div>
+        <div class="f f-adds"><span class="k">Adds</span>The same objective as the notebook, at any size, and fast (one matrix product instead of loops).</div>
+        <div class="f f-where"><span class="k">Where</span>engine 3.1–3.2 · check 9.1 (toy numbers match the notebook)</div>
+        <div class="f f-limit"><span class="k">Limit</span>Votes from one read are not independent. Alexandra's track tests better evidence.</div>
+      </div>
+      <div class="grid-2">
+        <div class="player" id="a-votes" style="grid-column:1 / -1">
+          <h3>Watch the 8 reads vote</h3>
+          <div class="sub">left: the current read and its pair votes · right: the J matrix filling in (blue = J &lt; 0, “keep same”; rose = J &gt; 0, “keep different”; stronger colour = more votes)</div>
+          <div class="viz"><svg viewBox="0 0 600 340" role="img" aria-label="Animation: each read compares every pair of its letters. Equal letters vote same, different letters vote different. The votes fill a 10 by 10 matrix J near the diagonal."></svg></div>
+          <p class="pcap" aria-live="polite"></p>
+          <div class="ctl"></div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:14px">
+        <div class="card">
+          <h3>What one pair contributes to the cost</h3>
+          <div class="tbl"><table class="t">
+            <thead><tr><th>Your answer puts SNPs i, j…</th><th>z<sub>i</sub>z<sub>j</sub></th><th>Cost added</th></tr></thead>
+            <tbody>
+              <tr><td>on the same letter (00 or 11)</td><td class="num">+1</td><td>D<sub>ij</sub>: every “different” vote is unhappy</td></tr>
+              <tr><td>on different letters (01 or 10)</td><td class="num">−1</td><td>A<sub>ij</sub>: every “same” vote is unhappy</td></tr>
+            </tbody>
+          </table></div>
+          <p class="small muted" style="margin:10px 0 0">Both rows equal (A + D)/2 + (D − A)/2 · z<sub>i</sub>z<sub>j</sub>. Summing over pairs gives <b>cost = offset + Σ J<sub>ij</sub> z<sub>i</sub> z<sub>j</sub></b>.</p>
+        </div>
+        <div class="card">
+          <h3>Reading J at a glance</h3>
+          <ul class="ticks">
+            <li><b>J &lt; 0</b> (more “same” votes): the cost drops when the two SNPs get the same letter.</li>
+            <li><b>J &gt; 0</b> (more “different” votes): the cost drops when they differ.</li>
+            <li><b>J = 0</b>: no read covers both, or the votes cancel.</li>
+            <li><b>offset</b> = cost of an average random answer; the notebook calls it c₀ (12.5 on the toy).</li>
+          </ul>
+        </div>
+      </div>
+      <details class="deep">
+        <summary>Every detail: votes, signs and the toy check</summary>
+        <div class="body">
+          <ul>
+            <li>Missing letters (−1) are skipped. Every pair of letters inside one read votes once, also pairs that are not neighbours.</li>
+            <li>Only the upper triangle (i &lt; j) is kept, so each pair counts once.</li>
+            <li>Speed-up: two 0/1 tables, <code>one[r, i]</code> (read r has a 1 at SNP i) and <code>zero[r, i]</code>. Then <code>one.T @ one + zero.T @ zero</code> counts every “same” vote at once and <code>one.T @ zero + zero.T @ one</code> every “different” vote. Float matrices use optimized BLAS multiplication; these small integer counts remain exactly representable.</li>
+            <li>A z-flip of <i>every</i> SNP leaves every z<sub>i</sub>z<sub>j</sub> unchanged, which is why an answer and its mirror always have the same cost.</li>
+            <li><b>Check 9.1:</b> on the notebook's 9 reads over 5 SNPs, offset = 12.5 and the best cost is 1, reached by 01101 and its mirror 10010, the same as the notebook.</li>
+            <li>Short reads only link SNPs at most 3 apart, so J is non-zero only near the diagonal: a <b>band</b> of width 3. The last frame of the animation marks it; section 3 uses it.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+    <section id="referee">
+      <div class="section-head">
+        <span class="eyebrow"><span class="step-n">3</span> Referee</span>
+        <h2>The exact best cost, even when 2<sup>N</sup> is astronomical</h2>
+      </div>
+      <div class="why-box"><b>Why it matters:</b> “did the method find the optimum?” needs the optimum. Brute force runs out of memory near 30 SNPs. The band trick below gives the exact answer at 100, 1000 or 2000 SNPs, so every grade on this page is against the true best.</div>
+      <div class="scope-note keep"><b>KEEP:</b> an exact reference for the small shared puzzles. <b>NOT NECESSARY for the main merge:</b> the band-DP implementation walkthrough and 2000-SNP scaling study below. Retain the finding that short-read puzzles can be classically easy.</div>
+      <div class="facts">
+        <div class="f f-what"><span class="k">What</span>Brute force by doubling (<code>diag_energies</code>) up to 24 SNPs; band dynamic programming (<code>banded_exact</code>) beyond.</div>
+        <div class="f f-adds"><span class="k">Adds</span>The true optimum at any size: 2000 SNPs in about 0.15 s.</div>
+        <div class="f f-where"><span class="k">Where</span>engine 4.1–4.2 · experiments 7 · check 9.2 (both agree with plain enumeration)</div>
+        <div class="f f-limit"><span class="k">Limit</span>Needs a narrow band (short reads). It also proves short-read phasing is classically easy.</div>
+      </div>
+      <div class="player" id="a-dp">
+        <span class="scope-label">NOT NECESSARY · supporting DP research</span>
+        <h3>Band DP on a real 12-SNP puzzle: slide a 3-SNP window, keep 8 numbers</h3>
+        <div class="sub">arcs = non-zero J (blue = keep same, rose = keep different, thicker = stronger) · boxes = best cost so far for each setting of the last 3 SNPs</div>
+        <div class="viz"><svg viewBox="0 0 600 330" role="img" aria-label="Animation: a window of three SNPs slides along twelve SNPs. Below it, eight boxes hold the best cost so far for each setting of the window. At the end the smallest box gives the optimum, 41 minus 36 equals 5."></svg></div>
+        <p class="pcap" aria-live="polite"></p>
+        <div class="ctl"></div>
+      </div>
+      <div class="grid-2" style="margin-top:14px">
+        <div class="card">
+          <h3>Brute force with a doubling trick</h3>
+          <p class="small muted">Keep the energies of all answers for the first q SNPs in a list <code>E</code>. Adding SNP q with letter 0 adds its couplings <code>f</code>; letter 1 subtracts them:</p>
+          <div class="formula">E ← [ E + f , E − f ]   (the list doubles)</div>
+          <p class="small muted" style="margin:10px 0 0">About 2 · 2<sup>N</sup> additions and 8 · 2<sup>N</sup> bytes (134 MB at 24 SNPs). The same list is reused by the exact QAOA simulator (section 6).</p>
+        </div>
+        <div class="panel">
+          <h3>Band DP time vs puzzle size</h3>
+          <div class="sub">realistic reads, one run on a laptop (experiments part 7)</div>
+          <div class="chart" id="ch-dp"></div>
+          <p class="cap">Linear in N: N steps × 2<sup>3</sup> states. Brute force at 2000 SNPs would need 2<sup>2000</sup> answers.</p>
+        </div>
+      </div>
+      <details class="deep">
+        <summary>Every detail: the DP step, and what the referee does when the band is too wide</summary>
+        <div class="body">
+          <ul>
+            <li><b>State.</b> The letters of the last w SNPs (w = <code>bandwidth(J)</code>, 3 here), so 2<sup>w</sup> = 8 states. <code>V[s]</code> = the lowest cost of everything to the left, given that the window is set to s.</li>
+            <li><b>One step.</b> For the new SNP, try both letters, add its couplings to the window, then forget the oldest SNP by keeping the smaller of its two values. Work: 2<sup>w</sup> per SNP.</li>
+            <li><b>Mirror pairs.</b> The 8 numbers come in equal pairs (s and its flip), because a mirror answer costs the same.</li>
+            <li><b>Answer.</b> optimum = offset + min V. The DP returns the cost, which is all the referee needs.</li>
+            <li>This is the Viterbi / transfer-matrix idea. Its cost grows like 2<sup>band</sup>, so long-range links (long reads, Hi-C) would make it hard. That is where a quantum method could matter.</li>
+            <li><b>Referee order in the race:</b> enumerate when N ≤ 24 (or when the numpy simulator needs the list anyway); else band DP if the band ≤ 16; else the best cost known (annealing with 200× the budget, or the truth's cost if lower). A <code>ref</code> column records which one was used.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <section id="classical">
+      <div class="section-head">
+        <span class="eyebrow"><span class="step-n">4</span> Classical</span>
+        <h2>The opponents: same puzzles, same 2048 tries</h2>
+      </div>
+      <div class="why-box"><b>Why it matters:</b> “QAOA finds the optimum” means little unless reasonable classical methods with the same budget do worse. Each method below runs 64 independent chains, so we measure a success rate, not one lucky run.</div>
+      <div class="facts">
+        <div class="f f-what"><span class="k">What</span>Random guessing; greedy start + local search with restarts; simulated annealing.</div>
+        <div class="f f-adds"><span class="k">Adds</span>Honest baselines, counted in the same unit as QAOA shots.</div>
+        <div class="f f-where"><span class="k">Where</span>engine 5.1–5.2 · experiments 5</div>
+        <div class="f f-limit"><span class="k">Limit</span>Simple reference methods, not phasing tools such as WhatsHap or HapCUT2.</div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>What one “try” means</h3>
+          <div class="tbl"><table class="t">
+            <thead><tr><th>Method</th><th>One try =</th></tr></thead>
+            <tbody>
+              <tr><td><span class="chip m-random">random</span></td><td>one random answer</td></tr>
+              <tr><td><span class="chip m-local">local search</span></td><td>one cost check of one flip (a scan of all N flips = N tries; a greedy start = 2N)</td></tr>
+              <tr><td><span class="chip m-sa">annealing</span></td><td>one proposed flip</td></tr>
+              <tr><td><span class="chip m-qaoa-p3">QAOA</span></td><td>one shot, <b>plus every shot spent on training and every extra check by post-processing</b></td></tr>
+              <tr><td><span class="chip m-brute">brute force</span></td><td>one of the 2<sup>N</sup> answers (the referee, not held to the budget)</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="card">
+          <h3>The local-field trick (used by both)</h3>
+          <div class="formula">h = W z,  W = J + Jᵀ<br>flip SNP i  →  ΔE = −2 z<sub>i</sub> h<sub>i</sub></div>
+          <p class="small muted" style="margin:10px 0 0"><b>h<sub>i</sub></b> is how strongly the other SNPs pull SNP i. Flipping i changes the cost by ΔE without recounting everything. After a flip, h is updated with one row of W.</p>
+          <p class="small muted" style="margin:6px 0 0">ΔE &lt; 0 means the flip helps.</p>
+        </div>
+      </div>
+      <div class="player" id="a-local" style="margin-top:14px">
+        <h3>Greedy start + local search on the 12-SNP puzzle (optimum = 5)</h3>
+        <div class="sub">top: the answer being built (outlined = SNP just placed or flipped) · bottom: cost vs tries used; shaded = greedy phase</div>
+        <div class="viz"><svg viewBox="0 0 600 300" role="img" aria-label="Animation: greedy places twelve letters, reaching cost 22. One flip lowers it to 13, then it is stuck. A restart builds cost 15, two flips reach 5, the optimum, after 108 tries."></svg></div>
+        <p class="pcap" aria-live="polite"></p>
+        <div class="ctl"></div>
+      </div>
+      <div class="player" id="a-sa" style="margin-top:14px">
+        <span class="scope-label">NOT NECESSARY · keep local search as the main classical opponent</span>
+        <h3>Simulated annealing on the same puzzle: hot, cooling, cold</h3>
+        <div class="sub">first 400 proposals of one chain (the race uses 2048 and 64 chains) · outline: green = accepted, amber = accepted although worse, red dashed = rejected</div>
+        <div class="viz"><svg viewBox="0 0 600 330" role="img" aria-label="Animation: one annealing chain. While hot, it accepts many uphill moves and the cost jumps around. As the temperature falls it settles, reaching the optimum 5."></svg></div>
+        <p class="pcap" aria-live="polite"></p>
+        <div class="ctl"></div>
+      </div>
+      <details class="deep">
+        <summary>Every detail: the exact rules of both methods</summary>
+        <div class="body">
+          <p><b>Greedy start (2N tries).</b> Visit the SNPs in a random order. Give each the letter that agrees best with the SNPs already placed: field = Σ W<sub>ij</sub> z<sub>j</sub> over placed j; field &gt; 0 → letter 1, field &lt; 0 → letter 0, field = 0 → coin flip.</p>
+          <p><b>Local search (N tries per scan).</b> Compute ΔE for all N single flips, apply the best one if it lowers the cost. If none does, the answer is a local minimum (“stuck”): restart from a fresh greedy answer while the budget allows.</p>
+          <p><b>Annealing (1 try per proposal).</b> Start from a random answer. Each step proposes flipping one random SNP. Better or equal: accept. Worse by ΔE: accept with chance e<sup>−ΔE/T</sup>. T falls geometrically from <b>hot</b> (the largest total |coupling| of any SNP, so almost anything is accepted) to <b>cold</b> (5% of the smallest |J|, so only improvements pass).</p>
+          <p><b>Measuring success.</b> Each chain records <code>hit</code>, the try at which it first reached the optimum (∞ if never). The fraction of 64 chains with a hit within 2048 is <code>P_budget</code>; section 7 turns the hits into TTS99.</p>
+        </div>
+      </details>
+    </section>
+    <section id="qaoa">
+      <div class="section-head">
+        <span class="eyebrow"><span class="step-n">5</span> QAOA</span>
+        <h2>The baseline circuit, trained with zero shots</h2>
+      </div>
+      <div class="why-box"><b>Why it matters:</b> repeatedly simulating a large statevector to tune angles is expensive. I use an analytic expected-cost <b>formula</b> for p = 1 and <b>reused angles</b> for p = 2, 3. Both use zero training shots, but still require classical computation. The circuit itself is unchanged.</div>
+      <div class="facts">
+        <div class="f f-what"><span class="k">What</span>The notebook's circuit (<code>make_qaoa</code>) + zero-shot trainers <code>train_p1</code> and <code>train_transfer</code>.</div>
+        <div class="f f-adds"><span class="k">Adds</span>0 training shots, depth up to p = 3, angles that work from 5 to 100 SNPs.</div>
+        <div class="f f-where"><span class="k">Where</span>engine 6.1, 6.3–6.5 · experiments 1, 4 · checks 9.3–9.5</div>
+        <div class="f f-limit"><span class="k">Limit</span>Ideal, noiseless simulation. Angles were learned on short-read puzzles only.</div>
+      </div>
+      <div class="grid-2">
+        <div class="panel viz">
+          <h3>The circuit (same as the notebook)</h3>
+          <div class="sub">4 of N qubits shown · one qubit per SNP</div>
+          <svg id="circ-svg" viewBox="0 0 600 200" role="img" aria-label="QAOA circuit: Hadamard on every qubit, then a cost layer of RZZ gates on pairs with non-zero J, then an RX mixer on every qubit, repeated p times, then measurement."></svg>
+        </div>
+        <div class="card">
+          <h3>What each block does</h3>
+          <ul class="ticks">
+            <li><b>H on every qubit:</b> start with all 2<sup>N</sup> answers equally likely.</li>
+            <li><b>Cost layer (angle γ):</b> one RZZ(2γ J<sub>ij</sub> / scale) per pair with J<sub>ij</sub> ≠ 0. Each answer gets a phase proportional to its cost. scale = max(1, max |J|).</li>
+            <li><b>Mixer (angle β):</b> RX(2β) on every qubit. It mixes answers that differ by one letter, so the phases interfere.</li>
+            <li><b>Repeat p times, then measure:</b> each shot returns one answer. Good angles make low-cost answers likely.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="player" id="a-toy" style="margin-top:14px">
+        <h3>What depth does on the notebook's toy: probability of each of the 32 answers</h3>
+        <div class="sub">bars sorted from best (left) to worst cost · rose = the two optimal answers (01101 and its mirror 10010) · dashed = 1/32, blind guessing · exact numpy simulation with our zero-shot angles</div>
+        <div class="viz"><svg viewBox="0 0 600 300" role="img" aria-label="Animation: at depth 0 all 32 answers have probability 1 in 32. At p equals 1 the two optimal answers rise to 53 percent together, at p equals 2 to 76 percent, at p equals 3 to 71 percent."></svg></div>
+        <p class="pcap" aria-live="polite"></p>
+        <div class="ctl"></div>
+      </div>
+
+      <h3 style="margin:26px 0 8px">Training p = 1: calculate the cost directly, then search one angle</h3>
+      <div class="why-box"><b>Think of two knobs:</b> γ controls how strongly the circuit marks costs; β controls how strongly it mixes answers. Training means choosing their settings so the <b>average measured cost</b> is low. The formula predicts that average, not the best haplotype itself.</div>
+      <div class="grid-2" style="margin-bottom:14px">
+        <div class="card">
+          <h3>The baseline: try both knobs</h3>
+          <div class="flow" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+            <div><b>Choose γ and β</b>COBYLA proposes settings.</div>
+            <div><b>Simulate the state</b>Store all 2<sup>N</sup> amplitudes and calculate the average cost.</div>
+            <div><b>Adjust and repeat</b>Try to lower that average.</div>
+          </div>
+          <p class="small muted" style="margin:12px 0 0">The baseline also trains with zero shots: its training uses a classical statevector, not hardware measurements.</p>
+        </div>
+        <div class="card">
+          <h3>Our p = 1 method: a shortcut</h3>
+          <div class="flow" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+            <div><b>Choose γ</b>Try a grid of values.</div>
+            <div><b>Calculate the best β</b>A mathematical formula gives it directly, using J.</div>
+            <div><b>Keep the lowest cost</b>Refine γ near the best grid point.</div>
+          </div>
+          <p class="small muted" style="margin:12px 0 0"><b>We still optimize.</b> We replace the full-state simulation and two-knob search with direct arithmetic and a one-knob search. This is our depth-1 shortcut, not a formula for every QAOA variant or depth.</p>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <p class="small muted" style="margin-top:0"><b>Where it came from:</b> Ozaeta, van Dam &amp; McMahon <a href="https://arxiv.org/abs/2012.03421">derived the average cost mathematically for single-layer QAOA on Ising problems</a> (2020 preprint). It is not a fitted guess. Our implementation specializes their result to our pair-only J model. T<sub>1</sub>(γ) and T<sub>2</sub>(γ) are intermediate numbers calculated from J: no simulated state and no 2<sup>N</sup> list, so it works at 100+ SNPs.</p>
+          <div class="formula">E(γ, β) = offset + ½ sin 4β · T₁(γ) − ½ sin² 2β · T₂(γ)</div>
+          <ul class="ticks">
+            <li><b>Best β for a fixed γ is a formula:</b> rewrite E as a sin 4β + b cos 4β + const; its minimum is const − √(a² + b²).</li>
+            <li><b>So only γ is searched:</b> 256 grid points on (0, π], then a 1-D refinement around the best.</li>
+            <li><b>Toy result:</b> expected cost <b>5.833</b> with 0 shots, against <b>7.798</b> for the notebook's COBYLA (check 9.4).</li>
+          </ul>
+        </div>
+        <div class="player" id="a-land">
+          <h3>Scanning γ on the toy</h3>
+          <div class="sub">top: E(γ, β) map, stronger colour = lower expected cost · dot = best β for this γ · bottom: that best cost as γ grows</div>
+          <div class="viz"><svg viewBox="0 0 600 330" role="img" aria-label="Animation: a vertical line scans the gamma axis of a heat map of expected cost. For each gamma a dot marks the best beta. The curve below reaches its minimum 5.833 at gamma 0.452, beta minus 0.506, below COBYLA's 7.798."></svg></div>
+          <p class="pcap" aria-live="polite"></p>
+          <div class="ctl"></div>
+        </div>
+      </div>
+
+      <h3 id="angle-transfer" style="margin:26px 0 8px">Training p = 2, 3 once on small puzzles, then reusing the angles everywhere</h3>
+      <div class="scope-note"><b>OPTIONAL for Tudor's final deliverable:</b> retain the existing transferred angles and findings, but defer further transfer experiments. This evaluator can use the team's selected, locally trained angles instead.</div>
+      <div class="grid-3">
+        <div class="rule"><span class="n">1</span><div><b>9 small puzzles</b><br><span class="muted">3 each at 8, 10 and 12 SNPs, realistic reads.</span></div></div>
+        <div class="rule"><span class="n">2</span><div><b>Grow one layer at a time</b><br><span class="muted">Start from the p = 1 formula; INTERP stretches p angles onto p + 1; COBYLA polishes on the <b>exact</b> expected cost (no shots).</span></div></div>
+        <div class="rule"><span class="n">3</span><div><b>Take the median angle</b><br><span class="muted">over the 9 puzzles, then run those angles unchanged on every puzzle up to 100 SNPs.</span></div></div>
+      </div>
+      <div class="grid-2" style="margin-top:14px">
+        <div class="card">
+          <h3>Same recipe, more qubits</h3>
+          <p>Standard QAOA shares its angles across gates in each layer. At depth p = 3, both a <b>10-qubit circuit</b> and a <b>100-qubit circuit</b> need just <b>6 angles</b>: three γ values and three β values.</p>
+          <p class="small muted" style="margin-bottom:0">We transfer those six settings, not the small circuit or its answer. The larger circuit is built from the larger puzzle's J.</p>
+        </div>
+        <div class="card">
+          <h3>Why this recipe can transfer</h3>
+          <p>Our small and large puzzles are made the same way: similar coverage and error rates, and short reads linking nearby SNPs. At shallow depth, many gates therefore see similar local patterns.</p>
+          <p class="small muted" style="margin-bottom:0"><b>Useful, not guaranteed.</b> Different link patterns, weights, depth or hardware noise can need new angles. Our four held-out 14-SNP puzzles are evidence for this family, not proof for every larger puzzle.</p>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:14px">
+        <div class="panel">
+          <h3>Do reused angles lose much? (concentration)</h3>
+          <div class="sub">4 unseen 14-SNP puzzles · quality = (offset − expected cost) / (offset − optimum), 1 = always optimal</div>
+          <div class="chart" id="ch-conc"></div>
+          <p class="cap">Reused angles keep about <b>95%</b> of the quality of tuning on each puzzle, and cost 0 shots on the new puzzle.</p>
+        </div>
+        <div class="panel">
+          <h3>Why reuse works: angles barely change between puzzles</h3>
+          <div class="sub">p = 1: formula angles of 85 Kaggle puzzles (8–100 SNPs) · p = 2, 3: the transferred angles of two runs</div>
+          <div class="chart" id="ch-angles"></div>
+          <p class="cap">Tight clusters: good angles <b>concentrate</b> (Brandão et al. 2018). Deeper layers show γ growing and |β| shrinking, like a slow anneal.</p>
+        </div>
+      </div>
+      <details class="deep">
+        <summary>Every detail: scale, γ units, β folding, INTERP and the other trainer</summary>
+        <div class="body">
+          <ul>
+            <li><b>scale.</b> The notebook divides J by max(1, max|J|) inside the RZZ, so the formula works with the physical phase γ/scale and converts back.</li>
+            <li><b>β folding.</b> β and β + π/2 give mirror answers with the same cost, so <code>canonical_beta</code> folds β into (−π/4, π/4]. This makes angles from different puzzles comparable, which the median in step 3 needs.</li>
+            <li><b>INTERP</b> (Zhou et al. 2020) pads the p angles with zeros at both ends and linearly interpolates them onto p + 1 slots: a smooth start for the deeper circuit.</li>
+            <li><b>Angles used in the race</b> (listed as γ₁…γ<sub>p</sub>, β₁…β<sub>p</sub>): p = 2 → [0.464, 0.638, −0.593, −0.304]; p = 3 → [0.387, 0.590, 0.669, −0.639, −0.447, −0.243].</li>
+            <li><b>Why p = 3 is below p = 2 on the toy:</b> its angles were tuned on 8–12-SNP puzzles, not on this 5-SNP one. At the tested sizes from 8 through 32 SNPs, p = 3 has the lowest median TTS99 among our budgeted methods.</li>
+            <li><b>The other trainer, <code>cobyla</code></b>, is for circuits without a formula (Carla's variants). It optimises the <i>sampled</i> mean cost, 256 shots per evaluation, and every shot is added to TTS99.</li>
+            <li><b>Checks:</b> 9.3 the formula equals the simulator exactly; 9.4 the formula beats COBYLA on the toy; 9.5 transferred p = 2 beats p = 1 on an unseen 13-SNP puzzle.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+    <section id="sims">
+      <div class="section-head">
+        <span class="eyebrow"><span class="step-n">6</span> Simulators</span>
+        <h2>Running 100 qubits on a laptop</h2>
+      </div>
+      <div class="scope-note" id="mps-scope"><b>KEEP:</b> one ideal simulator for small shared puzzles. <b>NOT NECESSARY for the main merge / QPU demo:</b> 100-qubit MPS runs, memory and timing sweeps, and swap-direction tuning. MPS is a classical simulation technique, not a requirement for submitting a circuit to a QPU.</div>
+      <div class="why-box"><b>MPS in plain words:</b> instead of one enormous list describing the whole quantum state, a <b>matrix product state</b> stores a chain of smaller blocks, one per qubit. Links between blocks retain their quantum correlations. It is a <b>classical way to simulate</b> the circuit, not a quantum device.</div>
+      <div class="grid-3" style="margin-bottom:14px">
+        <div class="card"><h3>One giant list</h3><p>A full statevector stores 2<sup>N</sup> amplitudes. Every extra qubit doubles the list: about 1 GB at 26, 69 GB at 32, far beyond a laptop at 100.</p></div>
+        <div class="card"><h3>A chain of small blocks</h3><p class="mono">qubit 1 ↔ qubit 2 ↔ qubit 3 ↔ …</p><p>The connecting links must grow when more entanglement crosses a cut through the chain. MPS saves memory only while those links stay manageable.</p></div>
+        <div class="card"><h3>Why our problem fits</h3><p>A read spans only 2–4 neighbouring SNPs, so gates mostly connect nearby qubits. We also use just 1–3 QAOA layers. These conditions keep entanglement across cuts limited enough for our runs.</p><p class="small muted" style="margin-bottom:0">Long-range links or deeper circuits can make the blocks much larger and remove the saving.</p></div>
+      </div>
+      <div class="facts">
+        <div class="f f-what"><span class="k">What</span>An exact numpy simulator (≤ 26 SNPs) and Qiskit Aer MPS with one key setting, <code>mps_swap_right</code> (27–100+).</div>
+        <div class="f f-adds"><span class="k">Adds</span>Exact P(optimum) up to 26 SNPs; 100-qubit, p = 3 runs in about 2 s.</div>
+        <div class="f f-where"><span class="k">Where</span>engine 6.2, 6.6 · experiments 6 · check 9.6 (MPS = exact; runs at 70 qubits)</div>
+        <div class="f f-limit"><span class="k">Limit</span>Simulation time is not quantum run time. MPS stays small only while entanglement across cuts in the chain remains limited.</div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>≤ 26 SNPs: exact numpy, 15 lines</h3>
+          <ul class="ticks">
+            <li><b>Cost layer = one multiplication:</b> every RZZ is diagonal, so the whole layer is ψ ← e<sup>−iγE/scale</sup> ψ, with E the brute-force list from section 3.</li>
+            <li><b>Mixer:</b> RX(2β) on qubit q mixes each pair of amplitudes that differ only in bit q; <code>reshape(-1, 2, 2**q)</code> lines the pairs up.</li>
+            <li><b>Exact output:</b> P(optimum) = sum of |ψ|² over optimal answers, with no sampling noise. Matches Qiskit's statevector (check 9.3).</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>27–100+ SNPs: Aer MPS, sampled</h3>
+          <ul class="ticks">
+            <li><b>MPS</b> stores a small tensor (a block of numbers) per qubit. χ, the <b>bond dimension</b>, measures the size of the connecting links; memory grows with χ rather than requiring the full 2<sup>N</sup> list.</li>
+            <li><b>The setting that made it fast:</b> an RZZ between qubits i and i + 2 makes Aer swap qubits until they are neighbours. The default swap direction was very slow on our banded gates; <code>mps_swap_right</code> is not: <b>99 s → about 0.1–0.2 s</b> at 24 SNPs.</li>
+            <li><b>Above 63 qubits</b> Aer's device description stops, so we skip the full transpile and only unroll to Aer's native gates.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="player" id="a-mem" style="margin-top:14px">
+        <h3>Memory explorer: full statevector vs MPS</h3>
+        <div class="sub">pick a size and a depth · bars on a log scale (each grid line = ×1000) · measured with our circuits and realistic puzzles</div>
+        <div class="ctl" style="margin-top:0"><span class="small muted">SNPs</span><span class="seg" data-k="N"></span><span class="small muted" style="margin-left:8px">depth p</span><span class="seg" data-k="p"></span></div>
+        <div class="viz"><svg viewBox="0 0 600 170" role="img" aria-label="Bar chart comparing statevector memory and MPS memory for the chosen size and depth, against Kaggle's 32 GB."></svg></div>
+        <div class="readout"></div>
+      </div>
+      <div class="grid-3" style="margin-top:14px">
+        <div class="panel">
+          <h3>Statevector memory</h3>
+          <div class="sub">16 bytes × 2<sup>N</sup></div>
+          <div class="chart" id="ch-mem"></div>
+        </div>
+        <div class="panel">
+          <h3>Statevector time on Kaggle</h3>
+          <div class="sub">one circuit, Aer, 4 CPUs</div>
+          <div class="chart" id="ch-sv"></div>
+        </div>
+        <div class="panel">
+          <h3>MPS time, 2048 shots</h3>
+          <div class="sub">laptop · dashed = default swap direction (p = 1)</div>
+          <div class="chart" id="ch-mps"></div>
+        </div>
+      </div>
+      <details class="deep">
+        <summary>Every detail: which simulator the race picks</summary>
+        <div class="body">
+          <ul>
+            <li>The race falls back automatically: <code>numpy</code> for the baseline circuit up to <code>sv_max</code> = 26 SNPs; <code>aer_sv</code> for other circuits up to 26; <code>aer_mps</code> beyond.</li>
+            <li>Memory of the numpy simulator is 16 · 2<sup>N</sup> bytes: 1.07 GB at 26, our limit.</li>
+            <li>χ in the explorer is the largest bond dimension Aer reached. At 100 SNPs, p = 3 it is 82, so the whole state fits in about 2 MB instead of 2 · 10<sup>31</sup> bytes.</li>
+            <li>The simulators are sockets too (<code>backend</code>): Alex can add a noisy FakeManila or a real IBM device with the same signature.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <section id="grading">
+      <div class="section-head">
+        <span class="eyebrow"><span class="step-n">7</span> Grading</span>
+        <h2>Four numbers per method, per puzzle</h2>
+      </div>
+      <div class="why-box"><b>Why it matters:</b> “P(optimum) is high” hides how many tries it took. TTS99 turns any method into one comparable number, and it charges QAOA for training and post-processing. Switch errors check the answer against the hidden truth, the way geneticists grade phasing.</div>
+      <div class="facts">
+        <div class="f f-what"><span class="k">What</span><code>P_budget</code>, <code>tts99</code>, <code>score</code>, <code>switch_err</code>.</div>
+        <div class="f f-adds"><span class="k">Adds</span>A fair, single “tries” number, and a biology-style accuracy metric.</div>
+        <div class="f f-where"><span class="k">Where</span>engine 7 · check 9.7 (switch errors)</div>
+        <div class="f f-limit"><span class="k">Limit</span>Tries, not seconds: a shot and a CPU cost check have very different prices.</div>
+      </div>
+      <div class="metrics">
+        <div class="card metric"><div class="k">P_budget</div><p class="q">Found the optimum within 2048 tries?</p><p>Samplers: 1 − (1 − p)<sup>2048</sup>, p = chance one shot is optimal. Chains: share of the 64 chains that hit it.</p></div>
+        <div class="card metric"><div class="k">tts99</div><p class="q">Tries to be 99% sure?</p><p>log(0.01) / log(1 − p). Lower is better. Training shots and post-processing checks are added.</p></div>
+        <div class="card metric"><div class="k">score</div><p class="q">How good was the best answer?</p><p>(offset − best) / (offset − optimum): 1 = optimum, 0 = an average random answer.</p></div>
+        <div class="card metric"><div class="k">switch_err</div><p class="q">How far from the truth?</p><p>Places where the answer jumps between copy A and copy B, only where a read links the two SNPs.</p></div>
+      </div>
+      <div class="grid-2" style="margin-top:14px">
+        <div class="player" id="a-tts">
+          <span class="scope-label">NOT NECESSARY · secondary analysis, not the main hardware metric</span>
+          <h3>TTS99 explorer</h3>
+          <div class="sub">p = chance that one try is optimal · curve = chance of having seen the optimum after t tries</div>
+          <div class="ctl" style="margin-top:0"><input type="range" min="-7" max="-0.0044" step="0.01" value="-1.5" aria-label="log10 of p"><span class="prog"></span></div>
+          <div class="presets"></div>
+          <div class="viz"><svg viewBox="0 0 600 260" role="img" aria-label="Curve of the chance of success against the number of tries on a log scale, with markers at TTS99 and at the budget of 2048."></svg></div>
+          <p class="pcap" aria-live="polite"></p>
+        </div>
+        <div class="player" id="a-sw">
+          <h3>Switch errors: click the answer's letters</h3>
+          <div class="sub">the gap between SNP 7 and 8 has no read across it, so nobody can phase it and it is not counted</div>
+          <div class="swbtns"></div>
+          <div class="viz"><svg viewBox="0 0 600 230" role="img" aria-label="Interactive: a truth row and an answer row of ten SNPs. Clicking flips letters. Counted switch errors are marked in rose, the unlinked gap is dashed."></svg></div>
+          <p class="pcap" aria-live="polite"></p>
+        </div>
+      </div>
+      <details class="deep">
+        <summary>Every detail: TTS99 for chains, fairness, and the extra columns</summary>
+        <div class="body">
+          <ul>
+            <li><b>TTS99 for chains</b> (<code>tts99_runs</code>). A chain stopped after b tries succeeds with s(b) = share of chains with hit ≤ b. Repeating such chains costs b · log(0.01) / log(1 − s(b)) tries. We take the best stopping point b.</li>
+            <li><b>Fairness rule for QAOA:</b> tts99 = tts99(p, 1 + extra checks / 2048) + training shots. Post-processing that checks extra answers makes each shot more expensive.</li>
+            <li><b>Budget scope.</b> <code>P_budget</code> covers 2048 final samples, not an all-in cap for shot-trained plug-ins. Their training shots are added in TTS99. Classical training time is recorded separately as <code>train_s</code>; zero shots is not zero computation.</li>
+            <li><b>Examples:</b> p = 1% → 458 tries. p ≥ 99% → 1 try.</li>
+            <li><b>Linked boundaries.</b> Boundary i (between SNP i + 1 and i + 2) counts only if some read links SNPs across it. Computed with a difference array and a running sum.</li>
+            <li>Also stored: <code>truth_dist</code> (wrong letters, up to the mirror) and <code>n_opt</code> (how many answers tie for the optimum, always ≥ 2).</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+    <section id="race">
+      <div class="section-head">
+        <span class="eyebrow"><span class="step-n">8</span> Race</span>
+        <h2>Who keeps up as the puzzle grows</h2>
+      </div>
+      <div class="scope-note" id="scaling-scope"><b>KEEP:</b> the shared comparison runner and a few fixed sizes and seeds. <b>NOT NECESSARY for the main merge:</b> rerunning the full Kaggle grids and large scaling dashboards below. Treat their recorded results as supporting research; prioritize observed success and answer quality on the selected QPU-sized puzzles.</div>
+      <div class="why-box"><b>Why it matters:</b> this is where all seven pieces meet. One call, <code>run_bench(sizes, puzzles, Config(...))</code>, runs every method on the same puzzles under the same rules and returns one row per method per puzzle. Teammates' plug-ins join the race by name.</div>
+      <div class="facts">
+        <div class="f f-what"><span class="k">What</span><code>Config</code>, <code>run_instance</code>, <code>run_bench</code>, <code>summarize</code>, <code>plot</code>.</div>
+        <div class="f f-adds"><span class="k">Adds</span>A reproducible, fair comparison from 5 to 100 SNPs; failures are logged, not hidden.</div>
+        <div class="f f-where"><span class="k">Where</span>engine 8 · experiments 5 (laptop), 8 (28–100), 9 (Kaggle)</div>
+        <div class="f f-limit"><span class="k">Limit</span>Medians of 5 puzzles per size; noiseless simulation.</div>
+      </div>
+      <div class="flow" aria-label="What happens for one puzzle">
+        <div><b>Puzzle</b>size N, seed k</div>
+        <div><b>Cost</b>votes → J, offset</div>
+        <div><b>Referee</b>exact optimum</div>
+        <div><b>Contestants</b>2048 tries each</div>
+        <div><b>Grade</b>4 numbers each</div>
+        <div><b>Summarise</b>medians per size</div>
+      </div>
+      <div class="rules">
+        <div class="rule"><span class="n">1</span><div><b>Same budget.</b> 2048 tries for everyone, the notebook's shot count.</div></div>
+        <div class="rule"><span class="n">2</span><div><b>Training counts.</b> Shots spent choosing angles are added to TTS99.</div></div>
+        <div class="rule"><span class="n">3</span><div><b>Post-processing counts.</b> Extra cost checks make each shot more expensive.</div></div>
+        <div class="rule"><span class="n">4</span><div><b>Same puzzles.</b> Puzzle k of every size uses seed k for every method.</div></div>
+        <div class="rule"><span class="n">5</span><div><b>Check failures first.</b> Crashes go in <code>fail</code>. Their missing metrics are excluded from medians, so inspect them separately. These Kaggle runs had none.</div></div>
+        <div class="rule"><span class="n">6</span><div><b>Truth is hidden.</b> Only grading sees it; no solver does.</div></div>
+      </div>
+      <div class="banner" style="margin-top:16px"><b>✅ Kaggle run</b><span id="data-source"></span></div>
+      <div class="panel">
+        <h3>Small puzzles (8–26 SNPs): tries needed to be 99% sure</h3>
+        <div class="sub" id="small-settings"></div>
+        <div class="legend" id="lg-tts"></div>
+        <div class="chart" id="ch-tts"></div>
+        <p class="cap">QAOA uses exact probabilities from the ideal simulator. p = 3 needs the fewest tries at every size: 699 at 26 SNPs versus 2433 for local search. p = 1 falls behind local search from 20 SNPs. Error-free reads give the same ranking.</p>
+      </div>
+      <div class="grid-2" style="margin-top:16px">
+        <div class="card">
+          <h3>TTS99 up to 64 SNPs (median of 5)</h3>
+          <div class="tbl"><table class="t">
+            <thead><tr><th class="num">N</th><th class="num">anneal</th><th class="num">local</th><th class="num">p=1</th><th class="num">p=2</th><th class="num">p=3</th><th class="num">local ÷ p=3</th></tr></thead>
+            <tbody>
+              <tr><td class="num">12</td><td class="num">550</td><td class="num">201</td><td class="num">109</td><td class="num">52</td><td class="num">21</td><td class="num">9.5×</td></tr>
+              <tr><td class="num">16</td><td class="num">2,283</td><td class="num">556</td><td class="num">461</td><td class="num">110</td><td class="num">44</td><td class="num">12.5×</td></tr>
+              <tr><td class="num">20</td><td class="num">4,804</td><td class="num">1,380</td><td class="num">1,385</td><td class="num">367</td><td class="num">165</td><td class="num">8.3×</td></tr>
+              <tr><td class="num">24</td><td class="num">8,159</td><td class="num">1,758</td><td class="num">3,309</td><td class="num">575</td><td class="num">239</td><td class="num">7.4×</td></tr>
+              <tr><td class="num">26</td><td class="num">9,156</td><td class="num">2,433</td><td class="num">8,986</td><td class="num">1,944</td><td class="num">699</td><td class="num">3.5×</td></tr>
+              <tr><td class="num">28</td><td class="num">10,570</td><td class="num">4,254</td><td class="num">∞</td><td class="num">3,141</td><td class="num">1,345</td><td class="num">3.2×</td></tr>
+              <tr class="hl"><td class="num">32</td><td class="num">20,170</td><td class="num">6,139</td><td class="num">∞</td><td class="num">4,713</td><td class="num">1,570</td><td class="num">3.9×</td></tr>
+              <tr><td class="num">48</td><td class="num">63,578</td><td class="num">41,775</td><td class="num">∞</td><td class="num">∞</td><td class="num">∞</td><td class="num">–</td></tr>
+              <tr><td class="num">64</td><td class="num">∞</td><td class="num">486,591</td><td class="num">∞</td><td class="num">∞</td><td class="num">∞</td><td class="num">–</td></tr>
+            </tbody>
+          </table></div>
+          <p class="small muted" style="margin:8px 0 0">∞ = the median puzzle never reached the optimum. From 28 SNPs QAOA is sampled on MPS, so its rate comes from the 2048 shots.</p>
+        </div>
+        <div class="panel">
+          <h3>Big puzzles (28–100 SNPs): quality of the best answer</h3>
+          <div class="sub" id="large-settings"></div>
+          <div class="legend" id="lg-score"></div>
+          <div class="chart" id="ch-score"></div>
+          <p class="cap">Annealing and local search keep 0.98+. QAOA slides to 0.91 (p = 3) and 0.79 (p = 1) at 100 SNPs.</p>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <h3>Big puzzles: switch errors against the truth</h3>
+        <div class="sub">median count per puzzle · lower is better</div>
+        <div class="legend" id="lg-switch"></div>
+        <div class="chart" id="ch-switch"></div>
+        <p class="cap">At 100 SNPs: annealing 4, local search 7, QAOA 9 (p = 3), 13 (p = 2), 19 (p = 1), random 35. Each extra layer helps.</p>
+      </div>
+    </section>
+
+    <section id="claims">
+      <div class="section-head">
+        <span class="eyebrow">What we can claim</span>
+        <h2>Three findings, stated honestly</h2>
+      </div>
+      <div class="claims">
+        <div class="card claim ok"><span class="verdict">holds up</span><h3>Up to 32 SNPs, QAOA p = 3 needs the fewest tries</h3><p>With reused angles and zero training shots: 3–13× fewer tries than local search. The gap narrows as N grows (12.5× at 16 SNPs, 3.9× at 32).</p></div>
+        <div class="card claim meh"><span class="verdict">falls behind</span><h3>Shallow QAOA loses the optimum from 48 SNPs</h3><p>With p ≤ 3 the median puzzle gets no optimal shot (local search: 9% at 48). Each layer helps, so next: deeper p, Carla's variants and Alex's post-processing.</p></div>
+        <div class="card claim limit"><span class="verdict">honest limit</span><h3>Short reads make the puzzle classically easy</h3><p>A narrow band means an exact linear-time DP (2000 SNPs in 0.15 s). An advantage claim would need long-range links.</p></div>
+      </div>
+      <div class="card not">
+        <h3>What this comparison does <u>not</u> say</h3>
+        <ul>
+          <li>No speed-up in time: a shot on hardware and a cost check on a CPU have very different prices.</li>
+          <li>No hardware performance: everything is noiseless simulation. Noise and routing are Alex's track.</li>
+          <li>Not state of the art: our classical methods are simple. Tuned solvers, or the exact DP, do better.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="notebooks">
+      <div class="section-head">
+        <span class="eyebrow">Run it yourself</span>
+        <h2>Three notebooks, explained cell by cell</h2>
+        <p>All in <code>bench/</code>. Each code cell has a plain-language explanation above it.</p>
+      </div>
+      <div class="nbs">
+        <div class="card nb m-local"><span class="file">qgd_bench.ipynb</span><span class="chip">engine</span><p>Explains the shared functions and runs 8 checks. No full experiment grid; tens of seconds on its own.</p></div>
+        <div class="card nb m-qaoa-p3"><span class="file">tudor_classical_vs_quantum.ipynb</span><span class="chip">experiments</span><p>Reproduces the core comparisons and scaling experiments in 10 parts. About 2–3 minutes on a laptop; <code>BIG = True</code> reruns the full Kaggle configurations (about 43 min on 4 CPUs). This page also includes illustrative traces and recorded simulator measurements.</p></div>
+        <div class="card nb m-sa"><span class="file">plugin_template.ipynb</span><span class="chip">for teammates</span><p>Copy it to <code>bench/&lt;name&gt;.ipynb</code>, write your function, register it, and race it against everything above.</p></div>
+      </div>
+      <div class="grid-2" style="margin-top:14px">
+        <pre><span class="c"># any notebook in bench/ can use the engine</span>
+QGD_QUIET = True          <span class="c"># skip the engine's demos and checks</span>
+%run qgd_bench.ipynb      <span class="c"># every engine function now exists here</span>
+
+import pandas as pd
+rows = run_bench([12, 16, 20], 5,
+                 Config(ps=(1, 2, 3), gen=dict(error=0.05, missing=0.1)))
+summarize(pd.DataFrame(rows))</pre>
+        <pre><span class="c"># a plug-in: register it, then pick it by name</span>
+@register("postprocess", "polish")
+def polish(X, J, offset):
+    ...                    <span class="c"># improve the samples</span>
+    return X, extra_checks <span class="c"># extra checks are charged</span>
+
+run_bench([16, 20], 5, Config(postprocess="polish"))</pre>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>The 8 checks at the end of the engine (they run every time it runs alone)</h3>
+        <div class="tbl"><table class="t">
+          <thead><tr><th>Check</th><th>Proves</th></tr></thead>
+          <tbody>
+            <tr><td>9.1</td><td>on the toy, votes, costs and optima match the baseline notebook</td></tr>
+            <tr><td>9.2</td><td>the doubling trick and the band DP agree with plain enumeration (with errors, missing letters, gaps)</td></tr>
+            <tr><td>9.3</td><td>the numpy simulator matches Qiskit; the p = 1 formula matches the simulator</td></tr>
+            <tr><td>9.4</td><td>on the toy, the p = 1 formula is at least as good as the notebook's COBYLA (7.798)</td></tr>
+            <tr><td>9.5</td><td>transferred p = 2 angles beat p = 1 on an unseen 13-SNP puzzle</td></tr>
+            <tr><td>9.6</td><td>Aer MPS matches the exact simulator, and runs at 70 qubits</td></tr>
+            <tr><td>9.7</td><td>switch errors: a swapped block counts once; unlinked boundaries are skipped</td></tr>
+            <tr><td>9.8</td><td>with error-free reads the hidden truth has cost 0 and is optimal</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="next">
+        <a class="btn" href="paths.html">← 1 · Paths map</a>
+        <a class="btn primary" href="merge-plan.html">3 · Merge plan →</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">Quantum Genome Detective · Qiskit Fall Fest 2026 · page 2 of the research notes. Numbers come from <code>bench/tudor_classical_vs_quantum.ipynb</code> and its Kaggle run; animation data is real engine output.</div>
+  </footer>
+
+  <script>
+    const DATA = {
+      source: "4 CPUs · 5 random puzzles per size · QAOA p = 1, 2, 3 at every size · about 43 minutes in total.",
+      small: {
+        settings: "5% read errors · 10% missing letters · reads span 2–4 SNPs · median of 5 puzzles",
+        tts99: {
+          "brute":   { 8: 256, 12: 4096, 16: 65536, 20: 1048576, 22: 4194304, 24: 16777216 },
+          "random":  { 8: 587, 12: 9429, 16: 150900, 20: 2414433, 22: 9657740, 24: 38630965, 26: 154523868 },
+          "sa":      { 8: 190, 12: 550, 16: 2283, 20: 4804, 22: 5840, 24: 8159, 26: 9156 },
+          "local":   { 8: 78.4, 12: 201, 16: 556, 20: 1380, 22: 1242, 24: 1758, 26: 2433 },
+          "qaoa-p1": { 8: 29.4, 12: 109, 16: 461, 20: 1385, 22: 2556, 24: 3309, 26: 8986 },
+          "qaoa-p2": { 8: 14.6, 12: 52.5, 16: 110, 20: 367, 22: 946, 24: 575, 26: 1944 },
+          "qaoa-p3": { 8: 9.75, 12: 21.1, 16: 44.4, 20: 165, 22: 319, 24: 239, 26: 699 }
+        },
+        randomP: { 5: 1, 8: 1, 12: 0.632, 16: 0.0606, 20: 0.0039, 22: 0.000976, 24: 0.000244, 26: 0.000061 }
+      },
+      large: {
+        settings: "5% read errors · 10% missing letters · reads span 2–4 SNPs · median of 5 puzzles",
+        score: {
+          "random":  { 28: 0.686, 32: 0.669, 48: 0.513, 64: 0.395, 100: 0.329 },
+          "qaoa-p1": { 28: 0.984, 32: 0.973, 48: 0.905, 64: 0.863, 100: 0.79 },
+          "qaoa-p2": { 28: 1, 32: 1, 48: 0.954, 64: 0.889, 100: 0.882 },
+          "qaoa-p3": { 28: 1, 32: 1, 48: 0.981, 64: 0.913, 100: 0.913 },
+          "sa":      { 28: 1, 32: 1, 48: 1, 64: 0.994, 100: 0.982 },
+          "local":   { 28: 1, 32: 1, 48: 1, 64: 1, 100: 0.982 }
+        },
+        switchErr: {
+          "random":  { 28: 5, 32: 8, 48: 13, 64: 19, 100: 35 },
+          "qaoa-p1": { 28: 1, 32: 2, 48: 5, 64: 8, 100: 19 },
+          "qaoa-p2": { 28: 0, 32: 0, 48: 4, 64: 5, 100: 13 },
+          "qaoa-p3": { 28: 0, 32: 0, 48: 2, 64: 5, 100: 9 },
+          "sa":      { 28: 0, 32: 0, 48: 0, 64: 2, 100: 4 },
+          "local":   { 28: 0, 32: 0, 48: 0, 64: 1, 100: 7 }
+        }
+      },
+      // p=1: closed-form angles of 85 Kaggle puzzles (8-100 SNPs); p=2, 3: one training run each for realistic and error-free reads
+      angles: {
+        p1beta: [-0.5062, -0.4895, -0.5004, -0.4917, -0.5208, -0.5257, -0.5249, -0.5105, -0.5017, -0.4867, -0.4915, -0.5013, -0.4985, -0.4817, -0.5167,
+                 -0.4874, -0.5009, -0.5052, -0.5005, -0.5009, -0.4875, -0.4936, -0.4859, -0.4965, -0.5026, -0.5049, -0.4913, -0.4902, -0.4932, -0.5003,
+                 -0.4869, -0.4999, -0.498, -0.487, -0.4969, -0.5098, -0.5088, -0.5005, -0.4822, -0.4948, -0.4879, -0.4951, -0.4907, -0.4824, -0.4991,
+                 -0.5002, -0.5101, -0.5026, -0.4853, -0.5014, -0.4999, -0.4993, -0.4792, -0.4854, -0.4882, -0.4968, -0.4866, -0.4824, -0.4905, -0.4886,
+                 -0.4845, -0.4768, -0.4843, -0.478, -0.4977, -0.4768, -0.4933, -0.4835, -0.4844, -0.4944, -0.487, -0.4816, -0.4888, -0.4721, -0.4868,
+                 -0.4812, -0.4871, -0.4986, -0.491, -0.474, -0.4777, -0.4949, -0.4843, -0.4876, -0.4843],
+        p1gamma: [0.5836, 0.5703, 0.5071, 0.5128, 0.5228, 0.4858, 0.5511, 0.5204, 0.5063, 0.4931, 0.4922, 0.6287, 0.596, 0.386, 0.5176,
+                  0.6043, 0.4943, 0.5139, 0.5747, 0.5523, 0.5169, 0.578, 0.4891, 0.524, 0.564, 0.5661, 0.6401, 0.5478, 0.6108, 0.4941,
+                  0.5278, 0.5539, 0.5439, 0.5542, 0.6118, 0.5408, 0.4858, 0.6999, 0.4841, 0.5031, 0.6444, 0.5316, 0.5876, 0.6622, 0.5031,
+                  0.5641, 0.5845, 0.5888, 0.5738, 0.6434, 0.5988, 0.6263, 0.5947, 0.6394, 0.6754, 0.563, 0.6259, 0.698, 0.6578, 0.5267,
+                  0.5679, 0.5767, 0.5632, 0.6914, 0.6371, 0.6075, 0.6, 0.5924, 0.6085, 0.6899, 0.7086, 0.6849, 0.7545, 0.6845, 0.7093,
+                  0.673, 0.8367, 0.6608, 0.8255, 0.6375, 0.7822, 0.6528, 0.7295, 0.7098, 0.5667],
+        p2: [[0.4638, 0.6379, -0.5934, -0.3042], [0.3857, 0.556, -0.633, -0.3153]],
+        p3: [[0.3872, 0.5905, 0.6692, -0.6394, -0.4468, -0.243], [0.3449, 0.4792, 0.554, -0.6609, -0.478, -0.2604]]
+      },
+      // Kaggle envcheck: one QAOA circuit, Aer statevector, 4 CPUs
+      svKaggle: { double: { 16: 1.71, 20: 1.13, 24: 6.36, 26: 26.4, 28: 116.5, 29: 240.9 }, single: { 29: 192.6, 30: 405.2 } },
+    };
+
+    const LABEL = { "random": "random", "brute": "brute force", "sa": "annealing", "local": "local search", "qaoa-p1": "QAOA p=1", "qaoa-p2": "QAOA p=2", "qaoa-p3": "QAOA p=3" };
+    const NS = "http://www.w3.org/2000/svg";
+    function el(tag, attrs, parent) {
+      const e = document.createElementNS(NS, tag);
+      for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v);
+      if (parent) parent.appendChild(e);
+      return e;
+    }
+    function txt(parent, x, y, s, attrs) { const t = el("text", Object.assign({ x, y }, attrs || {}), parent); t.textContent = s; return t; }
+    function pts(obj) { return Object.entries(obj).map(([x, y]) => [+x, y]); }
+    const sup = { "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹", "-": "⁻" };
+    const pow10 = v => "10" + String(Math.round(Math.log10(v))).split("").map(c => sup[c]).join("");
+
+    function chart(id, o) {
+      const host = document.getElementById(id);
+      const W = o.w || 560, H = o.h || 300, m = Object.assign({ l: 54, r: 18, t: 14, b: 42 }, o.m || {});
+      const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": o.aria });
+      const [x0, x1] = o.x.domain, [y0, y1] = o.y.domain;
+      const f = v => (o.y.log ? Math.log10(v) : v);
+      const sx = v => m.l + (v - x0) / (x1 - x0) * (W - m.l - m.r);
+      const sy = v => H - m.b - (f(Math.min(Math.max(v, y0), y1)) - f(y0)) / (f(y1) - f(y0)) * (H - m.t - m.b);
+      const g = el("g", { class: "axis" }, svg);
+      for (const t of o.y.ticks) {
+        el("line", { x1: m.l, x2: W - m.r, y1: sy(t), y2: sy(t), class: "grid" }, g);
+        txt(g, m.l - 7, sy(t) + 4, o.y.fmt ? o.y.fmt(t) : t, { "text-anchor": "end" });
+      }
+      for (const t of o.x.ticks) {
+        el("line", { x1: sx(t), x2: sx(t), y1: H - m.b, y2: H - m.b + 4, class: "tick" }, g);
+        txt(g, sx(t), H - m.b + 17, t, { "text-anchor": "middle" });
+      }
+      el("line", { x1: m.l, x2: W - m.r, y1: H - m.b, y2: H - m.b, class: "base" }, g);
+      txt(g, (m.l + W - m.r) / 2, H - 6, o.x.label, { "text-anchor": "middle", class: "lab" });
+      const cy = (m.t + H - m.b) / 2;
+      txt(g, 13, cy, o.y.label, { "text-anchor": "middle", class: "lab", transform: `rotate(-90 13 ${cy})` });
+      for (const r of o.refs || []) {
+        const rg = el("g", { class: "ref" }, svg);
+        if (r.y !== undefined) {
+          el("line", { x1: m.l, x2: W - m.r, y1: sy(r.y), y2: sy(r.y) }, rg);
+          txt(rg, r.left ? m.l + 6 : W - m.r - 4, sy(r.y) - 5, r.label, { "text-anchor": r.left ? "start" : "end" });
+        } else {
+          el("line", { x1: sx(r.x), x2: sx(r.x), y1: m.t, y2: H - m.b }, rg);
+          txt(rg, sx(r.x), m.t - 8, r.label, { "text-anchor": "middle" });
+        }
+      }
+      for (const s of o.series) {
+        const p = s.points.filter(([, y]) => y !== null && y !== undefined && (!o.y.log || y > 0));
+        const sg = el("g", { class: `series m-${s.key}` }, svg);
+        if (p.length > 1 && !s.dotsOnly) el("path", { d: p.map(([x, y], i) => `${i ? "L" : "M"}${sx(x).toFixed(1)},${sy(y).toFixed(1)}`).join(""), class: s.dash ? "dash" : "" }, sg);
+        if (!s.noDots) for (const [x, y] of p) el("circle", { cx: sx(x).toFixed(1), cy: sy(y).toFixed(1), r: s.r || 3.8 }, sg);
+        if (s.tag && p.length) {
+          const [lx, ly] = p[p.length - 1];
+          txt(sg, sx(lx) + (s.tagDx || 6), sy(ly) + (s.tagDy || 4), s.tag, { class: "lab" });
+        }
+      }
+      host.appendChild(svg);
+      if (o.legend) {
+        const lg = document.getElementById(o.legend);
+        for (const s of o.series) { const c = document.createElement("span"); c.className = `chip m-${s.key}`; c.textContent = LABEL[s.key] || s.key; lg.appendChild(c); }
+      }
+    }
+
+    function bars(id, rows, o) {
+      const host = document.getElementById(id);
+      const W = o.w || 360, rowH = 30, m = { l: o.ml || 54, r: o.mr || 64, t: 8, b: o.refLabel ? 26 : 8 }, H = m.t + m.b + rows.length * rowH;
+      const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": o.aria });
+      const f = v => (o.log ? Math.log10(v) : v);
+      const sx = v => m.l + (f(v) - f(o.min)) / (f(o.max) - f(o.min)) * (W - m.l - m.r);
+      rows.forEach(([lab, v, cls, show], i) => {
+        const y = m.t + i * rowH;
+        const g = el("g", { class: `bar m-${cls}` }, svg);
+        txt(g, m.l - 8, y + 19, lab, { "text-anchor": "end", class: "s-muted" });
+        el("rect", { x: m.l, y: y + 6, width: Math.max(3, sx(v) - m.l).toFixed(1), height: 18, rx: 4 }, g);
+        txt(g, Math.min(sx(v), W - m.r) + 6, y + 19, show, { class: "v" });
+      });
+      if (o.ref) {
+        const rg = el("g", { class: "ref" }, svg);
+        svg.insertBefore(rg, svg.firstChild);
+        el("line", { x1: sx(o.ref), x2: sx(o.ref), y1: m.t, y2: H - m.b + 4 }, rg);
+        txt(rg, sx(o.ref), H - 6, o.refLabel, { "text-anchor": "middle" });
+      }
+      host.appendChild(svg);
+    }
+
+    // ---------- v2: animations (data = real output of the engine in bench/qgd_bench.ipynb) ----------
+    const P2 = {"gen":{"seed":18,"truth":[1,0,0,1,1,0,0,0,1,1],"reads":[{"start":3,"copy":"B","letters":[0,0,1,1],"err":[],"miss":[]},{"start":0,"copy":"B","letters":[0,1,1],"err":[],"miss":[]},{"start":0,"copy":"B","letters":[0,1,1,0],"err":[],"miss":[]},{"start":6,"copy":"A","letters":[0,0,-1,1],"err":[],"miss":[8]},{"start":2,"copy":"B","letters":[-1,0,0,0],"err":[5],"miss":[2]},{"start":2,"copy":"A","letters":[0,1,1],"err":[],"miss":[]},{"start":5,"copy":"A","letters":[0,0],"err":[],"miss":[]},{"start":4,"copy":"A","letters":[1,0,0],"err":[],"miss":[]}]},"puzzle":{"n":12,"offset":41.0,"opt":5.0,"truth":[1,0,0,0,0,1,1,1,0,0,0,0],"reads":24,"n_opt":2,"J":[[0,1,1.5],[0,2,0.5],[0,3,1.0],[1,2,-1.5],[1,3,-1.5],[1,4,-0.5],[2,3,-1.0],[2,4,-0.5],[3,4,-1.5],[3,5,1.0],[3,6,0.5],[4,5,2.0],[4,6,1.5],[5,6,-1.5],[5,7,0.5],[6,7,-2.0],[6,8,1.5],[6,9,1.5],[7,8,3.0],[7,9,2.5],[7,10,0.5],[8,9,-4.0],[8,10,-1.0],[9,10,-2.0],[9,11,-1.5],[10,11,-1.0]],"optx":[1,0,0,0,0,1,1,1,0,0,0,0],"band":3},"local":[{"kind":"greedy","i":4,"x":"000010000000","placed":"000010000000","cost":null,"used":2},{"kind":"greedy","i":6,"x":"000010000000","placed":"000010100000","cost":null,"used":4},{"kind":"greedy","i":10,"x":"000010000000","placed":"000010100010","cost":null,"used":6},{"kind":"greedy","i":0,"x":"100010000000","placed":"100010100010","cost":null,"used":8},{"kind":"greedy","i":1,"x":"100010000000","placed":"110010100010","cost":null,"used":10},{"kind":"greedy","i":3,"x":"100010000000","placed":"110110100010","cost":null,"used":12},{"kind":"greedy","i":8,"x":"100010001000","placed":"110110101010","cost":null,"used":14},{"kind":"greedy","i":7,"x":"100010001000","placed":"110110111010","cost":null,"used":16},{"kind":"greedy","i":2,"x":"100010001000","placed":"111110111010","cost":null,"used":18},{"kind":"greedy","i":5,"x":"100010001000","placed":"111111111010","cost":null,"used":20},{"kind":"greedy","i":9,"x":"100010001100","placed":"111111111110","cost":null,"used":22},{"kind":"greedy","i":11,"x":"100010001101","placed":"111111111111","cost":22.0,"used":24},{"kind":"flip","i":10,"dE":-9.0,"x":"100010001111","cost":13.0,"used":36},{"kind":"stuck","x":"100010001111","cost":13.0,"used":48,"opt":false},{"kind":"greedy","i":4,"x":"000010000000","placed":"000010000000","cost":null,"used":50},{"kind":"greedy","i":10,"x":"000010000000","placed":"000010000010","cost":null,"used":52},{"kind":"greedy","i":6,"x":"000010000000","placed":"000010100010","cost":null,"used":54},{"kind":"greedy","i":3,"x":"000110000000","placed":"000110100010","cost":null,"used":56},{"kind":"greedy","i":0,"x":"000110000000","placed":"100110100010","cost":null,"used":58},{"kind":"greedy","i":11,"x":"000110000000","placed":"100110100011","cost":null,"used":60},{"kind":"greedy","i":5,"x":"000110000000","placed":"100111100011","cost":null,"used":62},{"kind":"greedy","i":2,"x":"001110000000","placed":"101111100011","cost":null,"used":64},{"kind":"greedy","i":8,"x":"001110001000","placed":"101111101011","cost":null,"used":66},{"kind":"greedy","i":7,"x":"001110001000","placed":"101111111011","cost":null,"used":68},{"kind":"greedy","i":1,"x":"011110001000","placed":"111111111011","cost":null,"used":70},{"kind":"greedy","i":9,"x":"011110001100","placed":"111111111111","cost":15.0,"used":72},{"kind":"flip","i":10,"dE":-5.0,"x":"011110001110","cost":10.0,"used":84},{"kind":"flip","i":11,"dE":-5.0,"x":"011110001111","cost":5.0,"used":96},{"kind":"stuck","x":"011110001111","cost":5.0,"used":108,"opt":true}],"sa":[[-1,0,0,11.5,45.0,"000111111000"],[6,1,1,11.5,48.0,"000111011000"],[7,1,0,11.324,43.0,"000111001000"],[7,0,1,11.151,43.0,"000111001000"],[6,0,1,10.981,43.0,"000111001000"],[8,1,0,10.813,42.0,"000111000000"],[0,1,0,10.647,40.0,"100111000000"],[4,1,0,10.485,40.0,"100101000000"],[10,1,1,10.324,47.0,"100101000010"],[9,1,0,10.167,46.0,"100101000110"],[8,1,0,10.011,27.0,"100101001110"],[10,0,1,9.858,27.0,"100101001110"],[2,1,1,9.707,30.0,"101101001110"],[0,1,0,9.559,30.0,"001101001110"],[3,1,0,9.413,27.0,"001001001110"],[5,1,1,9.269,31.0,"001000001110"],[5,1,0,9.127,27.0,"001001001110"],[0,1,0,8.988,23.0,"101001001110"],[1,0,1,8.85,23.0,"101001001110"],[6,1,1,8.715,26.0,"101001101110"],[7,0,1,8.582,26.0,"101001101110"],[5,0,1,8.451,26.0,"101001101110"],[11,1,0,8.321,21.0,"101001101111"],[4,0,1,8.194,21.0,"101001101111"],[8,0,1,8.069,21.0,"101001101111"],[8,1,1,7.946,34.0,"101001100111"],[4,0,1,7.824,34.0,"101001100111"],[10,1,1,7.705,39.0,"101001100101"],[6,1,1,7.587,42.0,"101001000101"],[8,1,0,7.471,27.0,"101001001101"],[10,1,0,7.357,18.0,"101001001111"],[0,1,1,7.244,22.0,"001001001111"],[11,0,1,7.133,22.0,"001001001111"],[3,1,1,7.024,25.0,"001101001111"],[3,1,0,6.917,22.0,"001001001111"],[6,1,1,6.811,25.0,"001001101111"],[4,0,1,6.707,25.0,"001001101111"],[3,0,1,6.605,25.0,"001001101111"],[2,1,0,6.504,20.0,"000001101111"],[0,1,0,6.404,14.0,"100001101111"],[1,0,1,6.306,14.0,"100001101111"],[4,0,1,6.21,14.0,"100001101111"],[9,0,1,6.115,14.0,"100001101111"],[0,1,1,6.021,20.0,"000001101111"],[0,1,0,5.929,14.0,"100001101111"],[6,1,0,5.839,11.0,"100001001111"],[1,0,1,5.75,11.0,"100001001111"],[10,0,1,5.662,11.0,"100001001111"],[9,0,1,5.575,11.0,"100001001111"],[6,1,1,5.49,14.0,"100001101111"],[4,1,1,5.406,26.0,"100011101111"],[7,0,1,5.323,26.0,"100011101111"],[6,1,0,5.242,17.0,"100011001111"],[10,0,1,5.162,17.0,"100011001111"],[8,0,1,5.083,17.0,"100011001111"],[0,1,1,5.005,23.0,"000011001111"],[4,1,0,4.929,17.0,"000001001111"],[6,0,1,4.853,17.0,"000001001111"],[7,0,1,4.779,17.0,"000001001111"],[5,0,1,4.706,17.0,"000001001111"],[11,0,1,4.634,17.0,"000001001111"],[11,0,1,4.563,17.0,"000001001111"],[7,0,1,4.494,17.0,"000001001111"],[0,1,0,4.425,11.0,"100001001111"],[5,0,1,4.357,11.0,"100001001111"],[4,0,1,4.291,11.0,"100001001111"],[5,0,1,4.225,11.0,"100001001111"],[0,0,1,4.16,11.0,"100001001111"],[4,0,1,4.097,11.0,"100001001111"],[11,1,1,4.034,16.0,"100001001110"],[11,1,0,3.973,11.0,"100001001111"],[1,0,1,3.912,11.0,"100001001111"],[8,0,1,3.852,11.0,"100001001111"],[10,0,1,3.793,11.0,"100001001111"],[0,0,1,3.735,11.0,"100001001111"],[9,0,1,3.678,11.0,"100001001111"],[11,0,1,3.622,11.0,"100001001111"],[4,0,1,3.566,11.0,"100001001111"],[10,0,1,3.512,11.0,"100001001111"],[3,0,1,3.458,11.0,"100001001111"],[2,0,1,3.405,11.0,"100001001111"],[11,0,1,3.353,11.0,"100001001111"],[3,0,1,3.302,11.0,"100001001111"],[1,1,1,3.252,21.0,"110001001111"],[11,0,1,3.202,21.0,"110001001111"],[2,1,1,3.153,22.0,"111001001111"],[7,0,1,3.105,22.0,"111001001111"],[3,0,1,3.057,22.0,"111001001111"],[0,1,0,3.01,20.0,"011001001111"],[1,0,1,2.964,20.0,"011001001111"],[6,1,1,2.919,23.0,"011001101111"],[5,0,1,2.875,23.0,"011001101111"],[10,0,1,2.831,23.0,"011001101111"],[2,0,1,2.787,23.0,"011001101111"],[5,0,1,2.745,23.0,"011001101111"],[9,0,1,2.703,23.0,"011001101111"],[3,1,0,2.661,22.0,"011101101111"],[2,0,1,2.621,22.0,"011101101111"],[10,0,1,2.581,22.0,"011101101111"],[9,0,1,2.541,22.0,"011101101111"],[3,1,1,2.502,23.0,"011001101111"],[9,0,1,2.464,23.0,"011001101111"],[9,0,1,2.426,23.0,"011001101111"],[5,0,1,2.389,23.0,"011001101111"],[4,0,1,2.353,23.0,"011001101111"],[8,0,1,2.317,23.0,"011001101111"],[11,0,1,2.281,23.0,"011001101111"],[2,0,1,2.247,23.0,"011001101111"],[7,0,1,2.212,23.0,"011001101111"],[9,0,1,2.178,23.0,"011001101111"],[4,0,1,2.145,23.0,"011001101111"],[7,0,1,2.112,23.0,"011001101111"],[9,0,1,2.08,23.0,"011001101111"],[1,1,1,2.048,25.0,"001001101111"],[0,1,0,2.017,21.0,"101001101111"],[1,0,1,1.986,21.0,"101001101111"],[0,0,1,1.956,21.0,"101001101111"],[11,0,1,1.926,21.0,"101001101111"],[8,0,1,1.896,21.0,"101001101111"],[0,1,1,1.867,25.0,"001001101111"],[10,0,1,1.839,25.0,"001001101111"],[5,0,1,1.811,25.0,"001001101111"],[5,0,1,1.783,25.0,"001001101111"],[8,0,1,1.756,25.0,"001001101111"],[9,0,1,1.729,25.0,"001001101111"],[6,1,0,1.703,22.0,"001001001111"],[10,0,1,1.677,22.0,"001001001111"],[1,1,0,1.651,20.0,"011001001111"],[6,0,1,1.626,20.0,"011001001111"],[6,0,1,1.601,20.0,"011001001111"],[11,0,1,1.576,20.0,"011001001111"],[3,1,0,1.552,17.0,"011101001111"],[10,0,1,1.528,17.0,"011101001111"],[3,0,1,1.505,17.0,"011101001111"],[8,0,1,1.482,17.0,"011101001111"],[11,0,1,1.459,17.0,"011101001111"],[8,0,1,1.437,17.0,"011101001111"],[6,0,1,1.415,17.0,"011101001111"],[1,0,1,1.394,17.0,"011101001111"],[9,0,1,1.372,17.0,"011101001111"],[2,0,1,1.351,17.0,"011101001111"],[6,0,1,1.331,17.0,"011101001111"],[6,0,1,1.31,17.0,"011101001111"],[9,0,1,1.29,17.0,"011101001111"],[6,0,1,1.271,17.0,"011101001111"],[6,0,1,1.251,17.0,"011101001111"],[11,1,1,1.232,22.0,"011101001110"],[6,0,1,1.213,22.0,"011101001110"],[9,0,1,1.195,22.0,"011101001110"],[11,1,0,1.176,17.0,"011101001111"],[3,0,1,1.158,17.0,"011101001111"],[4,1,0,1.141,13.0,"011111001111"],[8,0,1,1.123,13.0,"011111001111"],[7,0,1,1.106,13.0,"011111001111"],[6,0,1,1.089,13.0,"011111001111"],[1,0,1,1.072,13.0,"011111001111"],[0,0,1,1.056,13.0,"011111001111"],[3,0,1,1.04,13.0,"011111001111"],[2,0,1,1.024,13.0,"011111001111"],[8,0,1,1.008,13.0,"011111001111"],[8,0,1,0.993,13.0,"011111001111"],[11,0,1,0.978,13.0,"011111001111"],[10,0,1,0.963,13.0,"011111001111"],[1,0,1,0.948,13.0,"011111001111"],[9,0,1,0.934,13.0,"011111001111"],[7,0,1,0.919,13.0,"011111001111"],[0,0,1,0.905,13.0,"011111001111"],[8,0,1,0.891,13.0,"011111001111"],[7,0,1,0.878,13.0,"011111001111"],[3,0,1,0.864,13.0,"011111001111"],[8,0,1,0.851,13.0,"011111001111"],[0,0,1,0.838,13.0,"011111001111"],[5,1,0,0.825,5.0,"011110001111"],[8,0,1,0.813,5.0,"011110001111"],[9,0,1,0.8,5.0,"011110001111"],[3,0,1,0.788,5.0,"011110001111"],[2,0,1,0.776,5.0,"011110001111"],[6,0,1,0.764,5.0,"011110001111"],[11,0,1,0.753,5.0,"011110001111"],[0,0,1,0.741,5.0,"011110001111"],[9,0,1,0.73,5.0,"011110001111"],[5,0,1,0.719,5.0,"011110001111"],[7,0,1,0.708,5.0,"011110001111"],[10,0,1,0.697,5.0,"011110001111"],[0,0,1,0.686,5.0,"011110001111"],[6,0,1,0.676,5.0,"011110001111"],[3,0,1,0.665,5.0,"011110001111"],[1,0,1,0.655,5.0,"011110001111"],[5,0,1,0.645,5.0,"011110001111"],[11,0,1,0.635,5.0,"011110001111"],[1,0,1,0.625,5.0,"011110001111"],[11,0,1,0.616,5.0,"011110001111"],[9,0,1,0.607,5.0,"011110001111"],[8,0,1,0.597,5.0,"011110001111"],[2,0,1,0.588,5.0,"011110001111"],[5,0,1,0.579,5.0,"011110001111"],[6,0,1,0.57,5.0,"011110001111"],[2,0,1,0.562,5.0,"011110001111"],[0,0,1,0.553,5.0,"011110001111"],[2,0,1,0.545,5.0,"011110001111"],[1,0,1,0.536,5.0,"011110001111"],[0,0,1,0.528,5.0,"011110001111"],[11,0,1,0.52,5.0,"011110001111"],[3,0,1,0.512,5.0,"011110001111"],[11,0,1,0.504,5.0,"011110001111"],[6,0,1,0.496,5.0,"011110001111"],[9,0,1,0.489,5.0,"011110001111"],[2,0,1,0.481,5.0,"011110001111"],[10,0,1,0.474,5.0,"011110001111"],[3,0,1,0.467,5.0,"011110001111"],[9,0,1,0.46,5.0,"011110001111"],[3,0,1,0.453,5.0,"011110001111"],[4,0,1,0.446,5.0,"011110001111"],[0,0,1,0.439,5.0,"011110001111"],[5,0,1,0.432,5.0,"011110001111"],[11,0,1,0.426,5.0,"011110001111"],[1,0,1,0.419,5.0,"011110001111"],[4,0,1,0.413,5.0,"011110001111"],[9,0,1,0.406,5.0,"011110001111"],[5,0,1,0.4,5.0,"011110001111"],[0,0,1,0.394,5.0,"011110001111"],[1,0,1,0.388,5.0,"011110001111"],[9,0,1,0.382,5.0,"011110001111"],[6,0,1,0.376,5.0,"011110001111"],[11,0,1,0.37,5.0,"011110001111"],[3,0,1,0.365,5.0,"011110001111"],[4,0,1,0.359,5.0,"011110001111"],[7,0,1,0.354,5.0,"011110001111"],[7,0,1,0.348,5.0,"011110001111"],[2,0,1,0.343,5.0,"011110001111"],[3,0,1,0.338,5.0,"011110001111"],[1,0,1,0.333,5.0,"011110001111"],[6,0,1,0.328,5.0,"011110001111"],[11,0,1,0.323,5.0,"011110001111"],[1,0,1,0.318,5.0,"011110001111"],[7,0,1,0.313,5.0,"011110001111"],[2,0,1,0.308,5.0,"011110001111"],[7,0,1,0.303,5.0,"011110001111"],[3,0,1,0.299,5.0,"011110001111"],[3,0,1,0.294,5.0,"011110001111"],[6,0,1,0.29,5.0,"011110001111"],[7,0,1,0.285,5.0,"011110001111"],[10,0,1,0.281,5.0,"011110001111"],[8,0,1,0.276,5.0,"011110001111"],[2,0,1,0.272,5.0,"011110001111"],[1,0,1,0.268,5.0,"011110001111"],[8,0,1,0.264,5.0,"011110001111"],[8,0,1,0.26,5.0,"011110001111"],[7,0,1,0.256,5.0,"011110001111"],[1,0,1,0.252,5.0,"011110001111"],[6,0,1,0.248,5.0,"011110001111"],[9,0,1,0.244,5.0,"011110001111"],[11,0,1,0.241,5.0,"011110001111"],[8,0,1,0.237,5.0,"011110001111"],[8,0,1,0.233,5.0,"011110001111"],[2,0,1,0.23,5.0,"011110001111"],[8,0,1,0.226,5.0,"011110001111"],[3,0,1,0.223,5.0,"011110001111"],[2,0,1,0.219,5.0,"011110001111"],[10,0,1,0.216,5.0,"011110001111"],[5,0,1,0.213,5.0,"011110001111"],[7,0,1,0.21,5.0,"011110001111"],[0,0,1,0.206,5.0,"011110001111"],[6,0,1,0.203,5.0,"011110001111"],[11,0,1,0.2,5.0,"011110001111"],[5,0,1,0.197,5.0,"011110001111"],[4,0,1,0.194,5.0,"011110001111"],[4,0,1,0.191,5.0,"011110001111"],[7,0,1,0.188,5.0,"011110001111"],[3,0,1,0.185,5.0,"011110001111"],[4,0,1,0.182,5.0,"011110001111"],[10,0,1,0.18,5.0,"011110001111"],[0,0,1,0.177,5.0,"011110001111"],[1,0,1,0.174,5.0,"011110001111"],[1,0,1,0.171,5.0,"011110001111"],[9,0,1,0.169,5.0,"011110001111"],[4,0,1,0.166,5.0,"011110001111"],[1,0,1,0.164,5.0,"011110001111"],[8,0,1,0.161,5.0,"011110001111"],[10,0,1,0.159,5.0,"011110001111"],[8,0,1,0.156,5.0,"011110001111"],[1,0,1,0.154,5.0,"011110001111"],[2,0,1,0.152,5.0,"011110001111"],[10,0,1,0.149,5.0,"011110001111"],[5,0,1,0.147,5.0,"011110001111"],[4,0,1,0.145,5.0,"011110001111"],[11,0,1,0.143,5.0,"011110001111"],[11,0,1,0.14,5.0,"011110001111"],[3,0,1,0.138,5.0,"011110001111"],[4,0,1,0.136,5.0,"011110001111"],[9,0,1,0.134,5.0,"011110001111"],[9,0,1,0.132,5.0,"011110001111"],[11,0,1,0.13,5.0,"011110001111"],[6,0,1,0.128,5.0,"011110001111"],[6,0,1,0.126,5.0,"011110001111"],[3,0,1,0.124,5.0,"011110001111"],[9,0,1,0.122,5.0,"011110001111"],[1,0,1,0.12,5.0,"011110001111"],[4,0,1,0.118,5.0,"011110001111"],[3,0,1,0.117,5.0,"011110001111"],[9,0,1,0.115,5.0,"011110001111"],[6,0,1,0.113,5.0,"011110001111"],[6,0,1,0.111,5.0,"011110001111"],[9,0,1,0.11,5.0,"011110001111"],[1,0,1,0.108,5.0,"011110001111"],[4,0,1,0.106,5.0,"011110001111"],[7,0,1,0.105,5.0,"011110001111"],[9,0,1,0.103,5.0,"011110001111"],[8,0,1,0.102,5.0,"011110001111"],[7,0,1,0.1,5.0,"011110001111"],[3,0,1,0.098,5.0,"011110001111"],[9,0,1,0.097,5.0,"011110001111"],[8,0,1,0.095,5.0,"011110001111"],[0,0,1,0.094,5.0,"011110001111"],[8,0,1,0.093,5.0,"011110001111"],[10,0,1,0.091,5.0,"011110001111"],[5,0,1,0.09,5.0,"011110001111"],[3,0,1,0.088,5.0,"011110001111"],[1,0,1,0.087,5.0,"011110001111"],[2,0,1,0.086,5.0,"011110001111"],[8,0,1,0.084,5.0,"011110001111"],[7,0,1,0.083,5.0,"011110001111"],[6,0,1,0.082,5.0,"011110001111"],[6,0,1,0.081,5.0,"011110001111"],[1,0,1,0.079,5.0,"011110001111"],[0,0,1,0.078,5.0,"011110001111"],[0,0,1,0.077,5.0,"011110001111"],[0,0,1,0.076,5.0,"011110001111"],[9,0,1,0.075,5.0,"011110001111"],[4,0,1,0.073,5.0,"011110001111"],[1,0,1,0.072,5.0,"011110001111"],[8,0,1,0.071,5.0,"011110001111"],[2,0,1,0.07,5.0,"011110001111"],[0,0,1,0.069,5.0,"011110001111"],[2,0,1,0.068,5.0,"011110001111"],[8,0,1,0.067,5.0,"011110001111"],[9,0,1,0.066,5.0,"011110001111"],[2,0,1,0.065,5.0,"011110001111"],[3,0,1,0.064,5.0,"011110001111"],[7,0,1,0.063,5.0,"011110001111"],[6,0,1,0.062,5.0,"011110001111"],[10,0,1,0.061,5.0,"011110001111"],[8,0,1,0.06,5.0,"011110001111"],[3,0,1,0.059,5.0,"011110001111"],[7,0,1,0.058,5.0,"011110001111"],[6,0,1,0.057,5.0,"011110001111"],[3,0,1,0.057,5.0,"011110001111"],[7,0,1,0.056,5.0,"011110001111"],[7,0,1,0.055,5.0,"011110001111"],[6,0,1,0.054,5.0,"011110001111"],[11,0,1,0.053,5.0,"011110001111"],[6,0,1,0.052,5.0,"011110001111"],[0,0,1,0.052,5.0,"011110001111"],[1,0,1,0.051,5.0,"011110001111"],[3,0,1,0.05,5.0,"011110001111"],[2,0,1,0.049,5.0,"011110001111"],[2,0,1,0.048,5.0,"011110001111"],[5,0,1,0.048,5.0,"011110001111"],[11,0,1,0.047,5.0,"011110001111"],[10,0,1,0.046,5.0,"011110001111"],[9,0,1,0.046,5.0,"011110001111"],[5,0,1,0.045,5.0,"011110001111"],[11,0,1,0.044,5.0,"011110001111"],[7,0,1,0.044,5.0,"011110001111"],[6,0,1,0.043,5.0,"011110001111"],[5,0,1,0.042,5.0,"011110001111"],[6,0,1,0.042,5.0,"011110001111"],[7,0,1,0.041,5.0,"011110001111"],[5,0,1,0.04,5.0,"011110001111"],[2,0,1,0.04,5.0,"011110001111"],[3,0,1,0.039,5.0,"011110001111"],[3,0,1,0.038,5.0,"011110001111"],[11,0,1,0.038,5.0,"011110001111"],[6,0,1,0.037,5.0,"011110001111"],[3,0,1,0.037,5.0,"011110001111"],[0,0,1,0.036,5.0,"011110001111"],[5,0,1,0.036,5.0,"011110001111"],[0,0,1,0.035,5.0,"011110001111"],[9,0,1,0.035,5.0,"011110001111"],[4,0,1,0.034,5.0,"011110001111"],[6,0,1,0.034,5.0,"011110001111"],[11,0,1,0.033,5.0,"011110001111"],[1,0,1,0.032,5.0,"011110001111"],[8,0,1,0.032,5.0,"011110001111"],[6,0,1,0.031,5.0,"011110001111"],[6,0,1,0.031,5.0,"011110001111"],[4,0,1,0.031,5.0,"011110001111"],[1,0,1,0.03,5.0,"011110001111"],[7,0,1,0.03,5.0,"011110001111"],[0,0,1,0.029,5.0,"011110001111"],[3,0,1,0.029,5.0,"011110001111"],[9,0,1,0.028,5.0,"011110001111"],[7,0,1,0.028,5.0,"011110001111"],[11,0,1,0.027,5.0,"011110001111"],[1,0,1,0.027,5.0,"011110001111"],[10,0,1,0.027,5.0,"011110001111"],[6,0,1,0.026,5.0,"011110001111"],[2,0,1,0.026,5.0,"011110001111"],[0,0,1,0.025,5.0,"011110001111"],[0,0,1,0.025,5.0,"011110001111"]],"dp":{"w":3,"V":[[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[1.5,-1.5,-1.5,1.5,1.5,-1.5,-1.5,1.5],[0.5,2.5,0.5,-3.5,-3.5,0.5,2.5,0.5],[-7.0,0.0,-1.0,2.0,2.0,-1.0,0.0,-7.0],[-9.5,-4.5,0.5,-2.5,-2.5,0.5,-4.5,-9.5],[-6.5,-12.5,-5.5,-3.5,-3.5,-5.5,-12.5,-6.5],[-6.0,-7.0,-9.0,-16.0,-16.0,-9.0,-7.0,-6.0],[-17.5,-14.5,-6.5,-11.5,-11.5,-6.5,-14.5,-17.5],[-13.0,-22.0,-16.0,-13.0,-13.0,-16.0,-22.0,-13.0],[-16.0,-13.0,-14.0,-30.0,-30.0,-14.0,-13.0,-16.0],[-33.5,-26.5,-13.5,-14.5,-14.5,-13.5,-26.5,-33.5],[-36.0,-31.0,-27.0,-26.0,-26.0,-27.0,-31.0,-36.0]],"best":5.0,"check":5.0},"toyqaoa":{"labels":["00000","10000","01000","11000","00100","10100","01100","11100","00010","10010","01010","11010","00110","10110","01110","11110","00001","10001","01001","11001","00101","10101","01101","11101","00011","10011","01011","11011","00111","10111","01111","11111"],"cost":[16.0,13.0,17.0,16.0,16.0,17.0,9.0,12.0,8.0,1.0,13.0,8.0,16.0,13.0,13.0,12.0,12.0,13.0,13.0,16.0,8.0,13.0,1.0,8.0,12.0,9.0,17.0,16.0,16.0,17.0,13.0,16.0],"probs":{"0":[0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312,0.0312],"1":[0.0034,0.0017,0.0023,0.0034,0.0046,0.0049,0.0209,0.0311,0.0339,0.2633,0.0159,0.0339,0.0031,0.0028,0.0326,0.0421,0.0421,0.0326,0.0028,0.0031,0.0339,0.0159,0.2633,0.0339,0.0311,0.0209,0.0049,0.0046,0.0034,0.0023,0.0017,0.0034],"2":[0.0026,0.0089,0.0037,0.0021,0.0002,0.0122,0.0179,0.011,0.0144,0.3787,0.0028,0.0197,0.0019,0.008,0.0034,0.0126,0.0126,0.0034,0.008,0.0019,0.0197,0.0028,0.3787,0.0144,0.011,0.0179,0.0122,0.0002,0.0021,0.0037,0.0089,0.0026],"3":[0.0002,0.0145,0.0006,0.0009,0.0077,0.0081,0.0272,0.0069,0.0256,0.3532,0.0052,0.0323,0.0001,0.0162,0.0003,0.0008,0.0008,0.0003,0.0162,0.0001,0.0323,0.0052,0.3532,0.0256,0.0069,0.0272,0.0081,0.0077,0.0009,0.0006,0.0145,0.0002]},"angles":{"1":[0.452,-0.506],"2":[0.464,0.638,-0.593,-0.304],"3":[0.387,0.59,0.669,-0.64,-0.447,-0.243]},"p_opt":{"0":0.0625,"1":0.5267,"2":0.7573,"3":0.7064},"mean":{"0":12.5,"1":5.833,"2":3.547,"3":3.834},"J":[[0,1,0.5],[0,2,1.0],[0,3,-1.0],[0,4,1.0],[1,2,-2.0],[1,3,1.0],[2,3,2.0],[2,4,-1.0],[3,4,2.0]],"offset":12.5},"land":{"g":[0.02,0.07,0.119,0.169,0.218,0.268,0.317,0.367,0.416,0.466,0.515,0.565,0.615,0.664,0.714,0.763,0.813,0.862,0.912,0.961,1.011,1.061,1.11,1.16,1.209,1.259,1.308,1.358,1.407,1.457,1.506,1.556,1.606,1.655,1.705,1.754,1.804,1.853,1.903,1.952,2.002,2.052,2.101,2.151,2.2,2.25,2.299,2.349,2.398,2.448,2.497,2.547,2.597,2.646,2.696,2.745,2.795,2.844,2.894,2.943,2.993,3.042,3.092,3.142],"b":[-0.785,-0.745,-0.705,-0.665,-0.624,-0.584,-0.544,-0.503,-0.463,-0.423,-0.383,-0.342,-0.302,-0.262,-0.222,-0.181,-0.141,-0.101,-0.06,-0.02,0.02,0.06,0.101,0.141,0.181,0.222,0.262,0.302,0.342,0.383,0.423,0.463,0.503,0.544,0.584,0.624,0.665,0.705,0.745,0.785],"E":[[12.48,12.29,11.91,11.39,10.77,10.12,9.5,8.98,8.6,8.39,8.35,8.47,8.73,9.09,9.51,9.94,10.35,10.71,11.01,11.26,11.47,11.66,11.86,12.07,12.32,12.61,12.94,13.28,13.6,13.88,14.09,14.2,14.19,14.06,13.83,13.51,13.12,12.72,12.33,11.98,11.7,11.49,11.36,11.29,11.26,11.25,11.21,11.14,11.02,10.84,10.62,10.37,10.13,9.93,9.8,9.78,9.87,10.08,10.4,10.81,11.26,11.73,12.15,12.5],[12.43,12.11,11.6,10.96,10.25,9.53,8.87,8.33,7.95,7.75,7.75,7.93,8.25,8.68,9.16,9.66,10.12,10.54,10.89,11.19,11.42,11.64,11.84,12.07,12.33,12.62,12.95,13.29,13.62,13.91,14.13,14.24,14.24,14.12,13.88,13.55,13.15,12.73,12.32,11.95,11.65,11.43,11.29,11.21,11.19,11.19,11.19,11.16,11.09,10.98,10.83,10.65,10.48,10.35,10.27,10.28,10.38,10.59,10.88,11.24,11.63,12.01,12.34,12.58],[12.37,11.92,11.31,10.57,9.78,9.0,8.3,7.74,7.36,7.19,7.22,7.45,7.83,8.31,8.86,9.41,9.94,10.41,10.8,11.12,11.39,11.62,11.84,12.07,12.33,12.63,12.96,13.3,13.63,13.93,14.14,14.26,14.26,14.14,13.91,13.57,13.18,12.74,12.32,11.94,11.62,11.38,11.22,11.15,11.13,11.15,11.18,11.2,11.19,11.14,11.06,10.96,10.86,10.78,10.76,10.8,10.92,11.12,11.38,11.69,12.0,12.29,12.52,12.66],[12.32,11.76,11.03,10.21,9.35,8.52,7.8,7.23,6.86,6.71,6.78,7.05,7.48,8.02,8.61,9.22,9.79,10.3,10.73,11.08,11.37,11.62,11.85,12.08,12.34,12.64,12.96,13.3,13.63,13.92,14.14,14.26,14.27,14.15,13.92,13.59,13.19,12.75,12.32,11.93,11.59,11.35,11.18,11.11,11.1,11.13,11.19,11.25,11.29,11.31,11.3,11.27,11.24,11.23,11.26,11.33,11.46,11.65,11.88,12.13,12.37,12.57,12.7,12.73],[12.28,11.6,10.79,9.89,8.98,8.12,7.37,6.81,6.45,6.33,6.43,6.74,7.21,7.79,8.43,9.08,9.69,10.23,10.69,11.06,11.37,11.62,11.86,12.1,12.35,12.64,12.96,13.29,13.61,13.89,14.11,14.23,14.24,14.13,13.91,13.59,13.19,12.76,12.32,11.92,11.59,11.33,11.16,11.08,11.08,11.13,11.22,11.32,11.41,11.49,11.55,11.59,11.63,11.68,11.75,11.86,12.0,12.17,12.37,12.56,12.72,12.84,12.87,12.8],[12.24,11.47,10.58,9.63,8.68,7.79,7.05,6.49,6.15,6.05,6.18,6.52,7.03,7.64,8.31,8.99,9.62,10.19,10.67,11.06,11.38,11.65,11.88,12.12,12.37,12.64,12.95,13.26,13.57,13.85,14.06,14.18,14.2,14.1,13.88,13.57,13.18,12.76,12.33,11.93,11.59,11.33,11.16,11.08,11.08,11.15,11.26,11.39,11.54,11.67,11.79,11.9,12.01,12.12,12.23,12.37,12.51,12.67,12.83,12.97,13.06,13.08,13.02,12.86],[12.2,11.37,10.42,9.43,8.45,7.56,6.82,6.28,5.96,5.89,6.05,6.41,6.94,7.57,8.26,8.96,9.61,10.19,10.68,11.09,11.41,11.68,11.91,12.14,12.38,12.64,12.93,13.23,13.53,13.79,13.99,14.11,14.13,14.04,13.83,13.54,13.17,12.75,12.34,11.94,11.61,11.35,11.18,11.1,11.11,11.19,11.32,11.49,11.67,11.86,12.04,12.21,12.37,12.53,12.68,12.84,12.99,13.14,13.26,13.34,13.36,13.31,13.16,12.91],[12.18,11.28,10.3,9.29,8.31,7.43,6.71,6.18,5.89,5.84,6.02,6.4,6.94,7.59,8.29,8.99,9.64,10.23,10.72,11.13,11.45,11.72,11.95,12.17,12.39,12.64,12.91,13.19,13.46,13.71,13.91,14.02,14.04,13.96,13.77,13.49,13.14,12.75,12.35,11.96,11.64,11.38,11.21,11.14,11.15,11.24,11.39,11.59,11.8,12.04,12.27,12.49,12.7,12.91,13.1,13.27,13.43,13.55,13.64,13.67,13.63,13.5,13.27,12.95],[12.16,11.23,10.23,9.22,8.25,7.4,6.7,6.21,5.95,5.92,6.11,6.5,7.05,7.69,8.38,9.07,9.72,10.3,10.79,11.19,11.51,11.77,11.99,12.2,12.41,12.64,12.88,13.14,13.39,13.62,13.8,13.91,13.94,13.86,13.69,13.43,13.11,12.74,12.36,11.99,11.68,11.43,11.27,11.2,11.22,11.31,11.48,11.69,11.94,12.21,12.48,12.75,13.0,13.24,13.46,13.65,13.8,13.91,13.96,13.95,13.85,13.65,13.36,12.98],[12.15,11.21,10.22,9.22,8.29,7.46,6.81,6.35,6.12,6.11,6.32,6.71,7.24,7.87,8.54,9.21,9.85,10.41,10.88,11.27,11.58,11.83,12.04,12.23,12.42,12.63,12.85,13.08,13.31,13.52,13.69,13.79,13.82,13.75,13.6,13.36,13.06,12.72,12.37,12.03,11.73,11.5,11.34,11.28,11.3,11.4,11.57,11.8,12.07,12.36,12.67,12.97,13.26,13.52,13.76,13.96,14.11,14.2,14.22,14.16,14.02,13.77,13.43,13.0],[12.15,11.22,10.25,9.29,8.4,7.63,7.02,6.61,6.4,6.41,6.62,7.01,7.52,8.12,8.77,9.41,10.01,10.54,11.0,11.37,11.66,11.9,12.09,12.27,12.44,12.62,12.82,13.02,13.23,13.41,13.56,13.66,13.68,13.63,13.49,13.28,13.01,12.71,12.38,12.07,11.79,11.58,11.43,11.37,11.39,11.5,11.67,11.91,12.19,12.5,12.83,13.15,13.46,13.75,14.0,14.2,14.34,14.42,14.41,14.32,14.13,13.84,13.46,13.0],[12.15,11.26,10.34,9.44,8.61,7.89,7.34,6.97,6.8,6.82,7.03,7.4,7.88,8.45,9.05,9.65,10.21,10.71,11.13,11.48,11.75,11.97,12.14,12.3,12.45,12.61,12.78,12.96,13.13,13.3,13.43,13.52,13.54,13.49,13.38,13.2,12.96,12.69,12.4,12.12,11.87,11.66,11.53,11.48,11.5,11.61,11.78,12.02,12.3,12.62,12.95,13.29,13.61,13.9,14.16,14.36,14.49,14.55,14.52,14.4,14.19,13.87,13.47,12.99],[12.17,11.33,10.47,9.64,8.89,8.25,7.75,7.43,7.29,7.32,7.53,7.87,8.32,8.84,9.39,9.93,10.44,10.9,11.28,11.6,11.85,12.04,12.2,12.34,12.46,12.6,12.74,12.89,13.04,13.18,13.29,13.37,13.39,13.36,13.26,13.11,12.9,12.66,12.41,12.16,11.94,11.76,11.64,11.6,11.62,11.72,11.89,12.12,12.4,12.71,13.04,13.38,13.7,13.99,14.24,14.43,14.56,14.6,14.55,14.41,14.18,13.86,13.45,12.97],[12.2,11.42,10.65,9.91,9.24,8.68,8.25,7.97,7.86,7.91,8.1,8.41,8.81,9.27,9.76,10.25,10.7,11.1,11.44,11.72,11.94,12.12,12.25,12.37,12.48,12.59,12.7,12.82,12.95,13.06,13.16,13.22,13.24,13.22,13.14,13.01,12.84,12.64,12.43,12.21,12.02,11.87,11.76,11.72,11.74,11.84,12.0,12.21,12.48,12.78,13.09,13.42,13.72,14.01,14.24,14.42,14.53,14.56,14.51,14.36,14.12,13.79,13.39,12.93],[12.23,11.55,10.87,10.22,9.65,9.18,8.82,8.59,8.51,8.55,8.73,9.0,9.35,9.75,10.17,10.59,10.97,11.32,11.62,11.85,12.04,12.19,12.3,12.4,12.49,12.57,12.66,12.76,12.86,12.95,13.03,13.08,13.1,13.08,13.02,12.92,12.78,12.62,12.44,12.27,12.1,11.97,11.89,11.85,11.87,11.96,12.1,12.3,12.54,12.81,13.11,13.4,13.69,13.95,14.17,14.33,14.42,14.44,14.38,14.23,14.0,13.69,13.31,12.89],[12.27,11.69,11.12,10.59,10.12,9.73,9.44,9.27,9.2,9.25,9.4,9.63,9.92,10.25,10.6,10.94,11.26,11.55,11.79,11.99,12.14,12.26,12.35,12.43,12.49,12.56,12.63,12.7,12.77,12.84,12.9,12.94,12.96,12.95,12.9,12.83,12.72,12.59,12.46,12.31,12.19,12.08,12.01,11.98,12.0,12.08,12.2,12.37,12.58,12.82,13.08,13.34,13.59,13.82,14.01,14.15,14.23,14.24,14.17,14.03,13.82,13.54,13.21,12.83],[12.31,11.85,11.4,10.98,10.62,10.32,10.11,9.98,9.94,9.98,10.1,10.28,10.51,10.77,11.04,11.31,11.55,11.78,11.96,12.12,12.23,12.33,12.4,12.45,12.5,12.54,12.59,12.64,12.69,12.74,12.78,12.81,12.83,12.82,12.79,12.74,12.66,12.57,12.47,12.36,12.27,12.19,12.13,12.11,12.13,12.19,12.29,12.43,12.6,12.8,13.01,13.23,13.44,13.63,13.78,13.9,13.96,13.96,13.9,13.78,13.59,13.36,13.08,12.77],[12.36,12.03,11.7,11.41,11.15,10.94,10.79,10.71,10.69,10.72,10.81,10.94,11.11,11.29,11.48,11.67,11.84,12.0,12.13,12.24,12.32,12.39,12.44,12.47,12.5,12.53,12.56,12.59,12.62,12.65,12.68,12.7,12.71,12.71,12.69,12.66,12.61,12.55,12.48,12.41,12.34,12.29,12.25,12.23,12.25,12.29,12.37,12.47,12.6,12.75,12.91,13.07,13.23,13.37,13.49,13.57,13.61,13.61,13.56,13.46,13.32,13.14,12.93,12.7],[12.42,12.21,12.02,11.84,11.69,11.57,11.49,11.44,11.43,11.46,11.51,11.59,11.69,11.79,11.91,12.02,12.12,12.21,12.29,12.35,12.4,12.44,12.47,12.49,12.5,12.52,12.53,12.55,12.56,12.58,12.6,12.61,12.61,12.61,12.6,12.59,12.56,12.53,12.49,12.45,12.41,12.38,12.36,12.35,12.36,12.39,12.43,12.49,12.57,12.67,12.77,12.87,12.97,13.06,13.13,13.18,13.21,13.2,13.17,13.11,13.01,12.9,12.77,12.62],[12.47,12.4,12.34,12.28,12.23,12.2,12.17,12.16,12.15,12.16,12.18,12.21,12.24,12.27,12.31,12.35,12.38,12.41,12.43,12.46,12.47,12.48,12.49,12.5,12.5,12.51,12.51,12.51,12.52,12.52,12.53,12.53,12.53,12.53,12.53,12.53,12.52,12.51,12.5,12.48,12.47,12.46,12.46,12.45,12.46,12.47,12.48,12.5,12.53,12.56,12.6,12.63,12.66,12.7,12.72,12.74,12.75,12.74,12.73,12.71,12.68,12.64,12.59,12.54],[12.53,12.6,12.66,12.71,12.76,12.8,12.82,12.83,12.83,12.82,12.81,12.78,12.75,12.71,12.68,12.65,12.61,12.59,12.56,12.54,12.53,12.52,12.51,12.5,12.5,12.49,12.49,12.49,12.49,12.48,12.48,12.47,12.47,12.47,12.47,12.48,12.48,12.49,12.5,12.51,12.52,12.53,12.54,12.54,12.54,12.53,12.52,12.49,12.46,12.43,12.4,12.36,12.33,12.3,12.27,12.25,12.25,12.25,12.26,12.29,12.32,12.36,12.41,12.46],[12.58,12.78,12.96,13.12,13.26,13.36,13.42,13.46,13.46,13.43,13.37,13.29,13.21,13.11,13.01,12.91,12.82,12.74,12.67,12.61,12.57,12.54,12.51,12.5,12.49,12.49,12.48,12.47,12.47,12.46,12.45,12.44,12.44,12.43,12.43,12.44,12.46,12.48,12.51,12.54,12.56,12.59,12.61,12.62,12.61,12.58,12.53,12.47,12.38,12.29,12.18,12.07,11.96,11.87,11.79,11.74,11.72,11.73,11.77,11.85,11.95,12.08,12.22,12.38],[12.63,12.96,13.25,13.5,13.71,13.87,13.96,14.01,14.0,13.95,13.86,13.74,13.59,13.44,13.28,13.13,12.98,12.86,12.75,12.66,12.6,12.55,12.51,12.49,12.48,12.48,12.48,12.47,12.47,12.46,12.45,12.43,12.42,12.41,12.41,12.42,12.44,12.47,12.51,12.55,12.59,12.63,12.66,12.67,12.65,12.61,12.53,12.42,12.28,12.12,11.94,11.76,11.58,11.43,11.3,11.21,11.18,11.2,11.27,11.4,11.58,11.8,12.04,12.3],[12.68,13.12,13.51,13.84,14.11,14.31,14.43,14.48,14.46,14.38,14.26,14.09,13.9,13.7,13.5,13.3,13.11,12.95,12.81,12.69,12.61,12.54,12.5,12.48,12.47,12.47,12.48,12.48,12.48,12.47,12.46,12.45,12.43,12.42,12.41,12.42,12.43,12.46,12.51,12.56,12.61,12.66,12.69,12.7,12.68,12.62,12.51,12.36,12.17,11.95,11.7,11.44,11.2,10.97,10.8,10.68,10.64,10.67,10.78,10.96,11.22,11.52,11.87,12.23],[12.73,13.26,13.73,14.13,14.45,14.67,14.8,14.85,14.81,14.71,14.56,14.36,14.13,13.89,13.65,13.41,13.2,13.0,12.84,12.7,12.6,12.53,12.48,12.46,12.46,12.47,12.48,12.5,12.51,12.51,12.5,12.49,12.47,12.45,12.43,12.43,12.44,12.46,12.5,12.55,12.61,12.66,12.7,12.71,12.69,12.61,12.48,12.29,12.05,11.76,11.45,11.12,10.81,10.53,10.31,10.16,10.11,10.15,10.3,10.54,10.87,11.27,11.71,12.17],[12.76,13.38,13.92,14.37,14.71,14.95,15.08,15.12,15.06,14.93,14.75,14.52,14.27,14.0,13.73,13.47,13.23,13.02,12.84,12.69,12.58,12.5,12.46,12.44,12.45,12.47,12.5,12.53,12.55,12.56,12.56,12.55,12.52,12.49,12.47,12.45,12.45,12.46,12.49,12.54,12.6,12.66,12.7,12.71,12.67,12.58,12.43,12.2,11.92,11.58,11.2,10.81,10.44,10.11,9.84,9.67,9.61,9.67,9.85,10.15,10.55,11.03,11.56,12.11],[12.79,13.47,14.06,14.54,14.9,15.13,15.25,15.27,15.19,15.04,14.83,14.58,14.31,14.02,13.74,13.47,13.22,13.0,12.81,12.66,12.54,12.47,12.43,12.42,12.43,12.47,12.52,12.56,12.6,12.63,12.64,12.63,12.6,12.56,12.53,12.49,12.47,12.47,12.49,12.53,12.58,12.63,12.67,12.68,12.64,12.54,12.36,12.11,11.78,11.39,10.96,10.52,10.09,9.71,9.41,9.22,9.15,9.23,9.45,9.8,10.27,10.82,11.43,12.07],[12.82,13.54,14.15,14.64,14.99,15.22,15.31,15.3,15.2,15.02,14.79,14.53,14.25,13.96,13.68,13.41,13.17,12.95,12.76,12.61,12.49,12.42,12.38,12.39,12.42,12.47,12.54,12.61,12.67,12.71,12.73,12.73,12.7,12.65,12.6,12.54,12.5,12.48,12.48,12.5,12.54,12.59,12.62,12.63,12.58,12.47,12.28,12.0,11.65,11.22,10.74,10.25,9.77,9.35,9.02,8.81,8.75,8.84,9.09,9.49,10.02,10.65,11.33,12.03],[12.83,13.58,14.2,14.68,15.01,15.2,15.26,15.22,15.09,14.89,14.65,14.38,14.1,13.82,13.55,13.3,13.07,12.86,12.68,12.54,12.43,12.36,12.34,12.36,12.4,12.48,12.57,12.66,12.74,12.81,12.84,12.84,12.81,12.76,12.68,12.61,12.54,12.49,12.46,12.47,12.49,12.53,12.56,12.56,12.51,12.39,12.19,11.9,11.51,11.05,10.54,10.01,9.5,9.04,8.69,8.46,8.4,8.51,8.8,9.24,9.83,10.51,11.25,12.01],[12.84,13.58,14.19,14.64,14.93,15.08,15.1,15.02,14.86,14.64,14.39,14.13,13.86,13.61,13.36,13.13,12.92,12.74,12.57,12.45,12.35,12.3,12.29,12.32,12.39,12.49,12.6,12.72,12.83,12.91,12.96,12.97,12.94,12.87,12.78,12.68,12.58,12.5,12.45,12.43,12.43,12.46,12.48,12.47,12.42,12.3,12.09,11.79,11.39,10.91,10.37,9.81,9.27,8.79,8.42,8.19,8.13,8.26,8.57,9.06,9.69,10.41,11.2,12.0],[12.83,13.56,14.13,14.53,14.77,14.87,14.84,14.71,14.52,14.28,14.03,13.78,13.54,13.31,13.11,12.91,12.74,12.58,12.45,12.34,12.27,12.23,12.24,12.29,12.38,12.5,12.64,12.79,12.92,13.03,13.09,13.11,13.08,13.0,12.89,12.76,12.64,12.52,12.44,12.39,12.37,12.37,12.38,12.37,12.32,12.2,11.99,11.68,11.27,10.78,10.22,9.65,9.09,8.6,8.22,7.99,7.94,8.09,8.42,8.94,9.6,10.36,11.18,12.0],[12.82,13.5,14.02,14.36,14.53,14.56,14.47,14.3,14.07,13.83,13.58,13.35,13.14,12.96,12.8,12.65,12.52,12.41,12.31,12.23,12.18,12.16,12.18,12.25,12.36,12.51,12.68,12.85,13.01,13.14,13.23,13.26,13.22,13.14,13.01,12.85,12.69,12.54,12.42,12.34,12.29,12.28,12.27,12.26,12.2,12.09,11.88,11.57,11.17,10.67,10.12,9.53,8.97,8.48,8.1,7.87,7.83,8.0,8.35,8.89,9.57,10.36,11.19,12.02],[12.8,13.42,13.86,14.12,14.21,14.16,14.01,13.79,13.54,13.28,13.05,12.84,12.68,12.54,12.44,12.35,12.28,12.21,12.15,12.11,12.08,12.09,12.13,12.22,12.35,12.52,12.72,12.92,13.11,13.26,13.36,13.4,13.37,13.28,13.13,12.95,12.75,12.56,12.41,12.29,12.21,12.18,12.16,12.14,12.08,11.97,11.77,11.47,11.08,10.59,10.04,9.47,8.91,8.42,8.05,7.84,7.81,7.99,8.36,8.91,9.61,10.4,11.23,12.05],[12.77,13.31,13.66,13.83,13.83,13.7,13.48,13.21,12.93,12.66,12.45,12.28,12.16,12.09,12.05,12.02,12.01,12.0,11.98,11.97,11.98,12.01,12.08,12.19,12.34,12.53,12.76,12.98,13.2,13.38,13.5,13.55,13.52,13.42,13.25,13.04,12.81,12.59,12.39,12.24,12.13,12.07,12.04,12.01,11.96,11.85,11.66,11.38,11.01,10.54,10.01,9.46,8.92,8.45,8.09,7.89,7.88,8.07,8.45,9.01,9.7,10.48,11.3,12.09],[12.73,13.18,13.43,13.49,13.39,13.17,12.88,12.56,12.25,11.99,11.79,11.66,11.6,11.6,11.63,11.68,11.73,11.77,11.81,11.84,11.88,11.94,12.03,12.16,12.33,12.55,12.79,13.05,13.29,13.49,13.63,13.69,13.66,13.55,13.37,13.13,12.87,12.61,12.38,12.19,12.05,11.96,11.91,11.88,11.82,11.73,11.56,11.31,10.96,10.52,10.02,9.49,8.98,8.54,8.21,8.03,8.03,8.23,8.62,9.17,9.85,10.61,11.39,12.14],[12.69,13.03,13.16,13.11,12.9,12.6,12.23,11.87,11.54,11.27,11.1,11.02,11.02,11.08,11.19,11.31,11.44,11.55,11.64,11.71,11.78,11.87,11.98,12.13,12.32,12.56,12.83,13.11,13.37,13.59,13.75,13.82,13.8,13.68,13.48,13.22,12.93,12.64,12.37,12.14,11.97,11.86,11.79,11.75,11.7,11.61,11.47,11.24,10.93,10.53,10.07,9.58,9.11,8.7,8.4,8.24,8.27,8.47,8.86,9.4,10.05,10.77,11.51,12.2],[12.64,12.86,12.86,12.69,12.38,11.99,11.55,11.14,10.79,10.54,10.39,10.36,10.43,10.56,10.75,10.95,11.15,11.32,11.46,11.59,11.69,11.8,11.94,12.11,12.32,12.58,12.86,13.16,13.44,13.69,13.86,13.94,13.92,13.8,13.59,13.31,12.99,12.66,12.35,12.09,11.89,11.75,11.67,11.62,11.57,11.51,11.38,11.19,10.92,10.56,10.15,9.72,9.29,8.93,8.66,8.54,8.57,8.79,9.16,9.68,10.3,10.97,11.65,12.27],[12.59,12.67,12.55,12.26,11.85,11.36,10.86,10.41,10.04,9.8,9.69,9.71,9.84,10.05,10.31,10.59,10.86,11.1,11.3,11.47,11.61,11.75,11.9,12.09,12.32,12.59,12.89,13.21,13.51,13.77,13.95,14.04,14.03,13.9,13.68,13.38,13.04,12.68,12.34,12.05,11.82,11.66,11.56,11.5,11.46,11.41,11.31,11.16,10.93,10.63,10.28,9.9,9.53,9.21,8.99,8.9,8.95,9.17,9.53,10.02,10.59,11.2,11.8,12.34],[12.54,12.48,12.23,11.82,11.3,10.73,10.17,9.68,9.31,9.08,9.0,9.07,9.27,9.56,9.9,10.25,10.59,10.89,11.15,11.36,11.54,11.7,11.88,12.08,12.32,12.6,12.92,13.25,13.56,13.83,14.03,14.13,14.12,13.99,13.76,13.45,13.09,12.7,12.33,12.01,11.75,11.57,11.45,11.39,11.36,11.32,11.26,11.14,10.96,10.72,10.43,10.12,9.81,9.55,9.37,9.31,9.39,9.6,9.95,10.4,10.91,11.46,11.97,12.42],[12.48,12.29,11.91,11.39,10.77,10.12,9.5,8.98,8.6,8.39,8.35,8.47,8.73,9.09,9.51,9.94,10.35,10.71,11.01,11.26,11.47,11.66,11.86,12.07,12.32,12.61,12.94,13.28,13.6,13.88,14.09,14.2,14.19,14.06,13.83,13.51,13.12,12.72,12.33,11.98,11.7,11.49,11.36,11.29,11.26,11.25,11.21,11.14,11.02,10.84,10.62,10.37,10.13,9.93,9.8,9.78,9.87,10.08,10.4,10.81,11.26,11.73,12.15,12.5]],"emin":[12.147,11.209,10.216,9.212,8.253,7.395,6.689,6.179,5.893,5.842,6.018,6.394,6.928,7.569,8.263,8.958,9.61,10.187,10.671,11.06,11.368,11.617,11.84,12.069,12.319,12.469,12.475,12.472,12.465,12.456,12.445,12.433,12.422,12.414,12.411,12.417,12.433,12.461,12.32,11.922,11.584,11.326,11.158,11.079,11.078,11.129,11.18,11.14,10.917,10.52,10.011,9.454,8.906,8.423,8.053,7.839,7.81,7.98,8.347,8.889,9.574,10.355,11.182,12.0],"bmin":[-0.399,-0.414,-0.43,-0.444,-0.458,-0.47,-0.481,-0.492,-0.501,-0.508,-0.515,-0.521,-0.527,-0.532,-0.537,-0.543,-0.552,-0.564,-0.582,-0.606,-0.637,-0.673,-0.71,-0.753,0.718,0.217,0.114,0.093,0.087,0.087,0.09,0.096,0.104,0.112,0.123,0.135,0.151,0.186,-0.691,-0.635,-0.617,-0.606,-0.6,-0.6,-0.612,-0.643,-0.707,0.763,0.661,0.594,0.556,0.534,0.521,0.512,0.505,0.499,0.493,0.486,0.479,0.47,0.46,0.448,0.431,0.393],"best":{"g":0.4519,"b":-0.5063,"e":5.833},"offset":12.5,"cobyla":7.798},"mps":[{"N":16,"p":1,"chi_max":8,"mem_bytes":6016,"sv_bytes":1048576.0,"secs":0.007},{"N":16,"p":2,"chi_max":16,"mem_bytes":24704,"sv_bytes":1048576.0,"secs":0.009},{"N":16,"p":3,"chi_max":32,"mem_bytes":72320,"sv_bytes":1048576.0,"secs":0.024},{"N":24,"p":1,"chi_max":8,"mem_bytes":10624,"sv_bytes":268435456.0,"secs":0.006},{"N":24,"p":2,"chi_max":16,"mem_bytes":104576,"sv_bytes":268435456.0,"secs":0.017},{"N":24,"p":3,"chi_max":52,"mem_bytes":534720,"sv_bytes":268435456.0,"secs":0.198},{"N":32,"p":1,"chi_max":8,"mem_bytes":22144,"sv_bytes":68719476736.0,"secs":0.008},{"N":32,"p":2,"chi_max":32,"mem_bytes":198784,"sv_bytes":68719476736.0,"secs":0.055},{"N":32,"p":3,"chi_max":64,"mem_bytes":757376,"sv_bytes":68719476736.0,"secs":0.539},{"N":48,"p":1,"chi_max":8,"mem_bytes":22496,"sv_bytes":4503599627370496.0,"secs":0.007},{"N":48,"p":2,"chi_max":32,"mem_bytes":211872,"sv_bytes":4503599627370496.0,"secs":0.028},{"N":48,"p":3,"chi_max":63,"mem_bytes":1105792,"sv_bytes":4503599627370496.0,"secs":0.419},{"N":64,"p":1,"chi_max":8,"mem_bytes":26112,"sv_bytes":2.9514790517935283e+20,"secs":0.014},{"N":64,"p":2,"chi_max":28,"mem_bytes":224448,"sv_bytes":2.9514790517935283e+20,"secs":0.052},{"N":64,"p":3,"chi_max":44,"mem_bytes":1081312,"sv_bytes":2.9514790517935283e+20,"secs":0.453},{"N":100,"p":1,"chi_max":8,"mem_bytes":46656,"sv_bytes":2.028240960365167e+31,"secs":0.017},{"N":100,"p":2,"chi_max":32,"mem_bytes":367360,"sv_bytes":2.028240960365167e+31,"secs":0.091},{"N":100,"p":3,"chi_max":82,"mem_bytes":2003488,"sv_bytes":2.028240960365167e+31,"secs":1.014}],"timing":[{"dir":"mps_swap_right","N":16,"p":1,"secs":0.132},{"dir":"mps_swap_right","N":16,"p":2,"secs":0.134},{"dir":"mps_swap_right","N":16,"p":3,"secs":0.166},{"dir":"mps_swap_right","N":20,"p":1,"secs":0.139},{"dir":"mps_swap_right","N":20,"p":2,"secs":0.169},{"dir":"mps_swap_right","N":20,"p":3,"secs":0.25},{"dir":"mps_swap_right","N":24,"p":1,"secs":0.153},{"dir":"mps_swap_right","N":24,"p":2,"secs":0.237},{"dir":"mps_swap_right","N":24,"p":3,"secs":0.67},{"dir":"mps_swap_right","N":32,"p":1,"secs":0.215},{"dir":"mps_swap_right","N":32,"p":2,"secs":0.345},{"dir":"mps_swap_right","N":32,"p":3,"secs":0.993},{"dir":"mps_swap_right","N":48,"p":1,"secs":0.272},{"dir":"mps_swap_right","N":48,"p":2,"secs":0.411},{"dir":"mps_swap_right","N":48,"p":3,"secs":1.057},{"dir":"mps_swap_right","N":64,"p":1,"secs":0.364},{"dir":"mps_swap_right","N":64,"p":2,"secs":0.538},{"dir":"mps_swap_right","N":64,"p":3,"secs":1.269},{"dir":"mps_swap_right","N":100,"p":1,"secs":0.6},{"dir":"mps_swap_right","N":100,"p":2,"secs":0.833},{"dir":"mps_swap_right","N":100,"p":3,"secs":2.239}]};
+    const STILL = new URLSearchParams(location.search).has("still") || matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (STILL) document.documentElement.classList.add("still");
+    const clear = svg => { while (svg.firstChild) svg.removeChild(svg.firstChild); };
+    const B = s => s.split("").map(Number);
+    const r2 = v => String(Math.round(v * 100) / 100).replace("-", "−");
+    const S1 = k => k + 1;   // 0-based index -> SNP number shown to people
+    const mn = v => String(v).replace("-", "−");   // typographic minus
+
+    // A player: ⏮ ◀ ▶/⏸ ▶| + slider. draw(i, svg) draws frame i and returns the caption HTML.
+    function player(id, n, draw, o = {}) {
+      const root = document.getElementById(id), svg = root.querySelector(".viz svg"), cap = root.querySelector(".pcap"), ctl = root.querySelector(".ctl");
+      let i = 0, timer = null;
+      const mk = (label, title, cls) => {
+        const b = document.createElement("button");
+        b.type = "button"; b.textContent = label; b.title = title; b.setAttribute("aria-label", title);
+        if (cls) b.className = cls;
+        ctl.appendChild(b); return b;
+      };
+      const bReset = mk("⏮", "Back to the start"), bPrev = mk("◀", "Previous step"), bPlay = mk("▶ Play", "Play", "play"), bNext = mk("▶|", "Next step");
+      const range = document.createElement("input");
+      Object.assign(range, { type: "range", min: 0, max: n - 1, value: 0 });
+      range.setAttribute("aria-label", "Animation step");
+      ctl.appendChild(range);
+      const prog = document.createElement("span"); prog.className = "prog"; ctl.appendChild(prog);
+      function show(k) {
+        i = Math.max(0, Math.min(n - 1, k));
+        if (!o.keep) clear(svg);
+        cap.innerHTML = draw(i, svg) || "";
+        range.value = i; prog.textContent = `step ${i + 1} / ${n}`;
+      }
+      function stop() {
+        clearInterval(timer); timer = null;
+        bPlay.textContent = "▶ Play"; bPlay.setAttribute("aria-label", "Play");
+        cap.setAttribute("aria-live", "polite");
+      }
+      function play() {
+        if (i >= n - 1) show(0);
+        cap.setAttribute("aria-live", "off");
+        bPlay.textContent = "⏸ Pause"; bPlay.setAttribute("aria-label", "Pause");
+        timer = setInterval(() => (i >= n - 1 ? stop() : show(i + 1)), o.ms || 1200);
+      }
+      bPlay.onclick = () => (timer ? stop() : play());
+      bReset.onclick = () => { stop(); show(0); };
+      bPrev.onclick = () => { stop(); show(i - 1); };
+      bNext.onclick = () => { stop(); show(i + 1); };
+      range.oninput = () => { stop(); show(+range.value); };
+      if (STILL) { show(n - 1); return; }
+      show(0);
+      if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver(es => {
+          if (es.some(e => e.isIntersecting)) { io.disconnect(); if (!timer && i === 0) play(); }
+        }, { threshold: 0.45 });
+        io.observe(root);
+      }
+    }
+
+    // one letter cell: bit 0/1, -1 = missing; err = sequencing error
+    function cell(svg, x, y, s, bit, err) {
+      const cls = bit < 0 ? "amiss" : err ? "aerr" : "a" + bit;
+      el("rect", { x, y, width: s, height: s, rx: 6, class: cls }, svg);
+      txt(svg, x + s / 2, y + s / 2 + 5, bit < 0 ? "–" : bit, { class: "bit" });
+    }
+
+    // cost of an answer on the 12-SNP puzzle (offset + sum J z z, z = +1 for letter 0)
+    const PJ = P2.puzzle.J;
+    function costOf(x) {
+      const z = B(x).map(b => 1 - 2 * b);
+      return PJ.reduce((c, [i, j, v]) => c + v * z[i] * z[j], P2.puzzle.offset);
+    }
+
+    // ---------- anim 1 · a puzzle being made ----------
+    (function animGen() {
+      const G = P2.gen, A = G.truth, Bc = A.map(b => 1 - b), N = A.length;
+      const x0 = 112, st = 38, s = 30, yA = 24, yB = 60, yR = 112, rh = 36;
+      const copyOf = c => (c === "A" ? A : Bc);
+      player("a-gen", G.reads.length + 2, (f, svg) => {
+        const final = f === G.reads.length + 1, k = Math.min(f, G.reads.length);
+        for (let i = 0; i < N; i++) txt(svg, x0 + i * st + s / 2, 14, i + 1, { class: "s-muted", "text-anchor": "middle" });
+        [["copy A", A, yA], ["copy B", Bc, yB]].forEach(([lab, row, y]) => {
+          txt(svg, 4, y + 20, lab, { class: "s-text" });
+          row.forEach((b, i) => {
+            if (final) { el("rect", { x: x0 + i * st, y, width: s, height: s, rx: 6, class: "amiss" }, svg); txt(svg, x0 + i * st + s / 2, y + 20, "?", { class: "bit" }); }
+            else cell(svg, x0 + i * st, y, s, b);
+          });
+        });
+        for (let r = 0; r < k; r++) {
+          const R = G.reads[r], y = yR + r * rh, cur = r === k - 1 && !final;
+          txt(svg, 4, y + 20, `read ${r + 1}` + (final ? "" : ` · ${R.copy}`), { class: cur ? "s-text" : "s-muted" });
+          R.letters.forEach((b, t) => cell(svg, x0 + (R.start + t) * st, y + 2, 26, b, R.err.includes(R.start + t)));
+          if (cur) {
+            el("rect", { x: x0 + R.start * st - 4, y: y - 2, width: (R.letters.length - 1) * st + 34, height: 34, rx: 9, class: "cur" }, svg);
+            el("rect", { x: x0 + R.start * st - 3, y: (R.copy === "A" ? yA : yB) - 3, width: (R.letters.length - 1) * st + 36, height: s + 6, rx: 8, class: "src" }, svg);
+          }
+        }
+        if (f === 0) return `<b>Hidden answer.</b> The generator picks copy A = <code>${A.join("")}</code> at random. Copy B is its mirror, <code>${Bc.join("")}</code>. No solver will ever see these two rows; grading uses them at the end.`;
+        if (final) return `<b>What a solver gets:</b> only these ${G.reads.length} reads, without the A/B labels. Its job: rebuild copy A (or its mirror) from the overlaps. Here coverage is 2.4 and errors 7% to keep the picture small; the race uses coverage 6, 5% errors and 10% missing letters.`;
+        const R = G.reads[k - 1], src = copyOf(R.copy);
+        let msg = `<b>Read ${k}</b> starts at SNP ${R.start + 1}, covers ${R.letters.length} SNPs and copies them from copy ${R.copy}.`;
+        for (const m of R.miss) msg += ` SNP ${m + 1} was <b>not read</b> (–).`;
+        for (const e of R.err) msg += ` SNP ${e + 1} came out <b>wrong</b>: the copy has ${src[e]}, the read says ${1 - src[e]}.`;
+        return msg;
+      }, { ms: 1400 });
+    })();
+
+    // ---------- anim 2 · reads vote, J fills in ----------
+    (function animVotes() {
+      const G = P2.gen, N = G.truth.length, R = G.reads.length;
+      const Acnt = [], Dcnt = [];
+      for (let r = 0; r <= R; r++) { Acnt.push([]); Dcnt.push([]); }
+      const zero = () => Array.from({ length: N }, () => Array(N).fill(0));
+      let a = zero(), d = zero();
+      const pairs = [];
+      G.reads.forEach((rd, r) => {
+        const ps = [];
+        rd.letters.forEach((bi, ti) => rd.letters.forEach((bj, tj) => {
+          if (tj <= ti || bi < 0 || bj < 0) return;
+          const i = rd.start + ti, j = rd.start + tj, same = bi === bj;
+          if (same) a[i][j]++; else d[i][j]++;
+          ps.push([i, j, bi, bj, same]);
+        }));
+        pairs.push(ps);
+        Acnt[r + 1] = a.map(row => row.slice()); Dcnt[r + 1] = d.map(row => row.slice());
+      });
+      Acnt[0] = zero(); Dcnt[0] = zero();
+      let maxJ = 0, votes = 0;
+      for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) { maxJ = Math.max(maxJ, Math.abs(d[i][j] - a[i][j]) / 2); votes += a[i][j] + d[i][j]; }
+      const mx0 = 330, my0 = 40, c = 26;
+      player("a-votes", R + 2, (f, svg) => {
+        const k = Math.min(f, R), A_ = Acnt[k], D_ = Dcnt[k], cur = f >= 1 && f <= R ? f - 1 : -1;
+        const touched = new Set(cur >= 0 ? pairs[cur].map(([i, j]) => i * N + j) : []);
+        for (let i = 0; i < N; i++) {
+          txt(svg, mx0 + i * c + c / 2, my0 - 6, i + 1, { class: "s-muted", "text-anchor": "middle" });
+          txt(svg, mx0 - 6, my0 + i * c + c / 2 + 4, i + 1, { class: "s-muted", "text-anchor": "end" });
+        }
+        for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
+          const n = A_[i][j] + D_[i][j], J = (D_[i][j] - A_[i][j]) / 2, x = mx0 + j * c, y = my0 + i * c;
+          const cls = !n ? "mcell" : J === 0 ? "jzero" : J < 0 ? "jneg" : "jpos";
+          const rc = el("rect", { x: x + 1, y: y + 1, width: c - 2, height: c - 2, rx: 4, class: cls + (touched.has(i * N + j) ? " newcell" : "") }, svg);
+          if (n && J !== 0) rc.setAttribute("fill-opacity", (0.25 + 0.75 * Math.abs(J) / maxJ).toFixed(2));
+          if (n) txt(svg, x + c / 2, y + c / 2 + 3.5, r2(J), { class: "s-text", "text-anchor": "middle", style: "font-size:9px" });
+        }
+        txt(svg, mx0 + N * c / 2, my0 + N * c + 18, "J[i, j]  (upper triangle, i < j)", { class: "s-muted", "text-anchor": "middle" });
+        if (f === R + 1) el("line", { x1: mx0 + 4 * c, y1: my0, x2: mx0 + N * c, y2: my0 + (N - 4) * c, class: "uni" }, svg);
+        txt(svg, 4, 22, cur >= 0 ? `read ${cur + 1}` : f === 0 ? "the rule" : "all 8 reads", { class: "s-big" });
+        if (cur >= 0) {
+          const rd = G.reads[cur];
+          rd.letters.forEach((b, t) => { cell(svg, 4 + t * 30, 34, 26, b); txt(svg, 4 + t * 30 + 13, 76, "SNP " + (rd.start + t + 1), { class: "s-muted", "text-anchor": "middle", style: "font-size:9.5px" }); });
+          pairs[cur].forEach(([i, j, bi, bj, same], t) => txt(svg, 4, 104 + t * 22, `SNP ${i + 1} & ${j + 1}:  ${bi} ${bj}  →  ${same ? "same  (A+1)" : "different  (D+1)"}`, { class: "s-text" }));
+        } else if (f === 0) {
+          ["Each read compares every pair", "of letters it has (– is skipped):", "", "equal letters    → a “same” vote, A + 1", "different letters → a “different” vote, D + 1", "", "Then J = (D − A) / 2 for every pair."].forEach((l, t) => txt(svg, 4, 54 + t * 22, l, { class: "s-muted" }));
+        } else {
+          ["J < 0 (blue): reads say “same copy”", "J > 0 (rose): reads say “different copies”", "", `offset = all votes / 2 = ${votes} / 2 = ${votes / 2}`, "", "Dashed line = band edge: every non-zero J", "sits within 3 of the diagonal, because", "reads span at most 4 SNPs."].forEach((l, t) => txt(svg, 4, 54 + t * 22, l, { class: t === 3 ? "s-text" : "s-muted" }));
+        }
+        if (f === 0) return "<b>The rule:</b> a read with letters at SNPs i and j votes once for that pair. Matching letters vote “same” (A), different letters vote “different” (D). Missing letters do not vote.";
+        if (f === R + 1) return `<b>Done.</b> ${votes} votes in total. J = (D − A)/2 per pair; offset = ${votes / 2}. Strong blue cells say “these two SNPs sit on the same copy”, strong rose ones “they sit on different copies”. The dashed line marks the band edge: nothing beyond 3 SNPs apart.`;
+        const ps = pairs[cur], ns = ps.filter(p => p[4]).length;
+        return `<b>Read ${cur + 1}</b> has ${ps.length} pair${ps.length === 1 ? "" : "s"} of letters: ${ns} vote “same”, ${ps.length - ns} vote “different”. The outlined cells just changed.` + (G.reads[cur].err.length ? " This read has a sequencing error, so some of its votes are wrong; other reads outvote them." : "");
+      }, { ms: 1700 });
+    })();
+
+    // ---------- anim 3 · band DP ----------
+    (function animDP() {
+      const P = P2.puzzle, V = P2.dp.V, n = P.n, x0 = 40, st = 47, y = 120;
+      const ax = i => x0 + i * st;
+      player("a-dp", n + 1, (f, svg) => {
+        const k = f - 1;
+        for (const [i, j, v] of P.J) {
+          const h = 18 + (j - i) * 18;
+          const pth = el("path", { d: `M${ax(i)},${y - 13} Q${(ax(i) + ax(j)) / 2},${y - 13 - h * 1.3} ${ax(j)},${y - 13}`, class: v < 0 ? "arcneg" : "arcpos", "stroke-width": (0.8 + 1.1 * Math.abs(v)).toFixed(1) }, svg);
+          pth.setAttribute("opacity", j <= k ? 0.9 : 0.14);
+        }
+        if (k >= 0) el("rect", { x: ax(Math.max(0, k - 2)) - 19, y: y - 22, width: ax(k) - ax(Math.max(0, k - 2)) + 38, height: 44, rx: 12, class: "win" }, svg);
+        for (let i = 0; i < n; i++) {
+          const c = el("circle", { cx: ax(i), cy: y, r: 13, class: i < k - 2 ? "done" : "snp" }, svg);
+          if (i > k) c.setAttribute("opacity", 0.45);
+          txt(svg, ax(i), y + 4, i + 1, { class: "s-text", "text-anchor": "middle" });
+        }
+        const bw = 64, gap = 6, bx0 = 23, by = 196;
+        txt(svg, bx0, by - 22, k < 0 ? "8 boxes = 8 settings of the window" : `window = SNPs ${[k - 2, k - 1, k].map(t => (t < 0 ? "·" : t + 1)).join(", ")}  ·  each box: letters of the window → best cost so far`, { class: "s-muted" });
+        const row = k < 0 ? Array(8).fill(0) : V[k], mn = Math.min(...row);
+        row.forEach((v, s) => {
+          const g = el("g", { class: "vbox" + (k >= 0 && v === mn ? " best" : "") }, svg), x = bx0 + s * (bw + gap);
+          el("rect", { x, y: by, width: bw, height: 52, rx: 8 }, g);
+          const lt = [2, 1, 0].map((b, t) => (k - 2 + t < 0 ? "·" : (s >> b) & 1)).join(" ");
+          txt(g, x + bw / 2, by + 20, lt, { class: "st" });
+          txt(g, x + bw / 2, by + 41, k < 0 ? "–" : r2(v), { style: "font-size:13px;font-weight:800" });
+        });
+        if (f === n) txt(svg, 300, 290, `optimum = offset + smallest box = ${P.offset} + (${r2(mn)}) = ${P.offset + mn}`, { class: "s-big", "text-anchor": "middle" });
+        if (f === 0) return `<b>The idea:</b> J only links SNPs at most 3 apart (the arcs). So when we reach SNP i, the past matters only through the letters of the last 3 SNPs. Keep 8 numbers: for each setting of the window, the lowest cost of everything to the left. Offset = ${P.offset}.`;
+        const inc = P.J.filter(([, j]) => j === k).map(([i, , v]) => `J(${i + 1},${k + 1}) = ${r2(v)}`);
+        if (k === 0) return "<b>SNP 1</b> has nothing to its left, so all boxes are 0. The “·” marks window slots that do not exist yet.";
+        let msg = `<b>SNP ${k + 1} joins.</b> For each of the 8 settings, add its couplings to the window (${inc.join(", ")}), then forget SNP ${k - 2} by keeping the smaller of its two values. Best so far: ${r2(mn)} (green; an answer and its mirror always tie).`;
+        if (k < 3) msg = `<b>SNP ${k + 1} joins.</b> Add ${inc.join(", ")} to each setting. Same letters with J &lt; 0 get cheaper, different letters get dearer. Best so far: ${r2(mn)} (green).`;
+        if (f === n) msg += ` <b>Done:</b> 12 steps × 8 boxes instead of 2<sup>12</sup> = 4096 answers. At 2000 SNPs that is 16,000 updates instead of 2<sup>2000</sup>.`;
+        return msg;
+      }, { ms: 1400 });
+    })();
+
+    // shared by anims 4-5: W = J + J^T on the 12-SNP puzzle, and a small cost/tries chart
+    const PN = P2.puzzle.n, PW = Array.from({ length: PN }, () => Array(PN).fill(0));
+    for (const [i, j, v] of PJ) { PW[i][j] = v; PW[j][i] = v; }
+    function answerRow(svg, x, opts = {}) {
+      const x0 = 88, st = 42, s = 34, y = opts.y || 26;
+      txt(svg, 4, y + 22, opts.label || "answer", { class: "s-text" });
+      for (let i = 0; i < PN; i++) {
+        txt(svg, x0 + i * st + s / 2, y - 6, i + 1, { class: "s-muted", "text-anchor": "middle" });
+        const b = opts.placed && opts.placed[i] === "0" ? -1 : +x[i];
+        if (b < 0) { el("rect", { x: x0 + i * st, y, width: s, height: s, rx: 6, class: "amiss" }, svg); txt(svg, x0 + i * st + s / 2, y + s / 2 + 5, "?", { class: "bit" }); }
+        else cell(svg, x0 + i * st, y, s, b);
+      }
+      if (opts.mark >= 0) el("rect", { x: x0 + opts.mark * st - 4, y: y - 4, width: s + 8, height: s + 8, rx: 9, class: opts.markCls || "cur" }, svg);
+    }
+    function miniAxes(svg, o) {
+      const { l, r, t, b, x, y } = o;
+      const sx = v => l + (v - x[0]) / (x[1] - x[0]) * (r - l), sy = v => b - (v - y[0]) / (y[1] - y[0]) * (b - t);
+      const g = el("g", { class: "chart" }, svg);
+      for (const v of o.yt) { el("line", { x1: l, x2: r, y1: sy(v), y2: sy(v), class: "grid" }, g); txt(g, l - 6, sy(v) + 4, v, { "text-anchor": "end" }); }
+      for (const v of o.xt) { el("line", { x1: sx(v), x2: sx(v), y1: b, y2: b + 4, class: "tick" }, g); txt(g, sx(v), b + 16, v, { "text-anchor": "middle" }); }
+      el("line", { x1: l, x2: r, y1: b, y2: b, class: "base" }, g);
+      txt(g, (l + r) / 2, b + 31, o.xl, { "text-anchor": "middle", class: "lab" });
+      txt(g, 12, (t + b) / 2, o.yl, { "text-anchor": "middle", class: "lab", transform: `rotate(-90 12 ${(t + b) / 2})` });
+      return { sx, sy, g };
+    }
+
+    // ---------- anim 4 · greedy + local search ----------
+    (function animLocal() {
+      const S = P2.local, opt = P2.puzzle.opt;
+      player("a-local", S.length + 1, (f, svg) => {
+        const k = f - 1, st = k >= 0 ? S[k] : null;
+        if (!st) answerRow(svg, "000000000000", { placed: "000000000000" });
+        else if (st.kind === "greedy") answerRow(svg, st.x, { placed: st.placed, mark: st.i });
+        else answerRow(svg, st.x, { mark: st.kind === "flip" ? st.i : -1, markCls: "prop-ok" });
+        const used = st ? st.used : 0, cost = st && st.cost !== null ? st.cost : null;
+        txt(svg, 88, 92, `tries used: ${used}   ·   cost: ${cost === null ? "– (answer not complete)" : cost}   ·   optimum: ${opt}`, { class: "s-text" });
+        const { sx, sy, g } = miniAxes(svg, { l: 60, r: 585, t: 118, b: 252, x: [0, 112], y: [0, 25], xt: [0, 24, 48, 72, 96, 112], yt: [0, 5, 10, 15, 20, 25], xl: "tries used", yl: "cost" });
+        for (const [a, b] of [[0, 24], [48, 72]]) el("rect", { x: sx(a), y: 118, width: sx(b) - sx(a), height: 134, class: "shade" }, g);
+        txt(g, sx(12), 130, "greedy", { "text-anchor": "middle" }); txt(g, sx(60), 130, "greedy again", { "text-anchor": "middle" });
+        el("line", { x1: 60, x2: 585, y1: sy(opt), y2: sy(opt), class: "optline" }, g);
+        txt(g, 582, sy(opt) - 5, "optimum 5", { "text-anchor": "end" });
+        for (const run of [S.slice(0, 14), S.slice(14)]) {
+          const pts_ = run.filter((s, t) => S.indexOf(s) <= k && s.cost !== null).map(s => [sx(s.used), sy(s.cost)]);
+          if (pts_.length > 1) el("path", { d: pts_.map(([x, y], t) => `${t ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)}`).join(""), class: "pathline", style: "--mc: var(--cp-link)" }, svg);
+          for (const [x, y] of pts_) el("circle", { cx: x, cy: y, r: 4, class: "dot" }, svg);
+        }
+        if (!st) return "<b>Start:</b> nothing placed. Greedy will visit the 12 SNPs in a random order and give each the letter its already-placed neighbours prefer. A greedy start costs 2N = 24 tries.";
+        if (st.kind === "greedy") {
+          const prev = st.placed.split("").map((p, j) => p === "1" && j !== st.i), z = B(st.x).map(b => 1 - 2 * b);
+          const terms = prev.map((p, j) => (p && PW[st.i][j] ? PW[st.i][j] * z[j] : 0));
+          const fld = terms.reduce((a, b) => a + b, 0);
+          const why = !prev.some(Boolean) ? "nothing is placed yet, so a coin flip decides" : fld === 0 ? "its placed neighbours pull equally both ways (pull 0), so a coin flip decides" : `the pull from placed neighbours is ${r2(fld)} (${fld > 0 ? "&gt; 0 → letter 1" : "&lt; 0 → letter 0"})`;
+          return `<b>Greedy, SNP ${st.i + 1}:</b> ${why}. It gets letter <b>${st.x[st.i]}</b>.` + (st.cost !== null ? ` Answer complete: cost <b>${st.cost}</b> after ${st.used} tries.` : "");
+        }
+        if (st.kind === "flip") return `<b>Local search:</b> check all 12 single flips (12 tries) with ΔE = −2 z<sub>i</sub> h<sub>i</sub>. The best is SNP ${st.i + 1} with ΔE = ${r2(st.dE)} → flip it. Cost is now <b>${st.cost}</b>.`;
+        if (!st.opt) return `<b>Stuck:</b> another scan (12 tries) finds no flip that lowers the cost. Cost ${st.cost} is a <b>local minimum</b>, not the optimum (${opt}). Restart from a fresh random greedy answer.`;
+        return `<b>Stuck again, but at cost ${st.cost} = the optimum.</b> <code>${st.x}</code> is the mirror of the hidden truth <code>${P2.puzzle.truth.join("")}</code>, which is just as good. Total: ${st.used} of the 2048 tries. The race runs 64 such chains and counts how many hit the optimum, and when.`;
+      }, { ms: 800 });
+    })();
+
+    // ---------- anim 5 · simulated annealing ----------
+    (function animSA() {
+      const R = P2.sa, opt = P2.puzzle.opt, cmax = Math.ceil(Math.max(...R.map(r => r[4])) / 10) * 10;
+      const phase = T => (T >= 3 ? "Hot" : T >= 0.3 ? "Cooling" : "Cold");
+      player("a-sa", 101, (f, svg) => {
+        const r = Math.min(R.length - 1, 4 * f), [i, acc, up, T, cost, x] = R[r];
+        answerRow(svg, x, { mark: i, markCls: !acc ? "prop-rej" : up ? "prop-up" : "prop-ok" });
+        let ups = 0, best = Infinity;
+        for (let t = 0; t <= r; t++) { if (R[t][1] && R[t][2]) ups++; best = Math.min(best, R[t][4]); }
+        txt(svg, 88, 92, `T = ${T}   ·   cost ${cost}   ·   best so far ${best}   ·   uphill moves accepted: ${ups}`, { class: "s-text" });
+        const { sx, sy, g } = miniAxes(svg, { l: 60, r: 540, t: 122, b: 282, x: [0, 400], y: [0, cmax], xt: [0, 100, 200, 300, 400], yt: Array.from({ length: cmax / 10 + 1 }, (_, t) => t * 10), xl: "proposals (tries)", yl: "cost" });
+        const ly = v => 282 - (Math.log10(v) - Math.log10(0.02)) / (Math.log10(20) - Math.log10(0.02)) * 160;
+        for (const v of [0.1, 1, 10]) txt(g, 546, ly(v) + 4, "T " + v, { "text-anchor": "start" });
+        const iHot = R.findIndex(q => q[3] < 3), iCold = R.findIndex(q => q[3] < 0.3);
+        el("rect", { x: sx(0), y: 122, width: sx(iHot) - sx(0), height: 160, class: "shade" }, g);
+        [["hot", 0, iHot], ["cooling", iHot, iCold], ["cold", iCold, 400]].forEach(([lab, a, b]) => txt(g, sx((a + b) / 2), 134, lab, { "text-anchor": "middle" }));
+        el("line", { x1: 60, x2: 540, y1: sy(opt), y2: sy(opt), class: "optline" }, g);
+        el("path", { d: R.map((q, t) => `${t ? "L" : "M"}${sx(t).toFixed(1)},${ly(q[3]).toFixed(1)}`).join(""), class: "tline" }, svg);
+        el("path", { d: R.slice(0, r + 1).map((q, t) => `${t ? "L" : "M"}${sx(t).toFixed(1)},${sy(q[4]).toFixed(1)}`).join(""), class: "pathline", style: "--mc: var(--cp-warning)" }, svg);
+        el("circle", { cx: sx(r), cy: sy(cost), r: 4.5, class: "dot" }, svg);
+        if (r === 0) return `<b>Start:</b> a random answer, cost ${cost}. The temperature starts <b>hot</b>, T = ${T} (the largest total |coupling| of one SNP), and falls geometrically to ${R[R.length - 1][3]} (5% of the smallest |J|). Dashed line = T on the right-hand log scale.`;
+        const prev = R[r - 1][5], flipped = prev.slice(0, i) + (1 - +prev[i]) + prev.slice(i + 1), dE = costOf(flipped) - costOf(prev);
+        const chance = dE <= 0 ? 1 : Math.exp(-dE / T);
+        let msg = `<b>${phase(T)}, proposal ${r}:</b> flip SNP ${i + 1}, ΔE = ${dE > 0 ? "+" : ""}${r2(dE)}. `;
+        msg += dE <= 0 ? "Not worse → always accepted." : `Worse → accepted with chance e<sup>−${r2(dE)}/${T}</sup> = ${Math.round(chance * 100)}% → <b>${acc ? "accepted anyway" : "rejected"}</b>.`;
+        if (f === 100) msg += ` <b>End of the demo:</b> best cost seen = ${best}${best === opt ? " = the optimum" : ""}. Early uphill moves let the chain escape traps; the cold end settles into a valley.`;
+        return msg;
+      }, { ms: 140 });
+    })();
+
+    // ---------- the circuit (static) ----------
+    (function circuit() {
+      const svg = document.getElementById("circ-svg"), wy = [52, 86, 120, 154], L = 52, R = 584;
+      wy.forEach((y, q) => { txt(svg, 4, y + 4, `SNP ${q + 1}`, { class: "s-muted" }); el("line", { x1: L, x2: R, y1: y, y2: y, class: "wire" }, svg); });
+      const box = (x, y, w, lab, cls) => { el("rect", { x, y: y - 13, width: w, height: 26, rx: 5, class: cls }, svg); txt(svg, x + w / 2, y + 4, lab, { class: "s-text", "text-anchor": "middle" }); };
+      wy.forEach(y => box(62, y, 28, "H", "gate"));
+      el("rect", { x: 104, y: 30, width: 344, height: 146, rx: 10, fill: "none", class: "uni" }, svg);
+      txt(svg, 108, 24, "× p", { class: "s-big" });
+      el("rect", { x: 112, y: 36, width: 250, height: 134, rx: 8, class: "gate-c" }, svg);
+      txt(svg, 237, 24, "cost layer · angle γ", { class: "s-text", "text-anchor": "middle" });
+      [[0, 1], [1, 2], [2, 3], [0, 2], [1, 3], [0, 3]].forEach(([a, b], k) => {
+        const x = 132 + k * 42;
+        el("line", { x1: x, x2: x, y1: wy[a], y2: wy[b], class: "zz" }, svg);
+        for (const q of [a, b]) el("circle", { cx: x, cy: wy[q], r: 4.5, class: "zzdot" }, svg);
+      });
+      wy.forEach(y => box(378, y, 56, "RX(2β)", "gate"));
+      txt(svg, 406, 24, "mixer · β", { class: "s-text", "text-anchor": "middle" });
+      wy.forEach(y => box(470, y, 30, "M", "gate-m"));
+      txt(svg, 485, 24, "measure", { class: "s-text", "text-anchor": "middle" });
+      txt(svg, 237, 194, "one RZZ(2γJᵢⱼ/scale) per pair with J ≠ 0 (here all 6 pairs are ≤ 3 apart)", { class: "s-muted", "text-anchor": "middle" });
+      txt(svg, 584, 194, "→ one answer per shot", { class: "s-muted", "text-anchor": "end" });
+    })();
+
+    // ---------- anim 6 · depth on the toy ----------
+    (function animToy() {
+      const T = P2.toyqaoa, idx = T.labels.map((_, k) => k).sort((a, b) => T.cost[a] - T.cost[b] || (T.labels[a] < T.labels[b] ? -1 : 1));
+      const cmin = Math.min(...T.cost), l = 50, r = 590, top = 46, base = 250, ymax = 0.4, bw = (r - l) / 32;
+      const sy = v => base - v / ymax * (base - top);
+      let rects = null, head = null;
+      player("a-toy", 4, (f, svg) => {
+        if (!rects) {
+          const g = el("g", { class: "chart" }, svg);
+          for (const v of [0, 0.1, 0.2, 0.3, 0.4]) { el("line", { x1: l, x2: r, y1: sy(v), y2: sy(v), class: "grid" }, g); txt(g, l - 6, sy(v) + 4, v ? Math.round(v * 100) + "%" : "0", { "text-anchor": "end" }); }
+          txt(g, 13, (top + base) / 2, "probability", { class: "lab", "text-anchor": "middle", transform: `rotate(-90 13 ${(top + base) / 2})` });
+          txt(g, (l + r) / 2, 292, "the 32 answers, best on the left · number = cost of that answer", { class: "lab", "text-anchor": "middle" });
+          rects = idx.map((k, t) => {
+            const x = l + t * bw + 2, opt = T.cost[k] === cmin;
+            txt(g, x + (bw - 4) / 2, 266, T.cost[k], { "text-anchor": "middle", style: "font-size:9.5px" });
+            return el("rect", { x, y: top, width: bw - 4, height: base - top, rx: 2, class: "qbar" + (opt ? " opt" : ""), style: "transform: scaleY(0)" }, svg);
+          });
+          el("line", { x1: l, x2: r, y1: sy(1 / 32), y2: sy(1 / 32), class: "uni" }, svg);
+          txt(svg, r, sy(1 / 32) - 5, "1/32 = blind guess", { class: "s-muted", "text-anchor": "end" });
+          head = txt(svg, r, 22, "", { class: "s-big", "text-anchor": "end" });
+        }
+        const pr = T.probs[String(f)];
+        idx.forEach((k, t) => (rects[t].style.transform = `scaleY(${(pr[k] / ymax).toFixed(4)})`));
+        head.textContent = `p = ${f} · P(optimal) = ${(T.p_opt[f] * 100).toFixed(1)}% · mean cost ${r2(T.mean[f])}`;
+        const a = T.angles[String(f)];
+        if (f === 0) return `<b>Depth 0:</b> only the H layer. All 32 answers are equally likely (1/32 each), so an optimal answer comes out ${(T.p_opt[0] * 100).toFixed(2)}% of the time, and the mean cost is the offset, ${T.offset}.`;
+        const ang = `γ = ${a.slice(0, f).map(mn).join(", ")}; β = ${a.slice(f).map(mn).join(", ")}`;
+        let msg = `<b>p = ${f}</b> (${ang}): the two optimal answers now come out ${(T.p_opt[f] * 100).toFixed(1)}% of the time together; mean cost ${r2(T.mean[f])}.`;
+        if (f === 1) msg += " The cost layer gave cheap answers a different phase, and the mixer turned that phase into probability.";
+        if (f === 2) msg += " A second layer pushes even more weight onto the cheap answers.";
+        if (f === 3) msg += " Slightly below p = 2 here: the p = 3 angles were tuned on 8–12-SNP puzzles, not on this 5-SNP toy. On real-size puzzles p = 3 wins.";
+        return msg;
+      }, { ms: 1800, keep: true });
+    })();
+
+    // ---------- anim 7 · scanning gamma ----------
+    (function animLand() {
+      const L = P2.land, nG = L.g.length, nB = L.b.length, ml = 56, cw = 8, ch = 5, top = 8, hb = top + nB * ch;
+      const flat = L.E.flat(), Emax = Math.max(...flat), Emin = Math.min(...flat);
+      const gx = g => ml + cw / 2 + (g - L.g[0]) / (L.g[nG - 1] - L.g[0]) * (nG - 1) * cw;
+      const by = b => hb - ch / 2 - (b - L.b[0]) / (L.b[nB - 1] - L.b[0]) * (nB - 1) * ch;
+      const c0 = 222, c1 = 292, e0 = 5.5, e1 = 12.6, ey = e => c0 + (e1 - e) / (e1 - e0) * (c1 - c0);
+      let dyn = null;
+      player("a-land", nG + 1, (f, svg) => {
+        if (!dyn) {
+          L.E.forEach((row, r) => row.forEach((e, c) => el("rect", { x: ml + c * cw, y: hb - (r + 1) * ch, width: cw, height: ch, class: "heat", "fill-opacity": (0.08 + 0.87 * (Emax - e) / (Emax - Emin)).toFixed(3) }, svg)));
+          const g = el("g", { class: "chart" }, svg);
+          for (const [v, lab] of [[-Math.PI / 4, "−π/4"], [0, "0"], [Math.PI / 4, "π/4"]]) txt(g, ml - 6, by(Math.max(L.b[0], Math.min(L.b[nB - 1], v))) + 4, lab, { "text-anchor": "end" });
+          txt(g, 12, (top + hb) / 2, "β", { class: "lab", "text-anchor": "middle" });
+          txt(g, 12, (c0 + c1) / 2 + 4, "E", { class: "lab", "text-anchor": "middle" });
+          el("line", { x1: ml, x2: ml + nG * cw, y1: c1, y2: c1, class: "base" }, g);
+          for (const v of [0.5, 1, 1.5, 2, 2.5, 3]) { el("line", { x1: gx(v), x2: gx(v), y1: c1, y2: c1 + 4, class: "tick" }, g); txt(g, gx(v), c1 + 16, v, { "text-anchor": "middle" }); }
+          txt(g, ml + nG * cw / 2, 324, "γ (cost-layer angle)", { class: "lab", "text-anchor": "middle" });
+          for (const [e, lab] of [[L.offset, `offset ${L.offset} = blind guessing`], [L.cobyla, `notebook COBYLA ${L.cobyla}`]]) {
+            el("line", { x1: ml, x2: ml + nG * cw, y1: ey(e), y2: ey(e), class: "uni" }, g);
+            txt(g, ml + nG * cw, ey(e) - 4, lab, { "text-anchor": "end" });
+          }
+          dyn = el("g", {}, svg);
+        }
+        clear(dyn);
+        const k = f - 1;
+        if (k >= 0) {
+          el("line", { x1: gx(L.g[k]), x2: gx(L.g[k]), y1: top, y2: c1, class: "scan" }, dyn);
+          for (let t = 0; t <= k; t++) el("circle", { cx: gx(L.g[t]), cy: by(L.bmin[t]), r: t === k ? 4 : 1.8, class: "dot" }, dyn);
+          el("path", { d: L.emin.slice(0, k + 1).map((e, t) => `${t ? "L" : "M"}${gx(L.g[t]).toFixed(1)},${ey(e).toFixed(1)}`).join(""), class: "pathline", style: "--mc: var(--cp-accent)" }, dyn);
+          el("circle", { cx: gx(L.g[k]), cy: ey(L.emin[k]), r: 4, class: "dot" }, dyn);
+        }
+        if (f === nG) {
+          const sx = gx(L.best.g), sy1 = by(L.best.b), sy2 = ey(L.best.e);
+          for (const [cx, cy] of [[sx, sy1], [sx, sy2]]) el("path", { d: `M${cx},${cy - 9} L${cx + 2.6},${cy - 3} L${cx + 9},${cy - 3} L${cx + 4},${cy + 1.5} L${cx + 6},${cy + 8} L${cx},${cy + 4} L${cx - 6},${cy + 8} L${cx - 4},${cy + 1.5} L${cx - 9},${cy - 3} L${cx - 2.6},${cy - 3} Z`, class: "star" }, dyn);
+        }
+        if (f === 0) return `<b>The map:</b> each pixel is the exact expected cost E(γ, β) of the toy, straight from the formula (no circuit run). Stronger colour = cheaper. ${nG} values of γ × ${nB} of β are shown; the trainer uses 256 γ values.`;
+        if (f === nG) return `<b>Best:</b> γ = ${L.best.g}, β = ${mn(L.best.b)} → expected cost <b>${L.best.e}</b> (stars), after a 1-D refinement of the best grid point. 0 shots used. The notebook's COBYLA stopped at ${L.cobyla}.`;
+        return `<b>γ = ${L.g[k]}:</b> the formula gives the best β directly (${mn(L.bmin[k])}, the dot), so only γ is scanned. Best expected cost at this γ: ${L.emin[k]}.`;
+      }, { ms: 160, keep: true });
+    })();
+
+    // ---------- concentration + angle clusters ----------
+    bars("ch-conc", [["p=1 formula", 0.5, "qaoa-p1"], ["p=2 reused", 0.637, "qaoa-p2"], ["p=2 tuned here", 0.664, "qaoa-p2"], ["p=3 reused", 0.703, "qaoa-p3"], ["p=3 tuned here", 0.738, "qaoa-p3"]].map(([l, v, c]) => [l, v, c, v.toFixed(3)]), {
+      aria: "Mean quality on 4 unseen 14-SNP puzzles: p=1 formula 0.500; p=2 reused angles 0.637 versus 0.664 tuned; p=3 reused 0.703 versus 0.738 tuned.", min: 0, max: 1, w: 420, ml: 112, mr: 56
+    });
+    (function angles() {
+      const a = DATA.angles, rows = [
+        ["p=1  γ", a.p1gamma, "qaoa-p1"], ["p=1  β", a.p1beta, "qaoa-p1"],
+        ["p=2  γ₁ γ₂", [...a.p2.map(r => r[0]), ...a.p2.map(r => r[1])], "qaoa-p2"],
+        ["p=2  β₁ β₂", [...a.p2.map(r => r[2]), ...a.p2.map(r => r[3])], "qaoa-p2"],
+        ["p=3  γ₁ γ₂ γ₃", [0, 1, 2].flatMap(k => a.p3.map(r => r[k])), "qaoa-p3"],
+        ["p=3  β₁ β₂ β₃", [3, 4, 5].flatMap(k => a.p3.map(r => r[k])), "qaoa-p3"]
+      ];
+      const W = 520, rowH = 30, m = { l: 104, r: 14, t: 8, b: 36 }, H = m.t + m.b + rows.length * rowH;
+      const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Dot plot of QAOA angles. Each row's dots form tight clusters: p=1 beta near minus 0.5, deeper layers show gamma increasing and beta shrinking toward zero." });
+      const sx = v => m.l + (v + 0.8) / 1.7 * (W - m.l - m.r);
+      const g = el("g", { class: "chart" }, svg);
+      for (const t of [-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75]) {
+        el("line", { x1: sx(t), x2: sx(t), y1: m.t, y2: H - m.b, class: t === 0 ? "base" : "grid" }, g);
+        txt(g, sx(t), H - m.b + 16, t, { "text-anchor": "middle" });
+      }
+      txt(g, (m.l + W - m.r) / 2, H - 4, "angle value (radians, as used in the circuit)", { class: "lab", "text-anchor": "middle" });
+      rows.forEach(([lab, vals, cls], i) => {
+        const y = m.t + i * rowH + rowH / 2;
+        txt(svg, 4, y + 4, lab, { class: "s-text" });
+        const sg = el("g", { class: `series m-${cls}` }, svg);
+        vals.forEach((v, k) => el("circle", { cx: sx(v).toFixed(1), cy: (y + ((k % 3) - 1) * 4).toFixed(1), r: 4.5, "fill-opacity": 0.75 }, sg));
+      });
+      document.getElementById("ch-angles").appendChild(svg);
+    })();
+
+    // ---------- explorer 8 · statevector vs MPS memory ----------
+    (function memExplorer() {
+      const root = document.getElementById("a-mem"), svg = root.querySelector(".viz svg"), out = root.querySelector(".readout");
+      const Ns = [...new Set(P2.mps.map(r => r.N))], ps = [1, 2, 3], st = { N: 32, p: 1 };
+      const l = 150, r = 584, lo = 3, hi = 32, sx = b => l + (Math.log10(b) - lo) / (hi - lo) * (r - l);
+      const units = ["kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+      const human = b => { const e = Math.floor(Math.log10(b) / 3); return e < 1 ? `${Math.round(b)} B` : e <= 8 ? `${Number((b / 10 ** (3 * e)).toPrecision(3))} ${units[e - 1]}` : `${(b / 10 ** Math.floor(Math.log10(b))).toFixed(1)} × ${pow10(10 ** Math.floor(Math.log10(b)))} B`; };
+      function seg(k, vals) {
+        const box = root.querySelector(`.seg[data-k="${k}"]`);
+        return vals.map(v => {
+          const b = document.createElement("button");
+          b.type = "button"; b.textContent = v; b.setAttribute("aria-label", `${k === "N" ? "SNPs" : "depth p"} ${v}`);
+          b.onclick = () => { st[k] = v; draw(); };
+          box.appendChild(b); return [v, b];
+        });
+      }
+      const bN = seg("N", Ns), bp = seg("p", ps);
+      function draw() {
+        for (const [v, b] of bN) b.setAttribute("aria-pressed", v === st.N);
+        for (const [v, b] of bp) b.setAttribute("aria-pressed", v === st.p);
+        clear(svg);
+        const row = P2.mps.find(q => q.N === st.N && q.p === st.p), tm = P2.timing.find(q => q.N === st.N && q.p === st.p);
+        const g = el("g", { class: "chart" }, svg);
+        for (let e = lo; e <= 30; e += 3) { el("line", { x1: sx(10 ** e), x2: sx(10 ** e), y1: 14, y2: 118, class: "grid" }, g); txt(g, sx(10 ** e), 134, e <= 24 ? "1 " + units[e / 3 - 1] : pow10(10 ** e), { "text-anchor": "middle" }); }
+        txt(g, (l + r) / 2, 158, "bytes of memory (log scale: each grid line = × 1000)", { class: "lab", "text-anchor": "middle" });
+        const rg = el("g", { class: "ref" }, svg);
+        el("line", { x1: sx(32e9), x2: sx(32e9), y1: 8, y2: 122 }, rg);
+        txt(rg, sx(32e9) + 4, 12, "Kaggle RAM 32 GB", { "text-anchor": "start" });
+        [["full statevector", row.sv_bytes, "membar-sv", 30], ["MPS (measured)", row.mem_bytes, "membar-mps", 74]].forEach(([lab, b, cls, y]) => {
+          txt(svg, l - 8, y + 17, lab, { class: "s-text", "text-anchor": "end" });
+          el("rect", { x: l, y, width: Math.max(3, sx(b) - l), height: 24, rx: 4, class: cls }, svg);
+          const tx = sx(b) + 6 > r - 70 ? sx(b) - 6 : sx(b) + 6;
+          txt(svg, tx, y + 17, human(b), { class: "s-text", "text-anchor": tx < sx(b) ? "end" : "start", style: tx < sx(b) ? "fill: var(--cp-surface)" : "" });
+        });
+        out.innerHTML = `<div>largest bond dimension χ<b>${row.chi_max}</b></div><div>MPS memory<b>${human(row.mem_bytes)}</b></div><div>MPS time, 2048 shots (laptop)<b>${tm ? tm.secs.toFixed(2) + " s" : "–"}</b></div>`;
+        svg.setAttribute("aria-label", `${st.N} SNPs, depth ${st.p}: full statevector needs ${human(row.sv_bytes)}, MPS needs ${human(row.mem_bytes)} with bond dimension ${row.chi_max}.`);
+      }
+      draw();
+    })();
+
+    // ---------- explorer 9 · TTS99 ----------
+    (function ttsExplorer() {
+      const root = document.getElementById("a-tts"), svg = root.querySelector(".viz svg"), cap = root.querySelector(".pcap");
+      const range = root.querySelector('input[type="range"]'), prog = root.querySelector(".prog"), pre = root.querySelector(".presets");
+      const presets = [["toy, QAOA p=2", 0.757], ["toy, QAOA p=1", 0.527], ["toy, random", 0.0625], ["p = 1%", 0.01], ["20 SNPs, random", 2 / 2 ** 20]];
+      const l = 60, r = 584, t = 16, b = 214, sx = v => l + Math.log10(v) / 8 * (r - l), sy = v => b - v * (b - t);
+      const fmtP = p => (p >= 0.01 ? `${+(p * 100).toPrecision(3)}%` : `${(p / 10 ** Math.floor(Math.log10(p))).toFixed(1)} × ${pow10(10 ** Math.floor(Math.log10(p)))}`);
+      const tts = p => (p >= 0.99 ? 1 : Math.log(0.01) / Math.log1p(-p));
+      const hit = (p, n) => -Math.expm1(n * Math.log1p(-p));
+      let exact = null;
+      const btns = presets.map(([lab, p]) => {
+        const bt = document.createElement("button");
+        bt.type = "button"; bt.textContent = lab; bt.onclick = () => { range.value = Math.log10(p); exact = p; draw(); };
+        pre.appendChild(bt); return [p, bt];
+      });
+      function draw() {
+        const p = exact !== null ? exact : Math.min(0.99, 10 ** +range.value), T = tts(p), P = hit(p, 2048);
+        prog.textContent = "p = " + fmtP(p);
+        for (const [q, bt] of btns) bt.setAttribute("aria-pressed", q === p);
+        clear(svg);
+        const g = el("g", { class: "chart" }, svg);
+        for (const v of [0, 0.25, 0.5, 0.75, 1]) { el("line", { x1: l, x2: r, y1: sy(v), y2: sy(v), class: "grid" }, g); txt(g, l - 6, sy(v) + 4, v * 100 + "%", { "text-anchor": "end" }); }
+        for (let e = 0; e <= 8; e++) { el("line", { x1: sx(10 ** e), x2: sx(10 ** e), y1: b, y2: b + 4, class: "tick" }, g); txt(g, sx(10 ** e), b + 16, e < 4 ? 10 ** e : pow10(10 ** e), { "text-anchor": "middle" }); }
+        el("line", { x1: l, x2: r, y1: b, y2: b, class: "base" }, g);
+        txt(g, (l + r) / 2, 250, "tries t (log scale)", { class: "lab", "text-anchor": "middle" });
+        el("line", { x1: l, x2: r, y1: sy(0.99), y2: sy(0.99), class: "uni" }, svg);
+        const d = []; for (let k = 0; k <= 160; k++) { const n = 10 ** (k / 20); d.push(`${k ? "L" : "M"}${sx(n).toFixed(1)},${sy(hit(p, n)).toFixed(1)}`); }
+        el("path", { d: d.join(""), class: "pathline", style: "--mc: var(--cp-accent)" }, svg);
+        const rg = el("g", { class: "ref" }, svg);
+        el("line", { x1: sx(2048), x2: sx(2048), y1: t, y2: b }, rg);
+        txt(rg, sx(2048) + 4, b - 6, "budget 2048", { "text-anchor": "start" });
+        el("circle", { cx: sx(2048), cy: sy(P), r: 5, class: "dot" }, svg);
+        el("line", { x1: sx(Math.max(1, T)), x2: sx(Math.max(1, T)), y1: sy(0.99), y2: b, class: "optline" }, svg);
+        el("circle", { cx: sx(Math.max(1, T)), cy: sy(0.99), r: 5, class: "star" }, svg);
+        txt(svg, Math.min(r - 70, Math.max(l + 70, sx(Math.max(1, T)))), sy(0.99) - 8, `TTS99 ≈ ${Math.round(T).toLocaleString("en-US")}`, { class: "s-text", "text-anchor": "middle" });
+        cap.innerHTML = `One try is optimal with chance <b>${fmtP(p)}</b>. After the budget of 2048 tries you have seen the optimum with chance <b>${+(P * 100).toPrecision(3)}%</b> (dot). To be 99% sure you need TTS99 = log(0.01) / log(1 − p) ≈ <b>${Math.round(T).toLocaleString("en-US")}</b> tries (star)` + (T > 2048 ? ": more than the budget." : p >= 0.99 ? ": one try is enough." : ": inside the budget.");
+      }
+      range.oninput = () => { exact = null; draw(); };
+      draw();
+    })();
+
+    // ---------- explorer 10 · switch errors ----------
+    (function switchPlay() {
+      const root = document.getElementById("a-sw"), svg = root.querySelector(".viz svg"), cap = root.querySelector(".pcap"), bar = root.querySelector(".swbtns");
+      const T = B("0110100110"), n = T.length, GAP = 6, x0 = 96, st = 48, s = 38;
+      let X = T.slice(), focus = -1;
+      const acts = [["Swap the second half", () => X.map((b, i) => (i >= 5 ? 1 - b : b))], ["Flip one letter", () => X.map((b, i) => (i === 3 ? 1 - b : b))], ["Mirror everything", () => X.map(b => 1 - b)], ["Swap after the gap", () => X.map((b, i) => (i > GAP ? 1 - b : b))], ["Reset", () => T.slice()]];
+      for (const [lab, f] of acts) { const bt = document.createElement("button"); bt.type = "button"; bt.textContent = lab; bt.onclick = () => { X = f(); draw(); }; bar.appendChild(bt); }
+      const bx = i => x0 + (i + 1) * st - (st - s) / 2;
+      function draw() {
+        clear(svg);
+        const same = X.map((b, i) => b === T[i]), d = same.filter(v => !v).length, wrong = Math.min(d, n - d);
+        let sw = 0, skipped = 0;
+        el("rect", { x: bx(GAP) - 9, y: 6, width: 18, height: 158, rx: 5, class: "gapmark" }, svg);
+        txt(svg, bx(GAP), 182, "no read links 7 and 8", { class: "s-muted", "text-anchor": "middle" });
+        for (let i = 0; i < n - 1; i++) if (same[i] !== same[i + 1]) {
+          if (i === GAP) { skipped++; el("line", { x1: bx(i), x2: bx(i), y1: 64, y2: 160, class: "sw-skip" }, svg); }
+          else { sw++; el("line", { x1: bx(i), x2: bx(i), y1: 64, y2: 160, class: "sw-hit" }, svg); }
+        }
+        txt(svg, 4, 34, "truth", { class: "s-text" }); txt(svg, 4, 92, "answer", { class: "s-text" }); txt(svg, 4, 146, "follows", { class: "s-text" });
+        for (let i = 0; i < n; i++) {
+          cell(svg, x0 + i * st, 12, s, T[i]);
+          const g = el("g", { class: "swbox", tabindex: 0, role: "button", "aria-label": `SNP ${i + 1}: answer letter ${X[i]}. Press to flip.` }, svg);
+          cell(g, x0 + i * st, 70, s, X[i]);
+          g.onclick = () => { X[i] = 1 - X[i]; focus = i; draw(); };
+          g.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); g.onclick(); } };
+          txt(svg, x0 + i * st + s / 2, 146, same[i] ? "A" : "B", { class: same[i] ? "s-text" : "s-big", "text-anchor": "middle", style: same[i] ? "" : "fill: var(--cp-accent)" });
+        }
+        txt(svg, x0, 214, `letters wrong: min(${d}, ${n} − ${d}) = ${wrong}`, { class: "s-text" });
+        txt(svg, 340, 214, `switch errors: ${sw}`, { class: "s-big" });
+        if (focus >= 0) { const f = svg.querySelectorAll(".swbox")[focus]; if (f) f.focus(); focus = -1; }
+        let msg = `The answer follows copy A where it equals the truth and copy B where it equals the mirror (row “follows”). A switch error is a jump between A and B at a boundary that a read links: <b>${sw}</b> here.`;
+        if (skipped) msg += " The jump at the dashed gap is <b>not counted</b>: no read crosses it, so no method could know how the two sides line up.";
+        if (d === n) msg += " The full mirror has 0 errors: it is the same pair of copies, just named the other way round.";
+        else if (wrong > 0 && sw <= 1 && !skipped) msg += ` Letter count says ${wrong} wrong, but one switch can make half the letters “wrong”, so geneticists count switches.`;
+        cap.innerHTML = msg;
+      }
+      draw();
+    })();
+
+    // ---------- static charts ----------
+    const theory = [];
+    for (let n = 4; n <= 30; n += 0.5) theory.push([n, 1 - Math.pow(1 - 2 / Math.pow(2, n), 2048)]);
+    chart("ch-random", {
+      aria: "Probability that 2048 random guesses find the optimum, by number of SNPs. Near 1 up to 10 SNPs, 0.63 at 12, 0.06 at 16, 0.004 at 20.",
+      x: { domain: [4, 30], ticks: [5, 10, 15, 20, 25, 30], label: "N SNPs" },
+      y: { domain: [0, 1], ticks: [0, 0.25, 0.5, 0.75, 1], label: "P(found the best)" },
+      refs: [{ x: 5, label: "notebook toy" }],
+      m: { t: 24 },
+      series: [{ key: "random", points: theory, noDots: true }, { key: "random", points: pts(DATA.small.randomP), dotsOnly: true, r: 5 }]
+    });
+    bars("ch-space", [5, 10, 14, 20, 30].map(n => [`${n} SNPs`, Math.pow(2, n), Math.pow(2, n) > 2048 ? "qaoa-p3" : "random", n >= 30 ? "≈ 1 billion" : n >= 20 ? "≈ 1 million" : Math.pow(2, n).toLocaleString("en-US")]), {
+      aria: "Number of possible answers: 32 at 5 SNPs, 1024 at 10, 16384 at 14, about a million at 20, about a billion at 30, against a budget of 2048.",
+      log: true, min: 10, max: 2e9, ref: 2048, refLabel: "budget: 2048 tries", w: 420, ml: 62, mr: 84
+    });
+    bars("ch-dp", [[100, 4], [300, 10], [1000, 39], [2000, 147]].map(([n, ms]) => [`${n.toLocaleString("en-US")} SNPs`, ms, "dp", `${ms} ms`]), {
+      aria: "Exact band DP time on realistic puzzles: 4 ms at 100 SNPs, 10 ms at 300, 39 ms at 1000, 147 ms at 2000.", min: 0, max: 160, w: 420, ml: 86, mr: 64
+    });
+    bars("ch-mem", [20, 24, 26, 28, 30, 32, 34].map(n => {
+      const b = 16 * Math.pow(2, n), gb = b / 1e9;
+      return [`${n} SNPs`, b, gb > 32 ? "bad" : "local", gb < 1 ? `${Math.round(b / 1e6)} MB` : `${gb < 10 ? gb.toFixed(1) : Math.round(gb)} GB`];
+    }), { aria: "Statevector memory: 17 MB at 20 SNPs, 1.1 GB at 26, 17 GB at 30, 69 GB at 32, 275 GB at 34. Kaggle has 32 GB.", log: true, min: 1e7, max: 5e11, ref: 32e9, refLabel: "Kaggle RAM 32 GB", w: 360, ml: 62 });
+    chart("ch-sv", {
+      w: 360, h: 260, aria: "Statevector simulation time on Kaggle: about 1 to 6 seconds up to 24 SNPs, 26 s at 26, 117 s at 28, 241 s at 29, 405 s at 30 in single precision.",
+      x: { domain: [16, 30], ticks: [16, 20, 24, 28], label: "N SNPs" },
+      y: { domain: [1, 1000], log: true, ticks: [1, 10, 100, 1000], label: "seconds", fmt: v => v >= 1000 ? "1000" : v },
+      series: [{ key: "local", points: pts(DATA.svKaggle.double), tag: "double", tagDx: -46, tagDy: -2 }, { key: "sa", points: pts(DATA.svKaggle.single), tag: "single", tagDx: -40, tagDy: -10 }]
+    });
+    const mpsT = p => P2.timing.filter(r => r.p === p).sort((a, b) => a.N - b.N).map(r => [r.N, r.secs]);
+    chart("ch-mps", {
+      w: 360, h: 260, aria: "MPS simulation time for 2048 shots. Default swap direction at p=1: about 2 s at 16 SNPs, 23 s at 20, 99 s at 24. With mps_swap_right: under 1 s for p=1 up to 100 SNPs and about 2 s for p=3 at 100 SNPs.",
+      x: { domain: [16, 100], ticks: [16, 32, 48, 64, 100], label: "N SNPs" },
+      y: { domain: [0.05, 200], log: true, ticks: [0.1, 1, 10, 100], label: "seconds" },
+      series: [
+        { key: "random", points: [[16, 1.84], [18, 2.69], [20, 23], [24, 99]], dash: true, tag: "default", tagDx: 6, tagDy: 4 },
+        { key: "qaoa-p1", points: mpsT(1), tag: "p=1", tagDx: -26, tagDy: 16 },
+        { key: "qaoa-p2", points: mpsT(2) },
+        { key: "qaoa-p3", points: mpsT(3), tag: "p=3", tagDx: -26, tagDy: -9 }
+      ]
+    });
+
+    // ---------- race results (Kaggle) ----------
+    document.getElementById("data-source").textContent = DATA.source;
+    document.getElementById("small-settings").textContent = DATA.small.settings;
+    document.getElementById("large-settings").textContent = DATA.large.settings;
+    const order = ["random", "brute", "sa", "local", "qaoa-p1", "qaoa-p2", "qaoa-p3"];
+    const seriesOf = obj => order.filter(k => k in obj).map(k => ({ key: k, points: pts(obj[k]), dash: k === "random" || k === "brute" }));
+    chart("ch-tts", {
+      w: 900, h: 330, legend: "lg-tts", aria: "Tries needed to be 99 percent sure, 8 to 26 SNPs, log scale. At 26 SNPs: random 155 million, annealing 9156, QAOA p=1 8986, local search 2433, QAOA p=2 1944, QAOA p=3 699. Brute force stops at 24 SNPs with 17 million.",
+      x: { domain: [8, 26], ticks: [8, 12, 16, 20, 22, 24, 26], label: "N SNPs" },
+      y: { domain: [1, 1e9], log: true, ticks: [1, 10, 100, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9], label: "tries for 99% (log)", fmt: v => v < 1000 ? v : pow10(v) },
+      refs: [{ y: 2048, label: "budget: 2048 tries", left: true }],
+      series: seriesOf(DATA.small.tts99)
+    });
+    chart("ch-score", {
+      w: 520, h: 300, legend: "lg-score", aria: "Quality of the best answer, 28 to 100 SNPs. Annealing and local search stay at 0.98 to 1. At 100 SNPs QAOA p=3 drops to 0.91, p=2 to 0.88 and p=1 to 0.79. Random drops to 0.33.",
+      x: { domain: [28, 100], ticks: [28, 48, 64, 100], label: "N SNPs" },
+      y: { domain: [0.3, 1.02], ticks: [0.4, 0.6, 0.8, 1], label: "score (1 = optimum)" },
+      series: seriesOf(DATA.large.score)
+    });
+    chart("ch-switch", {
+      w: 900, h: 300, legend: "lg-switch", aria: "Switch errors, 28 to 100 SNPs. At 100 SNPs: annealing 4, local search 7, QAOA p=3 9, QAOA p=2 13, QAOA p=1 19, random 35.",
+      x: { domain: [28, 100], ticks: [28, 48, 64, 100], label: "N SNPs" },
+      y: { domain: [0, 40], ticks: [0, 10, 20, 30, 40], label: "switch errors" },
+      series: seriesOf(DATA.large.switchErr)
+    });
+
+    // Phones: wide SVGs keep a readable size and scroll sideways instead of shrinking.
+    document.querySelectorAll(".chart svg, .viz svg").forEach(s => {
+      const w = s.viewBox.baseVal.width;
+      if (w < 460) return;
+      const box = document.createElement("div");
+      box.className = "scroll-x";
+      s.parentNode.insertBefore(box, s);
+      box.appendChild(s);
+      s.classList.add(w >= 800 ? "xwide" : "wide");
+      const hint = document.createElement("div");
+      hint.className = "swipe";
+      hint.textContent = "↔ swipe to see the whole picture";
+      box.after(hint);
+    });
+  </script>
+</body>
+</html>
