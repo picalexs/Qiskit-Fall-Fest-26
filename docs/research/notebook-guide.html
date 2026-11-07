@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Final notebook guide · Quantum Genome Detective</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--cp-bg); color: var(--cp-text); font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.5; }
+    main { width: min(1080px, calc(100% - 32px)); margin: 32px auto 48px; }
+    a { color: var(--cp-link); }
+    nav { display: flex; flex-wrap: wrap; gap: 12px; font-size: .9rem; margin-bottom: 24px; }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.12; margin: 12px 0; }
+    h2 { margin: 32px 0 12px; font-size: 1.5rem; }
+    h3 { margin: 0 0 8px; font-size: 1.1rem; }
+    p { margin: 8px 0; }
+    code { font-family: Consolas, "Courier New", Courier, monospace; overflow-wrap: anywhere; }
+    .small, .muted { color: var(--cp-text-muted); }
+    .small { font-size: .85rem; }
+    .card, .notice { padding: 20px; border: 1px solid var(--cp-border); border-radius: 16px; background: var(--cp-surface); box-shadow: 0 0 2px var(--cp-border), 0 1px 2px var(--cp-border); }
+    .notice { margin: 16px 0; border-left: 4px solid var(--cp-warning); }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .tag { display: inline-block; padding: 3px 8px; border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-surface-soft); font-size: .78rem; font-weight: 700; }
+    .tag.done { color: var(--cp-success); border-color: var(--cp-success); }
+    .tag.next { border-color: var(--cp-warning); }
+    .tag.tudor { color: var(--cp-accent); border-color: var(--cp-accent); }
+    .flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+    .step { padding: 12px; border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-surface); }
+    .step b { display: block; margin: 4px 0; }
+    .step small { color: var(--cp-text-muted); }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--cp-border); }
+    th { background: var(--cp-surface-soft); }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .landing { border-left: 4px solid var(--cp-accent); }
+    .landing .location { color: var(--cp-accent); font-weight: 700; }
+    details { margin-top: 16px; }
+    summary { cursor: pointer; font-weight: 700; }
+    footer { margin-top: 32px; border-top: 1px solid var(--cp-border); padding-top: 16px; }
+    @media (max-width: 760px) { .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 580px) { .grid { grid-template-columns: minmax(0, 1fr); } .card { padding: 16px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <nav aria-label="Notebook guide">
+      <a href="../../bench/all_together.ipynb">Open the single notebook</a>
+      <a href="#sections">Section map</a>
+      <a href="#new-study">8-/12-SNP experiments</a>
+      <a href="#handoff">Team handoffs</a>
+      <a href="team-results.html">Earlier five-SNP pilot</a>
+      <a href="tudor-methods.html">Tudor's methods</a>
+    </nav>
+    <header>
+      <div class="tags"><span class="tag done">One self-contained notebook</span><span class="tag done">8-/12-SNP study executed locally</span><span class="tag next">Real QPU: pending</span></div>
+      <h1>The final notebook: where to work next</h1>
+      <p class="muted"><code>bench/all_together.ipynb</code> contains the team methods in 11 ordered sections. Run top to bottom with the required Python packages installed. It does not load another notebook or repository helper.</p>
+      <div class="flow" aria-label="Input to cost to classical and quantum methods to execution to results">
+        <div class="step"><small>§1–2 · Tudor</small><b>Settings + reads</b><small>same input for everyone</small></div>
+        <div class="step"><small>§3–4 · Alexandra / Carla</small><b>Evidence + pruning</b><small>define the selected cost</small></div>
+        <div class="step"><small>§5–6 · Tudor / Carla</small><b>Classical + QAOA</b><small>train locally, freeze angles</small></div>
+        <div class="step"><small>§7–8 · Alex</small><b>Execution</b><small>ideal, noise, optional studies</small></div>
+        <div class="step"><small>§9–11 · Tudor / team</small><b>Compare + check</b><small>common references</small></div>
+      </div>
+      <div class="notice"><b>Two experiments, not one mixed result:</b> the existing five-SNP pilot uses a pruned graph. The new 8-/12-SNP study uses unpruned evidence and its own synthetic noise backend. Do not combine their numbers as if only size changed.</div>
+    </header>
+
+    <section id="sections" aria-labelledby="sections-title">
+      <h2 id="sections-title">The 11-section map</h2>
+      <div class="card table-wrap">
+        <table>
+          <thead><tr><th scope="col">Section</th><th scope="col">What it contains</th><th scope="col">Where to work</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">1 · Setup</th><td>Budgets, switches, shared input and backend settings.</td><td>Tudor + team · change controls here.</td></tr>
+            <tr><th scope="row">2 · Common input / cost</th><td>Reads, bit order, pairwise costs and exact referees.</td><td>Tudor · keep shared data reproducible.</td></tr>
+            <tr><th scope="row">3 · Objectives</th><td>Weighting, deduplication, MEC and objective studies.</td><td>Alexandra · choose evidence without changing grading.</td></tr>
+            <tr><th scope="row">4 · Pruning</th><td>Pruning rules, connectivity and information limits.</td><td>Carla · compare on the full reference.</td></tr>
+            <tr><th scope="row">5 · Classical methods</th><td>Local search, annealing and the toy comparison.</td><td>Tudor · maintain the classical opponent.</td></tr>
+            <tr><th scope="row">6 · QAOA / training</th><td>Standard, warm-start, multi-angle, formula and transfer.</td><td>Carla + Tudor · report training cost and convergence.</td></tr>
+            <tr><th scope="row">7 · Execution</th><td>Frozen ideal/noisy replay; optional IBM paths.</td><td>Alex · preserve logical SNP order.</td></tr>
+            <tr><th scope="row">8 · Hardware methods</th><td>Layout, routing, readout, twirling, DD, ZNE and other studies.</td><td>Alex · optional studies, not all applied to the default run.</td></tr>
+            <tr><th scope="row">9 · Evaluation</th><td>Metrics, comparisons, plug-ins and the new shared size study.</td><td><span class="tag tudor">Tudor's next main working area</span></td></tr>
+            <tr><th scope="row">10 · Scaling research</th><td>Existing large MPS/Kaggle studies and Alex's larger-instance work.</td><td>Supporting research · separate from the new team pilot.</td></tr>
+            <tr><th scope="row">11 · Checks</th><td>Correctness checks, method inventory and limits.</td><td>Everyone · run after component changes.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small">Optional means “not rerun by default,” not removed. All contributor methods remain in the notebook. Some optional methods need extra dependencies; real-QPU paths are untested and remain off.</p>
+    </section>
+
+    <section id="new-study" aria-labelledby="new-title">
+      <h2 id="new-title">Where the agreed 8-/12-SNP study lands</h2>
+      <div class="grid">
+        <div class="card landing">
+          <div class="location">§1 · Controls</div>
+          <h3>One small, fixed experiment</h3>
+          <p><b>Sizes:</b> 8 and 12. <b>Seeds:</b> 0, 1, 2. <b>Depth:</b> p = 1. <b>Quantum shots:</b> 512 per method per mode.</p>
+          <p><b>Reads:</b> spans 2–4, coverage 6, 5% errors and 10% missing observations. <b>Evidence:</b> unweighted pairwise, no pruning.</p>
+          <p class="small"><code>RUN_SHARED_SIZE_STUDY = True</code> runs it. Its <code>SHARED_STUDY_*</code> controls are separate from the older five-SNP pilot.</p>
+        </div>
+        <div class="card landing">
+          <div class="location">§9 · New study block</div>
+          <h3>One dataset, every method</h3>
+          <p>Generate reads → exact reference → local search → standard/warm/multi-angle → local training → frozen ideal/noisy replay → common scores.</p>
+          <p class="small">The block calls existing functions from §2, §5, §6 and §7. It does not modify teammates' algorithms or require the large research sweeps.</p>
+        </div>
+        <div class="card landing">
+          <div class="location">§9 · Result table</div>
+          <h3>One row per size, method and mode</h3>
+          <p>Success rate, between-seed variation, best/mean full cost, MEC, switch errors, training effort and compiled resources.</p>
+          <p class="small">There are 42 per-dataset rows and 14 summary rows. <code>seed_rate_std</code> describes variation across three datasets; it is not a confidence interval.</p>
+        </div>
+        <div class="card landing">
+          <div class="location">§9 → Alex's execution work</div>
+          <h3>Exact, frozen handoff</h3>
+          <p><code>SHARED_SIZE_ARTIFACTS[(8, 0)]</code> is the predetermined first pilot. It stores reads, J, parameter order, angles and frozen circuits.</p>
+          <p class="small">Set <code>SAVE_OUTPUTS = True</code> for JSON datasets and QPY circuit files. Real-device submission is still a separate, deliberate next step.</p>
+        </div>
+      </div>
+      <div class="notice"><b>Noise model:</b> a seeded synthetic 12-qubit line backend, not a real IBM calibration snapshot. This avoids FakeManila's five-qubit limit while letting us inspect routing overhead. It is not evidence of real-QPU performance.</div>
+    </section>
+
+    <section aria-labelledby="results-title">
+      <h2 id="results-title">The first local table is already available</h2>
+      <div class="card table-wrap">
+        <table>
+          <caption class="small">Average full-model optimum rate over three fixed dataset seeds. Rates use different units for classical and quantum methods.</caption>
+          <thead><tr><th scope="col">SNPs</th><th scope="col">Method</th><th scope="col">Unit</th><th scope="col" class="num">Ideal / classical</th><th scope="col" class="num">Synthetic noisy</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">8</th><td>Local search</td><td>16 restarts / dataset</td><td class="num">100.00%</td><td class="num">—</td></tr>
+            <tr><th scope="row">8</th><td>Standard QAOA</td><td>512 shots / dataset / mode</td><td class="num">3.65%</td><td class="num">3.58%</td></tr>
+            <tr><th scope="row">8</th><td>Warm-start</td><td>512 shots / dataset / mode</td><td class="num">30.14%</td><td class="num">24.74%</td></tr>
+            <tr><th scope="row">8</th><td>Multi-angle</td><td>512 shots / dataset / mode</td><td class="num">8.07%</td><td class="num">8.33%</td></tr>
+            <tr><th scope="row">12</th><td>Local search</td><td>16 restarts / dataset</td><td class="num">87.50%</td><td class="num">—</td></tr>
+            <tr><th scope="row">12</th><td>Standard QAOA</td><td>512 shots / dataset / mode</td><td class="num">1.69%</td><td class="num">1.04%</td></tr>
+            <tr><th scope="row">12</th><td>Warm-start</td><td>512 shots / dataset / mode</td><td class="num">4.43%</td><td class="num">2.34%</td></tr>
+            <tr><th scope="row">12</th><td>Multi-angle</td><td>512 shots / dataset / mode</td><td class="num">0.65%</td><td class="num">0.65%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="grid" style="margin-top:16px">
+        <div class="card"><h3>What it tells us</h3><p>The methods now run on the same larger datasets, and the 12-SNP cases are harder. Warm-start has higher observed quantum optimum rates than standard QAOA in this small study.</p><p class="small">That warm start already uses a classical answer; its preparation work is recorded. This is not a quantum speedup comparison.</p></div>
+        <div class="card"><h3>What needs attention</h3><p>All six multi-angle fits reached the 60-evaluation limit. One 8-SNP warm-start fit did too. Three seeds and one shallow depth are not enough to choose a universal winner.</p><p class="small">Small noisy increases are sampling observations, not proof that noise helps. Increase training thoughtfully before judging multi-angle.</p></div>
+      </div>
+    </section>
+
+    <section id="handoff" aria-labelledby="handoff-title">
+      <h2 id="handoff-title">How we continue individually</h2>
+      <div class="grid">
+        <div class="card"><span class="tag tudor">Tudor · §9</span><h3>Own the comparison</h3><p>Inspect per-seed results, training status and resource overhead. Add controlled comparisons without changing reads between methods.</p><p class="small">Your older 28–100-SNP ideal studies remain in §10; do not rerun them just to validate this shared pilot.</p></div>
+        <div class="card"><span class="tag">Alexandra · §3</span><h3>Change evidence next</h3><p>Compare a selected weighting rule against this unweighted control. Rebuild J and retrain; keep full-reference scoring fixed.</p></div>
+        <div class="card"><span class="tag">Carla · §4 / §6</span><h3>Improve training or circuits</h3><p>Investigate multi-angle convergence and pruning trade-offs. Return a circuit, ordered parameters and frozen angles for each agreed dataset.</p></div>
+        <div class="card"><span class="tag next">Alex · §7 / §8</span><h3>Move the pilot to hardware</h3><p>Inspect the actual device's routed circuits, then compare standard with one selected variant on the predetermined 8-SNP pilot. Try 12 SNPs after the pilot is sound.</p><p class="small">Save job IDs, backend, shots, calibration context and raw logical samples. Synthetic noise results do not replace this step.</p></div>
+      </div>
+    </section>
+    <footer class="small">One notebook, preserved contributor methods, explicit local/hardware boundaries. The new study is an integration experiment, not a quantum-advantage claim.</footer>
+  </main>
+</body>
+</html>
