@@ -836,7 +836,10 @@ def plot_run_diagnostics(data, out, formats, dpi):
             if len(available) < len(part):
                 ax.text(.98, i, 'QPU usage not recorded', transform=ax.get_yaxis_transform(),
                         ha='right', va='center', fontsize=8, color=GREY)
-        ax.set_yticks(range(len(envs)),[env_title(stage,backend) for stage,backend in envs]);ax.invert_yaxis()
+        labels = ['Ideal simulation' if stage == 'ideal' else
+                  f"{device_label(backend)}\n{'calibrated noise' if stage == 'noisy' else 'real device'}"
+                  for stage, backend in envs]
+        ax.set_yticks(range(len(envs)), labels);ax.invert_yaxis()
         ax.set_xlabel('Seconds · simulator elapsed / hardware QPU usage');ax.grid(axis='y',visible=False)
         values=timing.runtime_seconds.dropna()
         if len(values) and (values > 0).all() and values.max()/values.min()>=100:
@@ -949,14 +952,26 @@ def _presentation_axes(ax):
 
 
 DEVICE_STYLES = {
-    'ibm_aachen': {'color': INK, 'linestyle': '-', 'marker': 'o', 'label': 'Aachen'},
-    'ibm_berlin': {'color': TIE, 'linestyle': '--', 'marker': 's', 'label': 'Berlin'},
+    'ibm_aachen': {'color': INK, 'linestyle': '-', 'marker': 'o', 'label': 'Aachen',
+                   'processor_type': 'Heron r3'},
+    'ibm_berlin': {'color': TIE, 'linestyle': '--', 'marker': 's', 'label': 'Berlin',
+                   'processor_type': 'Nighthawk r1'},
 }
 
 
 def device_style(backend):
     return DEVICE_STYLES.get(backend, {'color': GREY, 'linestyle': ':', 'marker': '^',
                                        'label': backend.replace('ibm_', '').title()})
+
+
+def device_label(backend):
+    style = device_style(backend)
+    processor_type = style.get('processor_type')
+    return f"{style['label']} ({processor_type})" if processor_type else style['label']
+
+
+def backend_color(backend):
+    return {'ibm_aachen': GOLD, 'ibm_berlin': TIE}.get(backend, device_style(backend)['color'])
 
 
 def save_slide(fig, out, name, formats, dpi):
@@ -1122,7 +1137,7 @@ def plot_multiangle_zoom(fig, main, table, zne, measured, corrected, depth, back
     points = pd.concat(combined, ignore_index=True)
     points.to_csv(output_file(out, '01_mitigation_success_data.csv'), index=False)
     for x, (stage, backend) in enumerate(rows):
-        color = GOLD if stage == 'noisy' else TIE
+        color = backend_color(backend)
         for technique, offset, marker in [('dd', -.30, '^'), ('twirling', -.15, 's'), ('zne', 0, '*'),
                                            ('readout', .15, 'D'), ('trex', .30, 'P')]:
             part = points[(points.stage == stage) & (points.backend == backend) &
@@ -1164,9 +1179,9 @@ def plot_presentation_multiangle(data, out, formats, dpi):
     depths=sorted(reference.depth.unique())
     ax.plot(reference.depth,reference.full_optimum_probability,color=CYAN,marker='D',ms=7,lw=2,
             label='Ideal · exact',zorder=4)
-    for stage,color,label in [('noisy',GOLD,'Noisy'),('real',TIE,'Hardware')]:
+    for stage,label in [('noisy','Noisy'),('real','Hardware')]:
         for backend in backends:
-            device=device_style(backend)
+            device=device_style(backend);color=backend_color(backend)
             values=table[(table.stage==stage)&(table.backend==backend)].dropna(subset=['full_optimum_probability'])
             if values.empty: continue
             means=values.groupby('depth').full_optimum_probability.mean().reindex(depths)
@@ -1175,7 +1190,7 @@ def plot_presentation_multiangle(data, out, formats, dpi):
                 ax.scatter(depth+np.asarray(jitter),group.full_optimum_probability,s=22,color=color,alpha=.24,zorder=2)
             ax.plot(means.index,means,color=color,linestyle=device['linestyle'],marker=device['marker'],
                     markerfacecolor=color if stage=='noisy' else 'white',markeredgewidth=1.5,
-                    ms=7,lw=2,label=f"{label} · {device['label']}",zorder=3)
+                    ms=7,lw=2,label=f"{label} · {device_label(backend)}",zorder=3)
     observed=table.full_optimum_probability.dropna()
     lower=max(0.0, np.floor((float(observed.min())-.02)*10)/10) if not observed.empty else 0.0
     upper=max(1.02, float(observed.max())+.02) if not observed.empty else 1.02
@@ -1316,7 +1331,7 @@ def plot_presentation_techniques(data, out, formats, dpi):
         ax.set_xlim(lo-pad,hi+pad)
     label='Hardware' if stage=='real' else 'Noisy simulation'
     fig.suptitle(f'{label}: did mitigation help?',fontsize=21,fontweight='bold',y=.97)
-    handles=[Line2D([0],[0],color=device_style(b)['color'],linestyle=device_style(b)['linestyle'],marker=device_style(b)['marker'],lw=2,label=device_style(b)['label']) for b in backends]
+    handles=[Line2D([0],[0],color=device_style(b)['color'],linestyle=device_style(b)['linestyle'],marker=device_style(b)['marker'],lw=2,label=device_label(b)) for b in backends]
     fig.legend(handles=handles,loc='upper center',bbox_to_anchor=(.5,.89),ncol=len(handles),fontsize=12)
     absent=[device_style(b)['label'] for b in backends
             if selected.loc[selected.backend==b,'error_reduction_percent'].dropna().empty]
