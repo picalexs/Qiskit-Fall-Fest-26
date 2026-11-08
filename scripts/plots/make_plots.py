@@ -1341,6 +1341,87 @@ def plot_presentation_techniques(data, out, formats, dpi):
     save_slide(fig,out,'03_technique_effect',formats,dpi)
 
 
+def mitigation_resource_data(data):
+    """Compare target circuits with the matching raw reference in each repeat."""
+    rows = []
+    for record in data.get('records', []):
+        technique, variant = record.get('technique'), record.get('variant')
+        resources = record.get('circuit_resources') or {}
+        target = ((technique in ('raw_reference', 'readout', 'dd') and variant == 'target') or
+                  (technique == 'twirling' and str(variant).startswith('twirl_')) or
+                  (technique == 'trex' and str(variant).startswith('target_mask_')) or
+                  (technique == 'zne' and variant == 'factor_3'))
+        if record.get('stage') not in ('real', 'noisy') or not target or not resources:
+            continue
+        mapping = resources.get('measurement_map') or {}
+        rows.append({key: record.get(key) for key in ('stage', 'backend', 'method', 'depth', 'repeat', 'technique')} |
+                    {'measured_qubits': len(set(mapping.values())) if mapping else np.nan,
+                     'two_qubit_gates': resources.get('two_qubit_gates'), 'total_depth': resources.get('depth')})
+    if not rows:
+        return pd.DataFrame()
+    metrics = ['measured_qubits', 'two_qubit_gates', 'total_depth']
+    keys = ['stage', 'backend', 'method', 'depth', 'repeat']
+    table = _selected_champion_rows(data, pd.DataFrame(rows))
+    if table.empty:
+        return table
+    # Average randomized variants within a repeat before comparing repeats.
+    table = table.groupby(keys + ['technique'], as_index=False)[metrics].mean()
+    raw = table[table.technique == 'raw_reference'][keys + metrics]
+    paired = table[table.technique != 'raw_reference'].merge(raw, on=keys, suffixes=('', '_raw'),
+                                                                validate='many_to_one')
+    for metric in metrics:
+        baseline = paired[f'{metric}_raw']
+        paired[f'{metric}_change_percent'] = np.where(baseline > 0, 100 * (paired[metric] - baseline) / baseline, np.nan)
+    return paired
+
+
+def plot_mitigation_resources(data, out, formats, dpi):
+    table = mitigation_resource_data(data)
+    if table.empty:
+        return
+    stage = 'real' if (table.stage == 'real').any() else 'noisy'
+    selected = table[table.stage == stage]
+    selected.to_csv(output_file(out, '03b_mitigation_resources_data.csv'), index=False)
+    backends = [b for b in presentation_backends(data) if (selected.backend == b).any()]
+    if not backends:
+        return
+    names = [name for name in TECHNIQUES if name in set(selected.technique)]
+    metrics = [('measured_qubits', 'Measured qubits', CYAN), ('two_qubit_gates', 'Two-qubit gates', GOLD),
+               ('total_depth', 'Total circuit depth', TIE)]
+    fig, axes = plt.subplots(1, len(backends), figsize=(12.8, 7.2), squeeze=False, sharey=True)
+    fig.subplots_adjust(left=.20, right=.96, bottom=.18, top=.78, wspace=.17)
+    for ax, backend in zip(axes[0], backends):
+        _presentation_axes(ax)
+        ax.grid(False)
+        ax.axvline(0, color=GREY, ls=':', lw=1.2)
+        for i, name in enumerate(names):
+            part = selected[(selected.backend == backend) & (selected.technique == name)]
+            for j, (metric, _, color) in enumerate(metrics):
+                comparable = part.dropna(subset=[metric, f'{metric}_raw', f'{metric}_change_percent'])
+                if comparable.empty:
+                    continue
+                value = comparable[f'{metric}_change_percent'].mean()
+                raw = comparable[f'{metric}_raw'].mean()
+                mitigated = comparable[metric].mean()
+                y = i + (j - 1) * .23
+                ax.barh(y, value, height=.19, color=color)
+                raw_label = f'{raw:.1f}'.removesuffix('.0')
+                mitigated_label = f'{mitigated:.1f}'.removesuffix('.0')
+                ax.annotate(f'{raw_label} → {mitigated_label} ({value:+.1f}%)', (value, y),
+                            xytext=(4 if value >= 0 else -4, 0),
+                            textcoords='offset points', ha='left' if value >= 0 else 'right', va='center', fontsize=8)
+        ax.set_yticks(range(len(names)), ['ZNE (factor 3)' if name == 'zne' else TECHNIQUES[name] for name in names])
+        ax.set_ylim(len(names)-.5, -.5)
+        ax.set_title(device_label(backend), fontweight='bold', fontsize=12)
+        ax.set_xlabel('Change vs raw (%)  ·  labels: average raw → mitigated')
+        ax.margins(x=.5, y=.1)
+    label = 'Hardware' if stage == 'real' else 'Noisy simulation'
+    fig.suptitle(f'{label}: mitigation circuit resources', fontsize=21, fontweight='bold', y=.97)
+    handles = [Line2D([0], [0], color=color, lw=7, label=label) for _, label, color in metrics]
+    fig.legend(handles=handles, loc='upper center', bbox_to_anchor=(.5, .89), ncol=3, fontsize=10)
+    save_slide(fig, out, '03b_mitigation_resources', formats, dpi)
+
+
 def presentation_zne_success_data(data):
     """Extrapolate an optimum-projector expectation from saved ZNE counts."""
     optima=set(data.get('problem',{}).get('full_minimizers',[]))
@@ -1445,6 +1526,7 @@ def plot_presentation(data, output, formats, dpi):
         plot_presentation_multiangle(data,output,formats,dpi)
         plot_presentation_resources(data,output,formats,dpi)
         plot_presentation_techniques(data,output,formats,dpi)
+        plot_mitigation_resources(data,output,formats,dpi)
         plot_presentation_zne(data,output,formats,dpi)
 
 
