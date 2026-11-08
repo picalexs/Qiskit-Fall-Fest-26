@@ -976,15 +976,135 @@ def slide_axes():
     return fig, ax
 
 
-def plot_multiangle_zoom(fig, main, table, zne, measured, depth, backends, out):
+def readout_projector_estimates(data):
+    """Estimate the optimum projector from saved local calibration and target counts."""
+    optima = data.get('problem', {}).get('full_minimizers') or []
+    if not optima:
+        return pd.DataFrame()
+    n = len(optima[0])
+    if not 1 <= n <= 12 or any(len(s) != n or set(s) - {'0', '1'} for s in optima):
+        raise ValueError('Invalid full-optimum bitstrings')
+    keys = ('stage', 'backend', 'method', 'depth', 'repeat')
+    groups = {}
+    for record in data.get('records', []):
+        if record.get('stage') not in ('noisy', 'real') or record.get('technique') not in ('raw_reference', 'readout', 'trex'):
+            continue
+        key = tuple(record.get(k) for k in keys)
+        variant = (record.get('technique'), record.get('variant'))
+        group = groups.setdefault(key, {})
+        if variant in group:
+            group['_duplicate'] = True
+        group[variant] = record
+    coefficients = {}
+    for bits in itertools.product((0, 1), repeat=n):
+        subset = tuple(i for i, bit in enumerate(bits) if bit)
+        coefficient = sum((-1) ** sum(int(state[i]) for i in subset) for state in optima) / (2 ** n)
+        if coefficient:
+            coefficients[subset] = coefficient
+    rows = []
+    for key, group in groups.items():
+        if '_duplicate' in group or ('raw_reference', 'target') not in group:
+            continue
+        raw = group[('raw_reference', 'target')]
+        for technique in ('readout', 'trex'):
+            variants = {variant: record for (arm, variant), record in group.items()
+                        if isinstance(arm, str) and arm == technique} if '_duplicate' not in group else {}
+            if not variants:
+                continue
+            try:
+                if technique == 'readout':
+                    if set(variants) != {'target', 'cal0', 'cal1'}:
+                        continue
+                    targets = [('', variants['target'])]
+                    calibrations = [('0'*n, variants['cal0']), ('1'*n, variants['cal1'])]
+                else:
+                    masks = {v[12:] for v in variants if isinstance(v, str) and v.startswith('target_mask_')}
+                    cal_masks = {v[9:] for v in variants if isinstance(v, str) and v.startswith('cal_mask_')}
+                    if masks != cal_masks or len(masks) != min(16, 2**n) or any(len(m) != n or set(m)-{'0', '1'} for m in masks):
+                        continue
+                    targets = [(m, variants['target_mask_'+m]) for m in sorted(masks)]
+                    calibrations = [(m, variants['cal_mask_'+m]) for m in sorted(masks)]
+                    if len({r['shots'] for _, r in targets}) != 1 or len({r['shots'] for _, r in calibrations}) != 1:
+                        continue
+                all_records = [raw] + [r for _, r in targets + calibrations]
+                if any(not r.get('counts') or sum(r['counts'].values()) != r.get('shots') or r['shots'] <= 0
+                       for r in all_records):
+                    continue
+                if any(len(label.replace(' ', '')) != n or set(label.replace(' ', '')) - {'0', '1'} or count < 0
+                       for label, count in raw['counts'].items()):
+                    continue
+                if sum(r['shots'] for r in all_records[1:]) != raw['shots']:
+                    continue
+                mappings = [r.get('circuit_resources', {}).get('measurement_map') for r in all_records]
+                if not mappings[0] or any(mapping != mappings[0] for mapping in mappings):
+                    continue
+                response = np.zeros((n, 2, 2))
+                for prepared, record in calibrations:
+                    for label, count in record['counts'].items():
+                        observed = label.replace(' ', '')[::-1]
+                        if len(observed) != n or set(observed)-{'0', '1'} or count < 0:
+                            raise ValueError('Invalid calibration counts')
+                        for i in range(n):
+                            response[i, int(observed[i]), int(prepared[i])] += count
+                totals = response.sum(axis=1)
+                if (totals == 0).any():
+                    continue
+                response /= totals[:, None, :]
+                if technique == 'readout':
+                    if any(not np.isfinite(np.linalg.cond(m)) or np.linalg.cond(m) > 1e6 for m in response):
+                        continue
+                    inverse = np.linalg.inv(response)
+                else:
+                    gains = response[:, 0, 0] + response[:, 1, 1] - 1
+                    if not np.isfinite(gains).all() or np.min(np.abs(gains)) < .1:
+                        continue
+                total, estimate = 0, 0.
+                for mask, record in targets:
+                    for label, count in record['counts'].items():
+                        observed = label.replace(' ', '')[::-1]
+                        if len(observed) != n or set(observed)-{'0', '1'} or count < 0:
+                            raise ValueError('Invalid target counts')
+                        if technique == 'readout':
+                            value = sum(np.prod([inverse[i, int(state[i]), int(observed[i])]
+                                                 for i in range(n)]) for state in optima)
+                        else:
+                            z = np.array([1 - 2*(int(observed[i]) ^ int(mask[i])) for i in range(n)])
+                            value = sum(coef * np.prod(z[list(subset)] / gains[list(subset)])
+                                        for subset, coef in coefficients.items())
+                        estimate += count * value
+                        total += count
+                estimate /= total
+                raw_success = sum(count for label, count in raw['counts'].items()
+                                  if label.replace(' ', '')[::-1] in optima) / raw['shots']
+                # A finite, pairwise-balanced mask set need not balance higher-order terms.
+                imbalance = 0.
+                if technique == 'trex':
+                    relevant = {subset for term in coefficients for size in range(1, len(term)+1)
+                                for subset in itertools.combinations(term, size)}
+                    imbalance = max((abs(np.mean([(-1)**sum(int(mask[i]) for i in subset)
+                                                  for mask, _ in targets])) for subset in relevant), default=0.)
+                rows.append(dict(zip(keys, key)) | {
+                    'technique': technique, 'raw_success': raw_success, 'mitigated_success': float(estimate),
+                    'raw_shots': raw['shots'], 'total_shots': sum(r['shots'] for r in all_records[1:]),
+                    'value_type': 'local readout estimate' if technique == 'readout' else 'TREX-style local-gain estimate',
+                    'mask_imbalance': imbalance if technique == 'trex' else None,
+                    'outside_probability_range': not 0 <= estimate <= 1,
+                })
+            except (ValueError, KeyError, np.linalg.LinAlgError):
+                continue
+    return _selected_champion_rows(data, pd.DataFrame(rows)) if rows else pd.DataFrame()
+
+
+def plot_multiangle_zoom(fig, main, table, zne, measured, corrected, depth, backends, out):
     """Show measured and estimated success against each equal-shot raw reference."""
     rows = [(stage, backend) for backend in backends for stage in ('noisy', 'real')]
     labels = [f"{device_style(backend)['label']}\n{'noise' if stage == 'noisy' else 'device'}"
               for stage, backend in rows]
     success = main.inset_axes([.58, .13, .39, .34])
-    success.set_title(f'p={depth} · ○ raw  △ DD  ■ twirling  ★ ZNE estimate', fontsize=8, pad=5, loc='left', x=.04)
+    success.set_title(f'p={depth} ○ raw △ DD ■ twirl | est: ★ ZNE ◆ readout ✚ TREX',
+                      fontsize=6.2, pad=5, loc='left', x=.02)
     success.spines['right'].set_visible(True)
-    success.set_ylabel('Success frequency', fontsize=8)
+    success.set_ylabel('Success frequency / estimate', fontsize=8)
     success.yaxis.set_major_formatter(PercentFormatter(1))
     success.tick_params(labelsize=7)
     success.grid(axis='x', visible=False)
@@ -997,11 +1117,14 @@ def plot_multiangle_zoom(fig, main, table, zne, measured, depth, backends, out):
     if not measured.empty:
         combined.append(measured.assign(mitigated_success=measured.optimum_probability,
                                         value_type='measured frequency'))
+    if not corrected.empty:
+        combined.append(corrected)
     points = pd.concat(combined, ignore_index=True)
     points.to_csv(output_file(out, '01_mitigation_success_data.csv'), index=False)
     for x, (stage, backend) in enumerate(rows):
         color = GOLD if stage == 'noisy' else TIE
-        for technique, offset, marker in [('dd', -.22, '^'), ('twirling', 0, 's'), ('zne', .22, '*')]:
+        for technique, offset, marker in [('dd', -.30, '^'), ('twirling', -.15, 's'), ('zne', 0, '*'),
+                                           ('readout', .15, 'D'), ('trex', .30, 'P')]:
             part = points[(points.stage == stage) & (points.backend == backend) &
                           (points.technique == technique)]
             if part.empty:
@@ -1034,7 +1157,9 @@ def plot_presentation_multiangle(data, out, formats, dpi):
            if champion.get('method') == 'multi-angle' else pd.DataFrame())
     measured = (measured_mitigation_data(data)
                 if champion.get('method') == 'multi-angle' else pd.DataFrame())
-    has_zoom = not zne.empty or not measured.empty
+    corrected = (readout_projector_estimates(data)
+                 if champion.get('method') == 'multi-angle' else pd.DataFrame())
+    has_zoom = not zne.empty or not measured.empty or not corrected.empty
     reference=table[(table.stage=='ideal') & (table.backend==backends[0])].sort_values('depth')
     depths=sorted(reference.depth.unique())
     ax.plot(reference.depth,reference.full_optimum_probability,color=CYAN,marker='D',ms=7,lw=2,
@@ -1069,7 +1194,7 @@ def plot_presentation_multiangle(data, out, formats, dpi):
     ax.set(xlabel='QAOA depth $p$',ylabel=ylabel,ylim=(lower,upper))
     ax.set_xticks(depths); ax.yaxis.set_major_formatter(PercentFormatter(1))
     if has_zoom:
-        plot_multiangle_zoom(fig, ax, table, zne, measured, champion['depth'], backends, out)
+        plot_multiangle_zoom(fig, ax, table, zne, measured, corrected, champion['depth'], backends, out)
     fig.suptitle('Multi-angle QAOA: ideal, noisy and real',fontsize=21,fontweight='bold',y=.97)
     handles, labels = ax.get_legend_handles_labels()
     fig.legend(handles,labels,loc='upper center',bbox_to_anchor=(.5,.93),ncol=3,fontsize=10)
