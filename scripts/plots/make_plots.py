@@ -1341,6 +1341,20 @@ def plot_presentation_techniques(data, out, formats, dpi):
     save_slide(fig,out,'03_technique_effect',formats,dpi)
 
 
+def single_qubit_gate_count(resources):
+    """Count saved single-qubit gates without treating delays as gates."""
+    operations = resources.get('operations')
+    if operations is None:
+        return np.nan
+    single = {'id', 'x', 'y', 'z', 'h', 's', 'sdg', 't', 'tdg', 'sx', 'sxdg',
+              'rx', 'ry', 'rz', 'p', 'u', 'u1', 'u2', 'u3'}
+    other = {'barrier', 'delay', 'measure', 'reset', 'cx', 'cz', 'cy', 'ch',
+             'ecr', 'swap', 'iswap', 'rxx', 'ryy', 'rzz', 'rzx', 'cp', 'crx', 'cry', 'crz'}
+    if set(operations) - single - other:
+        return np.nan
+    return sum(operations.get(name, 0) for name in single)
+
+
 def mitigation_resource_data(data):
     """Compare target circuits with the matching raw reference in each repeat."""
     rows = []
@@ -1353,13 +1367,12 @@ def mitigation_resource_data(data):
                   (technique == 'zne' and variant == 'factor_3'))
         if record.get('stage') not in ('real', 'noisy') or not target or not resources:
             continue
-        mapping = resources.get('measurement_map') or {}
         rows.append({key: record.get(key) for key in ('stage', 'backend', 'method', 'depth', 'repeat', 'technique')} |
-                    {'measured_qubits': len(set(mapping.values())) if mapping else np.nan,
+                    {'single_qubit_gates': single_qubit_gate_count(resources),
                      'two_qubit_gates': resources.get('two_qubit_gates'), 'total_depth': resources.get('depth')})
     if not rows:
         return pd.DataFrame()
-    metrics = ['measured_qubits', 'two_qubit_gates', 'total_depth']
+    metrics = ['single_qubit_gates', 'two_qubit_gates', 'total_depth']
     keys = ['stage', 'backend', 'method', 'depth', 'repeat']
     table = _selected_champion_rows(data, pd.DataFrame(rows))
     if table.empty:
@@ -1386,7 +1399,7 @@ def plot_mitigation_resources(data, out, formats, dpi):
     if not backends:
         return
     names = [name for name in TECHNIQUES if name in set(selected.technique)]
-    metrics = [('measured_qubits', 'Measured qubits', CYAN), ('two_qubit_gates', 'Two-qubit gates', GOLD),
+    metrics = [('single_qubit_gates', 'Single-qubit gates', CYAN), ('two_qubit_gates', 'Two-qubit gates', GOLD),
                ('total_depth', 'Total circuit depth', TIE)]
     fig, axes = plt.subplots(1, len(backends), figsize=(12.8, 7.2), squeeze=False, sharey=True)
     fig.subplots_adjust(left=.20, right=.96, bottom=.18, top=.78, wspace=.17)

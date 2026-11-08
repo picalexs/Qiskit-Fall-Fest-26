@@ -39,7 +39,7 @@ python scripts/plots/make_plots.py
 
 Outputs go to `figures/backend_comparison/<run>/`; use `--help` to select a run
 or output directory. The presentation includes `03b_mitigation_resources`,
-which compares each technique's measured qubits, two-qubit gates and circuit
+which compares each technique's single-qubit gates, two-qubit gates and circuit
 depth with its matching raw reference. It shows the ZNE factor-3 circuit and
 excludes calibration circuits; scheduled delays count toward circuit depth.
 The plot generator requires version 2 run data; older runs
