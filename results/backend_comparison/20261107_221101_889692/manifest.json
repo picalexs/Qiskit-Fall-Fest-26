@@ -1,0 +1,133 @@
+{
+  "schema_version": 2,
+  "status": "complete",
+  "created_utc": "2026-11-07T20:11:01.891690+00:00",
+  "config": {
+    "mode": "run",
+    "run_folder": null,
+    "run_real": false,
+    "recovery_job_ids": {},
+    "output_dir": "c:\\Users\\Alex\\Documents\\Projects\\Qiskit-Fall-Fest-26\\bench\\results\\backend_comparison",
+    "backends": [
+      "ibm_berlin",
+      "ibm_aachen"
+    ],
+    "reads": [
+      [
+        0,
+        1,
+        1,
+        -1,
+        -1
+      ],
+      [
+        1,
+        0,
+        0,
+        -1,
+        -1
+      ],
+      [
+        -1,
+        1,
+        1,
+        0,
+        -1
+      ],
+      [
+        -1,
+        0,
+        0,
+        1,
+        -1
+      ],
+      [
+        -1,
+        -1,
+        1,
+        0,
+        1
+      ],
+      [
+        -1,
+        -1,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        -1,
+        -1,
+        0,
+        1
+      ],
+      [
+        1,
+        -1,
+        -1,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        -1,
+        -1,
+        -1
+      ]
+    ],
+    "methods": [
+      "standard",
+      "warm-start",
+      "multi-angle"
+    ],
+    "depths": [
+      1,
+      2,
+      3
+    ],
+    "objective": "A baseline",
+    "prune_rule": "mstforest",
+    "shots": 2048,
+    "screen_shots": 1024,
+    "repeats": 3,
+    "screen_repeats": 3,
+    "technique_shots": 4096,
+    "techniques": [
+      "readout",
+      "dd",
+      "twirling",
+      "zne"
+    ],
+    "standard_iterations": 100,
+    "multi_iterations": 500,
+    "starts": 5,
+    "seed": 71,
+    "training_seed": 71,
+    "transpile_seed": 71,
+    "local_seed": 17,
+    "pruning_seed": 7,
+    "optimization_level": 2,
+    "local_budget": 128,
+    "local_restarts": 16,
+    "epsilon": 0.25,
+    "all_distribution_depths": false
+  },
+  "jobs": [],
+  "skips": [],
+  "champion": {
+    "method": "multi-angle",
+    "depth": 2
+  },
+  "versions": {
+    "qiskit": "2.5.0",
+    "qiskit-aer": "0.17.2",
+    "qiskit-ibm-runtime": "0.47.0",
+    "numpy": "2.5.1",
+    "scipy": "1.18.0",
+    "pandas": "3.0.3"
+  },
+  "selection_rule": "mean noisy full optimum; tie-break full cost, then 2q gates",
+  "completed_utc": "2026-11-07T20:21:45.564893+00:00"
+}

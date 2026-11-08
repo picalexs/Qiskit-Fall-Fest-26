@@ -1,0 +1,142 @@
+{
+  "created": "2026-11-07T19:08:32.626214+00:00",
+  "status": "complete",
+  "config": {
+    "backends": [
+      "fake_manila"
+    ],
+    "seed": 71,
+    "standard_iterations": 12,
+    "multi_iterations": 15,
+    "starts": 1,
+    "screen_shots": 32,
+    "shots": 64,
+    "top_methods": 1,
+    "run_real": false
+  },
+  "reads": [
+    [
+      0,
+      1,
+      1,
+      -1,
+      -1
+    ],
+    [
+      1,
+      0,
+      0,
+      -1,
+      -1
+    ],
+    [
+      -1,
+      1,
+      1,
+      0,
+      -1
+    ],
+    [
+      -1,
+      0,
+      0,
+      1,
+      -1
+    ],
+    [
+      -1,
+      -1,
+      1,
+      0,
+      1
+    ],
+    [
+      -1,
+      -1,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      -1,
+      -1,
+      0,
+      1
+    ],
+    [
+      1,
+      -1,
+      -1,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      -1,
+      -1,
+      -1
+    ]
+  ],
+  "python": "3.12.10",
+  "versions": {
+    "qiskit": "2.5.0",
+    "qiskit-aer": "0.17.2",
+    "qiskit-ibm-runtime": "0.47.0",
+    "numpy": "2.5.1",
+    "scipy": "1.18.0"
+  },
+  "jobs": [],
+  "files": [
+    "comparison.png",
+    "compiled_stats.json",
+    "counts.json",
+    "fake_manila_multi_forest_p2_calibration0.qpy",
+    "fake_manila_multi_forest_p2_calibration1.qpy",
+    "fake_manila_multi_forest_p2_isa.qpy",
+    "fake_manila_multi_full_p2_isa.qpy",
+    "fake_manila_noise_model.json",
+    "fake_manila_properties.json",
+    "fake_manila_standard_forest_p1_isa.qpy",
+    "fake_manila_standard_forest_p2_isa.qpy",
+    "fake_manila_standard_full_p1_calibration0.qpy",
+    "fake_manila_standard_full_p1_calibration1.qpy",
+    "fake_manila_standard_full_p1_isa.qpy",
+    "fake_manila_standard_full_p2_isa.qpy",
+    "manifest.json",
+    "multi_forest_p2_logical.qpy",
+    "multi_full_p2_logical.qpy",
+    "plots/01_screening.png",
+    "plots/02_quality.png",
+    "plots/03_resources.png",
+    "plots/04_noise_and_readout.png",
+    "plots/05_preparation_time.png",
+    "plots/07_outcomes_multi_forest_p2.png",
+    "plots/07_outcomes_standard_full_p1.png",
+    "plots/08_cost_distribution_multi_forest_p2.png",
+    "plots/08_cost_distribution_standard_full_p1.png",
+    "plots/cost_frequencies.csv",
+    "plots/outcome_frequencies.csv",
+    "ranking.csv",
+    "references.json",
+    "results.csv",
+    "screen_fake_manila_multi_forest_p2.json",
+    "screen_fake_manila_multi_full_p2.json",
+    "screen_fake_manila_standard_forest_p1.json",
+    "screen_fake_manila_standard_forest_p2.json",
+    "screen_fake_manila_standard_full_p1.json",
+    "screen_fake_manila_standard_full_p2.json",
+    "screening.csv",
+    "standard_forest_p1_logical.qpy",
+    "standard_forest_p2_logical.qpy",
+    "standard_full_p1_logical.qpy",
+    "standard_full_p2_logical.qpy",
+    "training.json"
+  ],
+  "selected_methods": [
+    "multi_forest_p2",
+    "standard_full_p1"
+  ],
+  "screening_rule": "mean noisy full optimum probability across backends; ties by lower mean cost then fewer two-qubit gates"
+}

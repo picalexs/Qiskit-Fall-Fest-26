@@ -1,0 +1,10 @@
+stage,backend,method,depth,repeat,technique,shots,full_optimum_probability,full_optimum_standard_error,mean_full_cost,mec_optimum_probability,mean_mec,total_variation_from_ideal
+screen,fake_manila,multi-angle,3,0,raw,16,0.25,0.10825317547305482,8.8125,0.25,4.6875,0.4895099362759649
+screen,fake_manila,standard,2,0,raw,16,0.0625,0.06051536478449089,11.0625,0.0625,5.6875,0.5322531357484304
+screen,fake_manila,standard,1,0,raw,16,0.0,0.0,13.0,0.0,6.75,0.60422343238059
+screen,fake_manila,warm-start,3,0,raw,16,0.4375,0.12401959270615269,8.0,0.4375,4.5,0.403299906265417
+screen,fake_manila,warm-start,2,0,raw,16,0.5,0.125,6.5625,0.5,3.6875,0.22809781655018457
+screen,fake_manila,multi-angle,1,0,raw,16,0.1875,0.09757809372497497,9.6875,0.1875,5.1875,0.46996346671276934
+screen,fake_manila,warm-start,1,0,raw,16,0.5625,0.12401959270615269,5.375,0.5625,3.125,0.21737062045008204
+screen,fake_manila,standard,3,0,raw,16,0.0625,0.06051536478449089,11.25,0.0625,5.875,0.5114129891788382
+screen,fake_manila,multi-angle,2,0,raw,16,0.625,0.12103072956898178,4.1875,0.625,2.4375,0.24907426306433317

@@ -1,0 +1,30 @@
+{
+  "key": "ideal|ideal|warm-start|1|0|raw|target",
+  "stage": "ideal",
+  "backend": "ideal",
+  "method": "warm-start",
+  "depth": 1,
+  "repeat": 0,
+  "technique": "raw",
+  "variant": "target",
+  "shots": 32,
+  "circuit_file": "circuits\\cbd4c8da215f78ed0950e315666d4f32d7621ac6394168d59255a16189d83301.qpy",
+  "counts": {
+    "10100": 1,
+    "01000": 6,
+    "11001": 2,
+    "10001": 1,
+    "01101": 2,
+    "01001": 12,
+    "01111": 3,
+    "01011": 2,
+    "01110": 1,
+    "10000": 1,
+    "00111": 1
+  },
+  "seed_simulator": 2305254207,
+  "batch_wall_seconds": 0.01199320000159787,
+  "batch_circuits": 9,
+  "job_id": null,
+  "pub_index": 3
+}

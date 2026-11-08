@@ -218,7 +218,3 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
-
-# Bench outputs (bench/results/<run>/, written by the bench notebooks)
-bench/results/
-**generated**

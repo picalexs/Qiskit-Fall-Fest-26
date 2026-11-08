@@ -1,0 +1,73 @@
+{
+  "key": "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_8",
+  "stage": "noisy",
+  "backend": "ibm_aachen",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 0,
+  "technique": "twirling",
+  "variant": "twirl_8",
+  "shots": 256,
+  "circuit_file": "circuits\\28fb574aec12bfe4c52dd470dff7bc06ce1a982c391ac95825443cb91fa5776b.qpy",
+  "circuit_resources": {
+    "depth": 58,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 156,
+    "operations": {
+      "delay": 170,
+      "rz": 51,
+      "sx": 44,
+      "cz": 16,
+      "x": 12,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    }
+  },
+  "counts": {
+    "01001": 126,
+    "11111": 1,
+    "10110": 107,
+    "00110": 2,
+    "10111": 6,
+    "01000": 4,
+    "01011": 1,
+    "11011": 1,
+    "00001": 2,
+    "00101": 1,
+    "10010": 2,
+    "11001": 1,
+    "10100": 1,
+    "01101": 1
+  },
+  "seed_simulator": 3553001912,
+  "batch_wall_seconds": 16.3199887999981,
+  "batch_circuits": 16,
+  "batch_task_keys": [
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_0",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_1",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_2",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_3",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_4",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_5",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_6",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_7",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_8",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_9",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_10",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_11",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_12",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_13",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_14",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_15"
+  ],
+  "job_id": null,
+  "pub_index": 8
+}

@@ -1,0 +1,31 @@
+{
+  "counts": {
+    "01110": 2,
+    "00101": 1,
+    "10011": 1,
+    "10111": 1,
+    "10101": 1,
+    "01001": 2,
+    "01010": 1,
+    "10010": 1,
+    "01000": 2,
+    "11001": 1,
+    "01111": 1,
+    "11111": 1,
+    "00110": 1
+  },
+  "metrics": {
+    "backend": "fake",
+    "method": "standard_forest_p1",
+    "shots": 16,
+    "full_optimum_probability": 0.125,
+    "full_optimum_standard_error": 0.08267972847076846,
+    "mean_full_cost": 10.625,
+    "mec_optimum_probability": 0.125,
+    "mean_mec": 5.625,
+    "total_variation_from_ideal": 0.4924828373810698,
+    "depth": 29,
+    "two_qubit_depth": 9,
+    "two_qubit_gates": 9
+  }
+}

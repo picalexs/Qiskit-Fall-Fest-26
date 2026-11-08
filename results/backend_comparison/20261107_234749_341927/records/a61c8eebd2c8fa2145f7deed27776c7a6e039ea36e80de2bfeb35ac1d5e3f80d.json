@@ -1,0 +1,40 @@
+{
+  "key": "real|ibm_aachen|multi-angle|2|1|trex|cal_mask_10010",
+  "stage": "real",
+  "backend": "ibm_aachen",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 1,
+  "technique": "trex",
+  "variant": "cal_mask_10010",
+  "shots": 128,
+  "circuit_file": "circuits\\a61c8eebd2c8fa2145f7deed27776c7a6e039ea36e80de2bfeb35ac1d5e3f80d.qpy",
+  "circuit_resources": {
+    "depth": 2,
+    "two_qubit_depth": 0,
+    "two_qubit_gates": 0,
+    "physical_qubits_used": 5,
+    "operations": {
+      "measure": 5,
+      "x": 2
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    }
+  },
+  "counts": {
+    "01001": 124,
+    "11001": 2,
+    "01000": 1,
+    "00001": 1
+  },
+  "job_id": "dbnq1p24udtc73c409ig",
+  "pub_index": 26,
+  "batch_wall_seconds": 0.2207734999974491,
+  "batch_wall_scope": "result_wait",
+  "batch_circuits": 64
+}

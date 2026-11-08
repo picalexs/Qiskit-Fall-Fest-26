@@ -1,0 +1,25 @@
+{
+  "key": "screen|fake_manila|multi-angle|2|0|raw|target",
+  "stage": "screen",
+  "backend": "fake_manila",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 0,
+  "technique": "raw",
+  "variant": "target",
+  "shots": 16,
+  "circuit_file": "circuits\\eea0913c4ce73cd5d7ace5802309a289bff0e32e6b99bf31812d5098c4810900.qpy",
+  "counts": {
+    "10111": 2,
+    "01111": 1,
+    "01110": 1,
+    "10110": 5,
+    "01001": 5,
+    "01011": 2
+  },
+  "seed_simulator": 224565650,
+  "batch_wall_seconds": 0.1339695999995456,
+  "batch_circuits": 9,
+  "job_id": null,
+  "pub_index": 7
+}

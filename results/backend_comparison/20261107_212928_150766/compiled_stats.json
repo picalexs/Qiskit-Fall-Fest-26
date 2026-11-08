@@ -1,0 +1,265 @@
+{
+  "ibm_berlin:standard_full_p1": {
+    "depth": 77,
+    "two_qubit_depth": 25,
+    "two_qubit_gates": 27,
+    "physical_qubits_used": 5,
+    "operations": {
+      "sx": 47,
+      "rz": 38,
+      "cz": 27,
+      "measure": 5,
+      "x": 1,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 2,
+      "1": 1,
+      "2": 12,
+      "3": 3,
+      "4": 13
+    },
+    "compile_wall_seconds": 0.008656400001200382
+  },
+  "ibm_berlin:standard_full_p2": {
+    "depth": 156,
+    "two_qubit_depth": 48,
+    "two_qubit_gates": 48,
+    "physical_qubits_used": 5,
+    "operations": {
+      "sx": 79,
+      "rz": 75,
+      "cz": 48,
+      "x": 9,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 12,
+      "1": 14,
+      "2": 23,
+      "3": 3,
+      "4": 13
+    },
+    "compile_wall_seconds": 0.005286999999952968
+  },
+  "ibm_berlin:multi_full_p2": {
+    "depth": 158,
+    "two_qubit_depth": 48,
+    "two_qubit_gates": 48,
+    "physical_qubits_used": 5,
+    "operations": {
+      "sx": 82,
+      "rz": 77,
+      "cz": 48,
+      "x": 7,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 12,
+      "1": 14,
+      "2": 23,
+      "3": 3,
+      "4": 13
+    },
+    "compile_wall_seconds": 0.00672110000232351
+  },
+  "ibm_berlin:standard_forest_p1": {
+    "depth": 37,
+    "two_qubit_depth": 8,
+    "two_qubit_gates": 8,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rz": 24,
+      "sx": 21,
+      "cz": 8,
+      "measure": 5,
+      "x": 1,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 6,
+      "1": 17,
+      "2": 7,
+      "3": 8,
+      "4": 9
+    },
+    "compile_wall_seconds": 0.004299000000173692
+  },
+  "ibm_berlin:standard_forest_p2": {
+    "depth": 54,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 5,
+    "operations": {
+      "sx": 43,
+      "rz": 40,
+      "cz": 16,
+      "measure": 5,
+      "x": 2,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 6,
+      "1": 17,
+      "2": 7,
+      "3": 8,
+      "4": 9
+    },
+    "compile_wall_seconds": 0.004497500001889421
+  },
+  "ibm_berlin:multi_forest_p2": {
+    "depth": 55,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rz": 43,
+      "sx": 43,
+      "cz": 16,
+      "measure": 5,
+      "x": 2,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 6,
+      "1": 17,
+      "2": 7,
+      "3": 8,
+      "4": 9
+    },
+    "compile_wall_seconds": 0.003510000002279412
+  },
+  "ibm_aachen:standard_full_p1": {
+    "depth": 86,
+    "two_qubit_depth": 25,
+    "two_qubit_gates": 28,
+    "physical_qubits_used": 5,
+    "operations": {
+      "sx": 55,
+      "rz": 47,
+      "cz": 28,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 85,
+      "1": 88,
+      "2": 97,
+      "3": 86,
+      "4": 87
+    },
+    "compile_wall_seconds": 0.005698299999494338
+  },
+  "ibm_aachen:standard_full_p2": {
+    "depth": 168,
+    "two_qubit_depth": 54,
+    "two_qubit_gates": 61,
+    "physical_qubits_used": 5,
+    "operations": {
+      "sx": 109,
+      "rz": 84,
+      "cz": 61,
+      "x": 6,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 97,
+      "1": 88,
+      "2": 85,
+      "3": 87,
+      "4": 86
+    },
+    "compile_wall_seconds": 0.00597370000105002
+  },
+  "ibm_aachen:multi_full_p2": {
+    "depth": 167,
+    "two_qubit_depth": 54,
+    "two_qubit_gates": 61,
+    "physical_qubits_used": 5,
+    "operations": {
+      "sx": 109,
+      "rz": 80,
+      "cz": 61,
+      "measure": 5,
+      "x": 2,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 97,
+      "1": 88,
+      "2": 85,
+      "3": 87,
+      "4": 86
+    },
+    "compile_wall_seconds": 0.007239399998070439
+  },
+  "ibm_aachen:standard_forest_p1": {
+    "depth": 37,
+    "two_qubit_depth": 8,
+    "two_qubit_gates": 8,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rz": 24,
+      "sx": 21,
+      "cz": 8,
+      "measure": 5,
+      "x": 1,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    },
+    "compile_wall_seconds": 0.0038534999985131435
+  },
+  "ibm_aachen:standard_forest_p2": {
+    "depth": 54,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 5,
+    "operations": {
+      "sx": 43,
+      "rz": 40,
+      "cz": 16,
+      "measure": 5,
+      "x": 2,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    },
+    "compile_wall_seconds": 0.004529900001216447
+  },
+  "ibm_aachen:multi_forest_p2": {
+    "depth": 55,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rz": 43,
+      "sx": 43,
+      "cz": 16,
+      "measure": 5,
+      "x": 2,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    },
+    "compile_wall_seconds": 0.003901400003087474
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "key": "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_10",
+  "stage": "noisy",
+  "backend": "ibm_aachen",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 2,
+  "technique": "twirling",
+  "variant": "twirl_10",
+  "shots": 256,
+  "circuit_file": "circuits\\4aba9ca8909f9f915adbe6d81e41ccf37304a29643a5527c282dab8f1bf4aa68.qpy",
+  "circuit_resources": {
+    "depth": 62,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 156,
+    "operations": {
+      "delay": 170,
+      "rz": 54,
+      "sx": 44,
+      "cz": 16,
+      "x": 13,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    }
+  },
+  "counts": {
+    "01001": 104,
+    "10110": 138,
+    "01000": 4,
+    "10100": 2,
+    "01110": 1,
+    "11110": 2,
+    "10111": 2,
+    "00110": 2,
+    "10001": 1
+  },
+  "seed_simulator": 2835796568,
+  "batch_wall_seconds": 30.03918159999739,
+  "batch_circuits": 16,
+  "batch_task_keys": [
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_0",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_1",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_2",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_3",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_4",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_5",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_6",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_7",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_8",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_9",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_10",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_11",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_12",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_13",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_14",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_15"
+  ],
+  "job_id": null,
+  "pub_index": 10
+}

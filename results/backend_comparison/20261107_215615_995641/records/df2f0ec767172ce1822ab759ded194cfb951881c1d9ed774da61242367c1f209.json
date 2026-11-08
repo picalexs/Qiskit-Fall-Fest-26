@@ -1,0 +1,26 @@
+{
+  "key": "screen|fake_manila|warm-start|1|0|raw|target",
+  "stage": "screen",
+  "backend": "fake_manila",
+  "method": "warm-start",
+  "depth": 1,
+  "repeat": 0,
+  "technique": "raw",
+  "variant": "target",
+  "shots": 16,
+  "circuit_file": "circuits\\df2f0ec767172ce1822ab759ded194cfb951881c1d9ed774da61242367c1f209.qpy",
+  "counts": {
+    "01010": 2,
+    "01001": 9,
+    "01011": 1,
+    "01101": 1,
+    "01000": 1,
+    "10001": 1,
+    "11001": 1
+  },
+  "seed_simulator": 224565650,
+  "batch_wall_seconds": 0.1339695999995456,
+  "batch_circuits": 9,
+  "job_id": null,
+  "pub_index": 3
+}

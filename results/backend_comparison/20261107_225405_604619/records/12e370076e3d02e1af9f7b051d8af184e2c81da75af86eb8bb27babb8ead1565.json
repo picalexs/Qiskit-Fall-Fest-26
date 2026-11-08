@@ -1,0 +1,69 @@
+{
+  "key": "noisy|ibm_aachen|multi-angle|2|0|zne|factor_1",
+  "stage": "noisy",
+  "backend": "ibm_aachen",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 0,
+  "technique": "zne",
+  "variant": "factor_1",
+  "shots": 2048,
+  "circuit_file": "circuits\\12e370076e3d02e1af9f7b051d8af184e2c81da75af86eb8bb27babb8ead1565.qpy",
+  "circuit_resources": {
+    "depth": 59,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 156,
+    "operations": {
+      "delay": 170,
+      "rz": 45,
+      "sx": 44,
+      "cz": 16,
+      "measure": 5,
+      "x": 3,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    }
+  },
+  "counts": {
+    "10110": 942,
+    "01001": 977,
+    "01000": 19,
+    "10100": 11,
+    "10111": 9,
+    "00110": 16,
+    "01011": 14,
+    "10010": 7,
+    "10001": 7,
+    "11001": 11,
+    "00100": 1,
+    "11101": 1,
+    "00001": 8,
+    "11110": 4,
+    "00010": 1,
+    "01101": 6,
+    "11010": 2,
+    "11011": 3,
+    "01100": 2,
+    "01110": 3,
+    "00000": 2,
+    "10101": 1,
+    "10011": 1
+  },
+  "seed_simulator": 3912003736,
+  "batch_wall_seconds": 14.626764800003002,
+  "batch_circuits": 3,
+  "batch_task_keys": [
+    "noisy|ibm_aachen|multi-angle|2|0|readout|target",
+    "noisy|ibm_aachen|multi-angle|2|0|zne|factor_1",
+    "noisy|ibm_aachen|multi-angle|2|0|zne|factor_3"
+  ],
+  "job_id": null,
+  "pub_index": 1
+}

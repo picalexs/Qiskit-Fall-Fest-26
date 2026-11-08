@@ -1,0 +1,41 @@
+{
+  "key": "real|ibm_berlin|multi-angle|2|2|readout|cal0",
+  "stage": "real",
+  "backend": "ibm_berlin",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 2,
+  "technique": "readout",
+  "variant": "cal0",
+  "shots": 1024,
+  "circuit_file": "circuits\\fb076c223fea4bcd19ea6fbaf23942877c07d5e95697adf0ef07eaf007ef431e.qpy",
+  "circuit_resources": {
+    "depth": 1,
+    "two_qubit_depth": 0,
+    "two_qubit_gates": 0,
+    "physical_qubits_used": 5,
+    "operations": {
+      "measure": 5
+    },
+    "measurement_map": {
+      "0": 11,
+      "1": 20,
+      "2": 10,
+      "3": 0,
+      "4": 1
+    }
+  },
+  "counts": {
+    "00000": 995,
+    "00010": 8,
+    "00001": 3,
+    "00100": 5,
+    "01000": 7,
+    "10000": 6
+  },
+  "job_id": "dbnq1o80rnvc73974gp0",
+  "pub_index": 11,
+  "batch_wall_seconds": 175.87679220000427,
+  "batch_wall_scope": "result_wait",
+  "batch_circuits": 64
+}

@@ -1,0 +1,68 @@
+{
+  "key": "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_4",
+  "stage": "noisy",
+  "backend": "ibm_aachen",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 2,
+  "technique": "twirling",
+  "variant": "twirl_4",
+  "shots": 256,
+  "circuit_file": "circuits\\75ab067a8fc70fc5118a1e3d1a01d592d22a46b43e21db1e9144c0c746fd0b7a.qpy",
+  "circuit_resources": {
+    "depth": 61,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 156,
+    "operations": {
+      "delay": 170,
+      "rz": 52,
+      "sx": 44,
+      "x": 18,
+      "cz": 16,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    }
+  },
+  "counts": {
+    "10110": 116,
+    "01001": 128,
+    "10111": 3,
+    "10001": 1,
+    "11001": 1,
+    "01000": 4,
+    "01110": 1,
+    "01011": 1,
+    "00110": 1
+  },
+  "seed_simulator": 2835796568,
+  "batch_wall_seconds": 13.810851599999296,
+  "batch_circuits": 16,
+  "batch_task_keys": [
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_0",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_1",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_2",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_3",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_4",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_5",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_6",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_7",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_8",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_9",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_10",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_11",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_12",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_13",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_14",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_15"
+  ],
+  "job_id": null,
+  "pub_index": 4
+}

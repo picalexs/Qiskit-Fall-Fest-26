@@ -1,0 +1,54 @@
+{
+  "key": "noisy|fake_manila|multi-angle|2|0|zne|factor_1",
+  "stage": "noisy",
+  "backend": "fake_manila",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 0,
+  "technique": "zne",
+  "variant": "factor_1",
+  "shots": 32,
+  "circuit_file": "circuits\\7cd83dc526214be8887a3fd2128b4abb9df19820a72792952a8db85871e8fd45.qpy",
+  "circuit_resources": {
+    "depth": 48,
+    "two_qubit_depth": 20,
+    "two_qubit_gates": 22,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rz": 46,
+      "sx": 25,
+      "cx": 22,
+      "delay": 12,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    }
+  },
+  "counts": {
+    "10110": 9,
+    "10000": 1,
+    "01001": 13,
+    "10010": 1,
+    "10111": 2,
+    "01000": 3,
+    "10001": 1,
+    "10100": 1,
+    "00100": 1
+  },
+  "seed_simulator": 298981027,
+  "batch_wall_seconds": 0.1371502000001783,
+  "batch_circuits": 3,
+  "batch_task_keys": [
+    "noisy|fake_manila|multi-angle|2|0|readout|target",
+    "noisy|fake_manila|multi-angle|2|0|zne|factor_1",
+    "noisy|fake_manila|multi-angle|2|0|zne|factor_3"
+  ],
+  "job_id": null,
+  "pub_index": 1
+}

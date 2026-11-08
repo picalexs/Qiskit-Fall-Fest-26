@@ -1,0 +1,130 @@
+{
+  "fake:standard_full_p1": {
+    "depth": 49,
+    "two_qubit_depth": 24,
+    "two_qubit_gates": 29,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rz": 39,
+      "cx": 29,
+      "sx": 21,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 0,
+      "1": 4,
+      "2": 3,
+      "3": 1,
+      "4": 2
+    },
+    "compile_wall_seconds": 0.006379700000252342
+  },
+  "fake:standard_full_p2": {
+    "depth": 93,
+    "two_qubit_depth": 44,
+    "two_qubit_gates": 59,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rz": 78,
+      "cx": 59,
+      "sx": 41,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 4,
+      "1": 0,
+      "2": 1,
+      "3": 2,
+      "4": 3
+    },
+    "compile_wall_seconds": 0.003639000002294779
+  },
+  "fake:multi_full_p2": {
+    "depth": 93,
+    "two_qubit_depth": 44,
+    "two_qubit_gates": 59,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rz": 80,
+      "cx": 59,
+      "sx": 41,
+      "measure": 5,
+      "x": 1,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 4,
+      "1": 0,
+      "2": 1,
+      "3": 2,
+      "4": 3
+    },
+    "compile_wall_seconds": 0.008915399997931672
+  },
+  "fake:standard_forest_p1": {
+    "depth": 29,
+    "two_qubit_depth": 9,
+    "two_qubit_gates": 9,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rz": 31,
+      "sx": 18,
+      "cx": 9,
+      "measure": 5,
+      "x": 1,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "compile_wall_seconds": 0.004138000000239117
+  },
+  "fake:standard_forest_p2": {
+    "depth": 47,
+    "two_qubit_depth": 20,
+    "two_qubit_gates": 22,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rz": 46,
+      "sx": 25,
+      "cx": 22,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "compile_wall_seconds": 0.0031405000008817296
+  },
+  "fake:multi_forest_p2": {
+    "depth": 47,
+    "two_qubit_depth": 20,
+    "two_qubit_gates": 22,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rz": 46,
+      "sx": 25,
+      "cx": 22,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "compile_wall_seconds": 0.0032971000000543427
+  }
+}

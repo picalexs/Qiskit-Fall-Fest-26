@@ -1,0 +1,33 @@
+{
+  "key": "screen|fake_manila|standard|3|0|raw|target",
+  "stage": "screen",
+  "backend": "fake_manila",
+  "method": "standard",
+  "depth": 3,
+  "repeat": 0,
+  "technique": "raw",
+  "variant": "target",
+  "shots": 16,
+  "circuit_file": "circuits\\ec9bc8501a4e763c3247f6dd71a1161eb5d22cb2231cb5b57d6e0834dc5b59d7.qpy",
+  "counts": {
+    "11001": 1,
+    "01000": 2,
+    "10100": 1,
+    "01110": 1,
+    "10011": 1,
+    "00010": 2,
+    "11000": 1,
+    "10110": 1,
+    "00100": 1,
+    "10111": 1,
+    "01010": 1,
+    "00110": 1,
+    "10101": 1,
+    "01111": 1
+  },
+  "seed_simulator": 224565650,
+  "batch_wall_seconds": 0.1339695999995456,
+  "batch_circuits": 9,
+  "job_id": null,
+  "pub_index": 2
+}

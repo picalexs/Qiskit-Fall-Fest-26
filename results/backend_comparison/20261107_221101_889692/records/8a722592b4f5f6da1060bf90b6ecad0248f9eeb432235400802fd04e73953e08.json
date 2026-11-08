@@ -1,0 +1,45 @@
+{
+  "key": "noisy|ibm_aachen|multi-angle|2|2|readout|cal0",
+  "stage": "noisy",
+  "backend": "ibm_aachen",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 2,
+  "technique": "readout",
+  "variant": "cal0",
+  "shots": 1024,
+  "circuit_file": "circuits\\8a722592b4f5f6da1060bf90b6ecad0248f9eeb432235400802fd04e73953e08.qpy",
+  "circuit_resources": {
+    "depth": 1,
+    "two_qubit_depth": 0,
+    "two_qubit_gates": 0,
+    "physical_qubits_used": 5,
+    "operations": {
+      "measure": 5
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    }
+  },
+  "counts": {
+    "01000": 1,
+    "00000": 1006,
+    "10000": 2,
+    "00001": 7,
+    "00010": 5,
+    "00100": 3
+  },
+  "seed_simulator": 3921515872,
+  "batch_wall_seconds": 1.2368147999986832,
+  "batch_circuits": 2,
+  "batch_task_keys": [
+    "noisy|ibm_aachen|multi-angle|2|2|readout|cal0",
+    "noisy|ibm_aachen|multi-angle|2|2|readout|cal1"
+  ],
+  "job_id": null,
+  "pub_index": 0
+}

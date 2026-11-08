@@ -1,0 +1,73 @@
+{
+  "key": "screen|ibm_aachen|warm-start|3|2|raw|target",
+  "stage": "screen",
+  "backend": "ibm_aachen",
+  "method": "warm-start",
+  "depth": 3,
+  "repeat": 2,
+  "technique": "raw",
+  "variant": "target",
+  "shots": 1024,
+  "circuit_file": "circuits\\4597c179329c89ebcdefe10272b14df921571d2f6bca989032d9a34accd4487f.qpy",
+  "circuit_resources": {
+    "depth": 85,
+    "two_qubit_depth": 20,
+    "two_qubit_gates": 24,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rz": 73,
+      "sx": 69,
+      "cz": 24,
+      "x": 6,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    }
+  },
+  "counts": {
+    "00001": 58,
+    "01001": 770,
+    "01011": 32,
+    "00100": 53,
+    "01111": 13,
+    "00000": 3,
+    "01000": 16,
+    "10001": 10,
+    "00011": 1,
+    "01100": 21,
+    "11001": 14,
+    "10000": 3,
+    "01101": 8,
+    "01010": 2,
+    "00101": 8,
+    "01110": 4,
+    "11100": 1,
+    "11011": 1,
+    "11101": 2,
+    "00110": 2,
+    "11000": 1,
+    "10100": 1
+  },
+  "seed_simulator": 228241794,
+  "batch_wall_seconds": 20.620739900004992,
+  "batch_circuits": 9,
+  "batch_task_keys": [
+    "screen|ibm_aachen|standard|1|2|raw|target",
+    "screen|ibm_aachen|standard|2|2|raw|target",
+    "screen|ibm_aachen|standard|3|2|raw|target",
+    "screen|ibm_aachen|warm-start|1|2|raw|target",
+    "screen|ibm_aachen|warm-start|2|2|raw|target",
+    "screen|ibm_aachen|warm-start|3|2|raw|target",
+    "screen|ibm_aachen|multi-angle|1|2|raw|target",
+    "screen|ibm_aachen|multi-angle|2|2|raw|target",
+    "screen|ibm_aachen|multi-angle|3|2|raw|target"
+  ],
+  "job_id": null,
+  "pub_index": 5
+}

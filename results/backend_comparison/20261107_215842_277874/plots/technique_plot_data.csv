@@ -1,0 +1,6 @@
+stage,backend,method,depth,repeat,technique,total_shots,mean_full_cost,optimum_probability,diagnostic,factor_1_cost,factor_3_cost
+noisy,fake_manila,multi-angle,2,0,twirling,64,5.640625,0.5,,,
+noisy,fake_manila,multi-angle,2,0,raw_reference,64,6.0,0.46875,,,
+noisy,fake_manila,multi-angle,2,0,readout,64,4.593131868131871,,,,
+noisy,fake_manila,multi-angle,2,0,zne,64,1.71875,,,3.875,8.1875
+noisy,fake_manila,multi-angle,2,0,dd,64,6.984375,0.40625,,,

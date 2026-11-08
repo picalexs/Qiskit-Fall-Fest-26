@@ -1,0 +1,70 @@
+{
+  "key": "noisy|fake_manila|standard|1|0|raw|target",
+  "stage": "noisy",
+  "backend": "fake_manila",
+  "method": "standard",
+  "depth": 1,
+  "repeat": 0,
+  "technique": "raw",
+  "variant": "target",
+  "shots": 32,
+  "circuit_file": "circuits\\bb6efd1a56da65d8aa07bb2986a8ef2d8f9ab8eb63c24532c5cd38cddb7bf62b.qpy",
+  "circuit_resources": {
+    "depth": 29,
+    "two_qubit_depth": 9,
+    "two_qubit_gates": 9,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rz": 31,
+      "sx": 18,
+      "cx": 9,
+      "measure": 5,
+      "x": 1,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    }
+  },
+  "counts": {
+    "10110": 3,
+    "01100": 2,
+    "10000": 3,
+    "01001": 2,
+    "10111": 4,
+    "10101": 1,
+    "01000": 3,
+    "10011": 1,
+    "11001": 1,
+    "00001": 1,
+    "00111": 2,
+    "01010": 1,
+    "01101": 1,
+    "00101": 1,
+    "01111": 1,
+    "11111": 1,
+    "10100": 1,
+    "00011": 2,
+    "01011": 1
+  },
+  "seed_simulator": 298981027,
+  "batch_wall_seconds": 0.16393460000108462,
+  "batch_circuits": 9,
+  "batch_task_keys": [
+    "noisy|fake_manila|standard|1|0|raw|target",
+    "noisy|fake_manila|standard|2|0|raw|target",
+    "noisy|fake_manila|standard|3|0|raw|target",
+    "noisy|fake_manila|warm-start|1|0|raw|target",
+    "noisy|fake_manila|warm-start|2|0|raw|target",
+    "noisy|fake_manila|warm-start|3|0|raw|target",
+    "noisy|fake_manila|multi-angle|1|0|raw|target",
+    "noisy|fake_manila|multi-angle|2|0|raw|target",
+    "noisy|fake_manila|multi-angle|3|0|raw|target"
+  ],
+  "job_id": null,
+  "pub_index": 0
+}

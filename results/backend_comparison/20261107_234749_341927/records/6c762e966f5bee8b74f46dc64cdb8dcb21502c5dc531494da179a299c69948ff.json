@@ -1,0 +1,52 @@
+{
+  "key": "ideal|ideal|multi-angle|3|2|raw|target",
+  "stage": "ideal",
+  "backend": "ideal",
+  "method": "multi-angle",
+  "depth": 3,
+  "repeat": 2,
+  "technique": "raw",
+  "variant": "target",
+  "shots": 2048,
+  "circuit_file": "circuits\\6c762e966f5bee8b74f46dc64cdb8dcb21502c5dc531494da179a299c69948ff.qpy",
+  "circuit_resources": {
+    "depth": 15,
+    "two_qubit_depth": 10,
+    "two_qubit_gates": 12,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rx": 15,
+      "rzz": 12,
+      "h": 5,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    }
+  },
+  "counts": {
+    "10110": 979,
+    "01001": 1069
+  },
+  "seed_simulator": 1540925815,
+  "batch_wall_seconds": 0.05422260000341339,
+  "batch_circuits": 9,
+  "batch_task_keys": [
+    "ideal|ideal|standard|1|2|raw|target",
+    "ideal|ideal|standard|2|2|raw|target",
+    "ideal|ideal|standard|3|2|raw|target",
+    "ideal|ideal|warm-start|1|2|raw|target",
+    "ideal|ideal|warm-start|2|2|raw|target",
+    "ideal|ideal|warm-start|3|2|raw|target",
+    "ideal|ideal|multi-angle|1|2|raw|target",
+    "ideal|ideal|multi-angle|2|2|raw|target",
+    "ideal|ideal|multi-angle|3|2|raw|target"
+  ],
+  "job_id": null,
+  "pub_index": 8
+}

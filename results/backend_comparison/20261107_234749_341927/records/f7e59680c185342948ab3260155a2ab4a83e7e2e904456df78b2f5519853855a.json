@@ -1,0 +1,71 @@
+{
+  "key": "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_10",
+  "stage": "noisy",
+  "backend": "ibm_aachen",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 0,
+  "technique": "twirling",
+  "variant": "twirl_10",
+  "shots": 256,
+  "circuit_file": "circuits\\f7e59680c185342948ab3260155a2ab4a83e7e2e904456df78b2f5519853855a.qpy",
+  "circuit_resources": {
+    "depth": 63,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 156,
+    "operations": {
+      "delay": 170,
+      "rz": 61,
+      "sx": 44,
+      "cz": 16,
+      "x": 11,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    }
+  },
+  "counts": {
+    "10110": 123,
+    "01010": 1,
+    "01001": 119,
+    "10010": 1,
+    "10111": 1,
+    "01000": 4,
+    "01011": 1,
+    "10100": 2,
+    "10000": 1,
+    "00111": 1,
+    "00110": 1,
+    "01110": 1
+  },
+  "seed_simulator": 3553001912,
+  "batch_wall_seconds": 16.958262100000866,
+  "batch_circuits": 16,
+  "batch_task_keys": [
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_0",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_1",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_2",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_3",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_4",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_5",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_6",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_7",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_8",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_9",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_10",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_11",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_12",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_13",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_14",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_15"
+  ],
+  "job_id": null,
+  "pub_index": 10
+}

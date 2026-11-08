@@ -1,0 +1,69 @@
+{
+  "key": "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_8",
+  "stage": "noisy",
+  "backend": "ibm_aachen",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 2,
+  "technique": "twirling",
+  "variant": "twirl_8",
+  "shots": 256,
+  "circuit_file": "circuits\\1475e2878095995c94873fdf7f219a2851202515fc56bfb7ba46611d74660517.qpy",
+  "circuit_resources": {
+    "depth": 58,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 156,
+    "operations": {
+      "delay": 170,
+      "rz": 50,
+      "sx": 44,
+      "cz": 16,
+      "x": 13,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    }
+  },
+  "counts": {
+    "10110": 124,
+    "01001": 116,
+    "10001": 1,
+    "11001": 2,
+    "01011": 2,
+    "10100": 3,
+    "00110": 4,
+    "10010": 2,
+    "01010": 1,
+    "00001": 1
+  },
+  "seed_simulator": 2835796568,
+  "batch_wall_seconds": 11.05601580000075,
+  "batch_circuits": 16,
+  "batch_task_keys": [
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_0",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_1",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_2",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_3",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_4",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_5",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_6",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_7",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_8",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_9",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_10",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_11",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_12",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_13",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_14",
+    "noisy|ibm_aachen|multi-angle|2|2|twirling|twirl_15"
+  ],
+  "job_id": null,
+  "pub_index": 8
+}

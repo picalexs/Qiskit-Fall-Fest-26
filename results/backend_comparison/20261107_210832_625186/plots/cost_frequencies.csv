@@ -1,0 +1,43 @@
+method,series,cost_or_bin_midpoint,bin_lower,bin_upper,probability
+multi_forest_p2,Exact ideal,1.0,1.0,1.0,0.4621990923058116
+multi_forest_p2,Exact ideal,8.0,8.0,8.0,0.18211558316548523
+multi_forest_p2,Exact ideal,9.0,9.0,9.0,0.06817477481964408
+multi_forest_p2,Exact ideal,12.0,12.0,12.0,0.04349653651200425
+multi_forest_p2,Exact ideal,13.0,13.0,13.0,0.20550443445129446
+multi_forest_p2,Exact ideal,16.0,16.0,16.0,0.03659743870167327
+multi_forest_p2,Exact ideal,17.0,17.0,17.0,0.0019121400440862643
+multi_forest_p2,Fake_Manila · Ideal sample,1.0,1.0,1.0,0.453125
+multi_forest_p2,Fake_Manila · Ideal sample,8.0,8.0,8.0,0.1875
+multi_forest_p2,Fake_Manila · Ideal sample,9.0,9.0,9.0,0.109375
+multi_forest_p2,Fake_Manila · Ideal sample,12.0,12.0,12.0,0.0625
+multi_forest_p2,Fake_Manila · Ideal sample,13.0,13.0,13.0,0.125
+multi_forest_p2,Fake_Manila · Ideal sample,16.0,16.0,16.0,0.0625
+multi_forest_p2,Fake_Manila · Ideal sample,17.0,17.0,17.0,0.0
+multi_forest_p2,Fake_Manila · Calibrated noise,1.0,1.0,1.0,0.25
+multi_forest_p2,Fake_Manila · Calibrated noise,8.0,8.0,8.0,0.25
+multi_forest_p2,Fake_Manila · Calibrated noise,9.0,9.0,9.0,0.046875
+multi_forest_p2,Fake_Manila · Calibrated noise,12.0,12.0,12.0,0.0625
+multi_forest_p2,Fake_Manila · Calibrated noise,13.0,13.0,13.0,0.265625
+multi_forest_p2,Fake_Manila · Calibrated noise,16.0,16.0,16.0,0.078125
+multi_forest_p2,Fake_Manila · Calibrated noise,17.0,17.0,17.0,0.046875
+standard_full_p1,Exact ideal,1.0,1.0,1.0,0.30344933061519846
+standard_full_p1,Exact ideal,8.0,8.0,8.0,0.05945776972623666
+standard_full_p1,Exact ideal,9.0,9.0,9.0,0.05595409358875943
+standard_full_p1,Exact ideal,12.0,12.0,12.0,0.026855176200041454
+standard_full_p1,Exact ideal,13.0,13.0,13.0,0.45224428494675223
+standard_full_p1,Exact ideal,16.0,16.0,16.0,0.0680943928651016
+standard_full_p1,Exact ideal,17.0,17.0,17.0,0.03394495205790877
+standard_full_p1,Fake_Manila · Ideal sample,1.0,1.0,1.0,0.296875
+standard_full_p1,Fake_Manila · Ideal sample,8.0,8.0,8.0,0.078125
+standard_full_p1,Fake_Manila · Ideal sample,9.0,9.0,9.0,0.046875
+standard_full_p1,Fake_Manila · Ideal sample,12.0,12.0,12.0,0.015625
+standard_full_p1,Fake_Manila · Ideal sample,13.0,13.0,13.0,0.4375
+standard_full_p1,Fake_Manila · Ideal sample,16.0,16.0,16.0,0.0625
+standard_full_p1,Fake_Manila · Ideal sample,17.0,17.0,17.0,0.0625
+standard_full_p1,Fake_Manila · Calibrated noise,1.0,1.0,1.0,0.265625
+standard_full_p1,Fake_Manila · Calibrated noise,8.0,8.0,8.0,0.109375
+standard_full_p1,Fake_Manila · Calibrated noise,9.0,9.0,9.0,0.046875
+standard_full_p1,Fake_Manila · Calibrated noise,12.0,12.0,12.0,0.078125
+standard_full_p1,Fake_Manila · Calibrated noise,13.0,13.0,13.0,0.359375
+standard_full_p1,Fake_Manila · Calibrated noise,16.0,16.0,16.0,0.078125
+standard_full_p1,Fake_Manila · Calibrated noise,17.0,17.0,17.0,0.0625

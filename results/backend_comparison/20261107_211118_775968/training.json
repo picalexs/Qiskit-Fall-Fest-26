@@ -1,0 +1,184 @@
+{
+  "standard_full_p1": {
+    "angles": [
+      2.7773902382547857,
+      0.4950161172275805
+    ],
+    "parameters": [
+      "theta[0]",
+      "theta[1]"
+    ],
+    "evaluations": "116",
+    "native_energy_without_offset": -4.702212897000054,
+    "converged": true,
+    "message": "Return from COBYLA because the trust region radius reaches its lower bound.",
+    "wall_seconds": 0.3159066000007442
+  },
+  "standard_full_p2": {
+    "angles": [
+      0.42259250057251574,
+      0.5155914596031614,
+      4.064399189354411,
+      2.788029719371772
+    ],
+    "parameters": [
+      "theta[0]",
+      "theta[1]",
+      "theta[2]",
+      "theta[3]"
+    ],
+    "evaluations": "300",
+    "native_energy_without_offset": -10.372215927389128,
+    "converged": false,
+    "message": "Return from COBYLA because the objective function has been evaluated MAXFUN times.",
+    "wall_seconds": 0.8165604999994684
+  },
+  "multi_full_p2": {
+    "angles": [
+      4.8773348863215364,
+      2.7499068893596545,
+      0.4771179917150076,
+      3.032646358363741,
+      2.496701822404491,
+      2.7691458449281257,
+      0.2967806246429615,
+      3.1205830373256678,
+      2.397276026446866,
+      4.851085447231376,
+      2.111753395535519,
+      1.0825324079191208,
+      3.149235222727327,
+      0.6120015866225363,
+      1.4647139325345129,
+      2.7567087851817056,
+      2.2986262573364944,
+      2.881031692650215,
+      2.237330342293184,
+      1.9110284325354105,
+      -0.49103246558592045,
+      3.137788320500894,
+      1.4451403882778153,
+      3.9700156041315897,
+      0.8264259690941668,
+      2.292505701983414,
+      3.1433224134047357,
+      -0.19405627015169974
+    ],
+    "parameters": [
+      "theta[0]",
+      "theta[1]",
+      "theta[2]",
+      "theta[3]",
+      "theta[4]",
+      "theta[5]",
+      "theta[6]",
+      "theta[7]",
+      "theta[8]",
+      "theta[9]",
+      "theta[10]",
+      "theta[11]",
+      "theta[12]",
+      "theta[13]",
+      "theta[14]",
+      "theta[15]",
+      "theta[16]",
+      "theta[17]",
+      "theta[18]",
+      "theta[19]",
+      "theta[20]",
+      "theta[21]",
+      "theta[22]",
+      "theta[23]",
+      "theta[24]",
+      "theta[25]",
+      "theta[26]",
+      "theta[27]"
+    ],
+    "evaluations": "1500",
+    "native_energy_without_offset": -11.493737889990783,
+    "converged": false,
+    "message": "Return from COBYLA because the objective function has been evaluated MAXFUN times.",
+    "wall_seconds": 4.9933751999997185
+  },
+  "standard_forest_p1": {
+    "angles": [
+      2.4526694877488433,
+      1.9635007095229065
+    ],
+    "parameters": [
+      "theta[0]",
+      "theta[1]"
+    ],
+    "evaluations": "107",
+    "native_energy_without_offset": -1.7191886458241976,
+    "converged": true,
+    "message": "Return from COBYLA because the trust region radius reaches its lower bound.",
+    "wall_seconds": 0.23353469999710796
+  },
+  "standard_forest_p2": {
+    "angles": [
+      1.5298970977607596,
+      1.106414944293445,
+      2.4419215199700135,
+      1.9490960708493779
+    ],
+    "parameters": [
+      "theta[0]",
+      "theta[1]",
+      "theta[2]",
+      "theta[3]"
+    ],
+    "evaluations": "285",
+    "native_energy_without_offset": -3.7879109848589123,
+    "converged": true,
+    "message": "Return from COBYLA because the trust region radius reaches its lower bound.",
+    "wall_seconds": 0.5303714000001492
+  },
+  "multi_forest_p2": {
+    "angles": [
+      0.44486157413633426,
+      3.987163689668779,
+      3.9269638584570328,
+      2.039528297292167,
+      2.062083831707848,
+      0.10137453044975603,
+      3.141603032928503,
+      2.356168887105838,
+      2.724510020153549,
+      4.970439163450793,
+      3.0801664538035967,
+      1.1537243035895548,
+      0.7854265745078415,
+      3.743891705104536,
+      2.2556143878569905,
+      3.141555943103164,
+      1.102090867437679,
+      2.356217044714289
+    ],
+    "parameters": [
+      "theta[0]",
+      "theta[1]",
+      "theta[2]",
+      "theta[3]",
+      "theta[4]",
+      "theta[5]",
+      "theta[6]",
+      "theta[7]",
+      "theta[8]",
+      "theta[9]",
+      "theta[10]",
+      "theta[11]",
+      "theta[12]",
+      "theta[13]",
+      "theta[14]",
+      "theta[15]",
+      "theta[16]",
+      "theta[17]"
+    ],
+    "evaluations": "1469",
+    "native_energy_without_offset": -6.9999998181802185,
+    "converged": true,
+    "message": "Return from COBYLA because the trust region radius reaches its lower bound.",
+    "wall_seconds": 3.719951899998705
+  }
+}

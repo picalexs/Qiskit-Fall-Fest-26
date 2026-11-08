@@ -1,0 +1,8 @@
+stage,backend,repeat,batch_wall_seconds,batch_circuits,job_id
+noisy,fake_manila,0,0.3182932999989134,16,
+noisy,fake_manila,0,0.16393460000108462,9,
+ideal,ideal,0,0.00581860000238521,9,
+screen,fake_manila,0,0.13213810000161175,9,
+noisy,fake_manila,0,0.1552747999994608,2,
+noisy,fake_manila,0,0.03652250000232016,2,
+noisy,fake_manila,0,0.1371502000001783,3,

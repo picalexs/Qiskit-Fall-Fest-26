@@ -1,0 +1,13 @@
+stage,backend,method,depth,repeat,technique,total_shots,mean_full_cost,optimum_probability,diagnostic,factor_1_cost,factor_3_cost
+noisy,ibm_aachen,multi-angle,2,2,zne,4096,1.28271484375,,,1.50927734375,1.96240234375
+noisy,ibm_berlin,multi-angle,2,0,zne,4096,1.416259765625,,,1.65576171875,2.134765625
+noisy,ibm_aachen,multi-angle,2,0,zne,4096,1.474609375,,,1.5947265625,1.8349609375
+real,ibm_aachen,multi-angle,2,1,zne,4096,1.70654296875,,,1.908203125,2.3115234375
+real,ibm_aachen,multi-angle,2,2,zne,4096,1.57275390625,,,1.76953125,2.1630859375
+real,ibm_aachen,multi-angle,2,0,zne,4096,1.658935546875,,,1.9091796875,2.40966796875
+noisy,ibm_berlin,multi-angle,2,1,zne,4096,1.484130859375,,,1.66845703125,2.037109375
+real,ibm_berlin,multi-angle,2,0,zne,4096,1.576904296875,,,1.783203125,2.19580078125
+noisy,ibm_berlin,multi-angle,2,2,zne,4096,1.468505859375,,,1.623046875,1.93212890625
+noisy,ibm_aachen,multi-angle,2,1,zne,4096,1.35205078125,,,1.50341796875,1.80615234375
+real,ibm_berlin,multi-angle,2,1,zne,4096,1.615478515625,,,1.77392578125,2.0908203125
+real,ibm_berlin,multi-angle,2,2,zne,4096,1.504150390625,,,1.712890625,2.13037109375

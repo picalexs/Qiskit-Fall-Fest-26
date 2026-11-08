@@ -1,0 +1,33 @@
+{
+  "key": "ideal|ideal|standard|3|0|raw|target",
+  "stage": "ideal",
+  "backend": "ideal",
+  "method": "standard",
+  "depth": 3,
+  "repeat": 0,
+  "technique": "raw",
+  "variant": "target",
+  "shots": 32,
+  "circuit_file": "circuits\\24a76d4f3c189dba667ba637eb9b4e00dbddbc4e732af833ec877cb4724adfb8.qpy",
+  "counts": {
+    "00111": 1,
+    "10110": 7,
+    "10001": 2,
+    "10100": 2,
+    "01011": 2,
+    "10111": 2,
+    "01010": 1,
+    "01001": 7,
+    "01000": 2,
+    "00101": 1,
+    "01111": 1,
+    "10000": 1,
+    "01110": 2,
+    "11000": 1
+  },
+  "seed_simulator": 2305254207,
+  "batch_wall_seconds": 0.01199320000159787,
+  "batch_circuits": 9,
+  "job_id": null,
+  "pub_index": 2
+}

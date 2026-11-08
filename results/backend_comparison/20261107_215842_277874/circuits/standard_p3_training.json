@@ -1,0 +1,216 @@
+{
+  "parameters": [
+    "theta[0]",
+    "theta[1]",
+    "theta[2]",
+    "theta[3]",
+    "theta[4]",
+    "theta[5]"
+  ],
+  "angles": [
+    2.4017350995573183,
+    0.9287052508409926,
+    2.511813087900413,
+    1.5816450704359855,
+    0.2935944724559343,
+    0.44792177108201253
+  ],
+  "starts": [
+    {
+      "start": 0,
+      "angles": [
+        2.4017350995573183,
+        0.9287052508409926,
+        2.511813087900413,
+        1.5816450704359855,
+        0.2935944724559343,
+        0.44792177108201253
+      ],
+      "native_cost": 3.4004652681279763,
+      "evaluations": 35,
+      "success": false,
+      "message": "Return from COBYLA because the objective function has been evaluated MAXFUN times.",
+      "trace": [
+        {
+          "evaluation": 1,
+          "native_cost": 6.891304998522852,
+          "full_cost": 12.626864245894808
+        },
+        {
+          "evaluation": 2,
+          "native_cost": 5.960997416348822,
+          "full_cost": 11.56671937546009
+        },
+        {
+          "evaluation": 3,
+          "native_cost": 8.029904781736757,
+          "full_cost": 13.812220219073518
+        },
+        {
+          "evaluation": 4,
+          "native_cost": 7.607966951600911,
+          "full_cost": 13.132207203820832
+        },
+        {
+          "evaluation": 5,
+          "native_cost": 6.379593579036112,
+          "full_cost": 12.252767820286769
+        },
+        {
+          "evaluation": 6,
+          "native_cost": 6.440078620775084,
+          "full_cost": 12.098597629825365
+        },
+        {
+          "evaluation": 7,
+          "native_cost": 8.846966713009593,
+          "full_cost": 14.002007435327265
+        },
+        {
+          "evaluation": 8,
+          "native_cost": 6.448456597178307,
+          "full_cost": 12.196586573180177
+        },
+        {
+          "evaluation": 9,
+          "native_cost": 5.749403659187678,
+          "full_cost": 11.667909704867695
+        },
+        {
+          "evaluation": 10,
+          "native_cost": 6.4496523435949,
+          "full_cost": 12.575152730779582
+        },
+        {
+          "evaluation": 11,
+          "native_cost": 5.672487599870057,
+          "full_cost": 11.496838752480656
+        },
+        {
+          "evaluation": 12,
+          "native_cost": 5.542865165786233,
+          "full_cost": 11.116928549232789
+        },
+        {
+          "evaluation": 13,
+          "native_cost": 5.334266870442485,
+          "full_cost": 10.84743037949187
+        },
+        {
+          "evaluation": 14,
+          "native_cost": 5.17739281754702,
+          "full_cost": 10.478646825975808
+        },
+        {
+          "evaluation": 15,
+          "native_cost": 5.154527133906086,
+          "full_cost": 10.505300979065321
+        },
+        {
+          "evaluation": 16,
+          "native_cost": 4.951281894906689,
+          "full_cost": 10.027918655245053
+        },
+        {
+          "evaluation": 17,
+          "native_cost": 4.672065932448529,
+          "full_cost": 9.581278156867295
+        },
+        {
+          "evaluation": 18,
+          "native_cost": 4.247533116524021,
+          "full_cost": 9.007256100370883
+        },
+        {
+          "evaluation": 19,
+          "native_cost": 5.163382005307163,
+          "full_cost": 10.38027297715109
+        },
+        {
+          "evaluation": 20,
+          "native_cost": 4.0676923685335495,
+          "full_cost": 8.766518726107599
+        },
+        {
+          "evaluation": 21,
+          "native_cost": 4.190797369833954,
+          "full_cost": 9.071840033201674
+        },
+        {
+          "evaluation": 22,
+          "native_cost": 3.8777578488604063,
+          "full_cost": 8.628692634782437
+        },
+        {
+          "evaluation": 23,
+          "native_cost": 3.5983696004781436,
+          "full_cost": 8.430071047565358
+        },
+        {
+          "evaluation": 24,
+          "native_cost": 3.5206117093666522,
+          "full_cost": 8.423047564888208
+        },
+        {
+          "evaluation": 25,
+          "native_cost": 3.7540427315402356,
+          "full_cost": 8.969253985638307
+        },
+        {
+          "evaluation": 26,
+          "native_cost": 3.533117485113628,
+          "full_cost": 8.545719294262682
+        },
+        {
+          "evaluation": 27,
+          "native_cost": 3.4990086837153487,
+          "full_cost": 8.37789684937119
+        },
+        {
+          "evaluation": 28,
+          "native_cost": 3.763951326772364,
+          "full_cost": 8.697765988901113
+        },
+        {
+          "evaluation": 29,
+          "native_cost": 3.449594148137929,
+          "full_cost": 8.27036763734359
+        },
+        {
+          "evaluation": 30,
+          "native_cost": 3.499769934340139,
+          "full_cost": 8.209314730987138
+        },
+        {
+          "evaluation": 31,
+          "native_cost": 3.4383911857618683,
+          "full_cost": 8.317936881745876
+        },
+        {
+          "evaluation": 32,
+          "native_cost": 3.4662547105738164,
+          "full_cost": 8.34966203812156
+        },
+        {
+          "evaluation": 33,
+          "native_cost": 3.451055977336924,
+          "full_cost": 8.319806003018352
+        },
+        {
+          "evaluation": 34,
+          "native_cost": 3.418152730396648,
+          "full_cost": 8.309225047147137
+        },
+        {
+          "evaluation": 35,
+          "native_cost": 3.4004652681279763,
+          "full_cost": 8.311594400498162
+        }
+      ]
+    }
+  ],
+  "best_start": 0,
+  "best_native_cost": 3.4004652681279763,
+  "evaluations": 35,
+  "wall_seconds": 0.09223100000235718
+}

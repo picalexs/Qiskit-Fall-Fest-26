@@ -1,0 +1,70 @@
+{
+  "key": "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_12",
+  "stage": "noisy",
+  "backend": "ibm_aachen",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 0,
+  "technique": "twirling",
+  "variant": "twirl_12",
+  "shots": 256,
+  "circuit_file": "circuits\\8b2a23b1d46e9a8d9a3059739541ca9dea870b5751f7283691863ce785203695.qpy",
+  "circuit_resources": {
+    "depth": 63,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 156,
+    "operations": {
+      "delay": 170,
+      "rz": 61,
+      "sx": 44,
+      "cz": 16,
+      "x": 12,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    }
+  },
+  "counts": {
+    "10110": 120,
+    "01001": 122,
+    "01011": 2,
+    "10011": 1,
+    "11001": 2,
+    "10100": 1,
+    "01110": 2,
+    "10111": 3,
+    "10010": 1,
+    "00110": 1,
+    "01000": 1
+  },
+  "seed_simulator": 3553001912,
+  "batch_wall_seconds": 16.3199887999981,
+  "batch_circuits": 16,
+  "batch_task_keys": [
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_0",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_1",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_2",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_3",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_4",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_5",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_6",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_7",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_8",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_9",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_10",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_11",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_12",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_13",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_14",
+    "noisy|ibm_aachen|multi-angle|2|0|twirling|twirl_15"
+  ],
+  "job_id": null,
+  "pub_index": 12
+}

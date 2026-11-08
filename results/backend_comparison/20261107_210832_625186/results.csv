@@ -1,0 +1,5 @@
+backend,method,mode,job_id,shots,full_optimum_probability,full_optimum_standard_error,mean_full_cost,mec_optimum_probability,mean_mec,total_variation_from_ideal,readout_corrected_mean_full_cost,calibration_shots,depth,two_qubit_depth,two_qubit_gates,physical_qubits_used
+fake_manila,multi_forest_p2,ideal,,64,0.453125,0.062224735633101526,6.3125,0.453125,3.5,0.21167382819179678,,0,47,20,22,5
+fake_manila,multi_forest_p2,noisy,,64,0.25,0.05412658773652741,8.921875,0.25,4.765625,0.3539207973375078,7.962429152798997,128,47,20,22,5
+fake_manila,standard_full_p1,ideal,,64,0.296875,0.05711012311411502,9.28125,0.296875,5.0625,0.15465445344718126,,0,49,24,29,5
+fake_manila,standard_full_p1,noisy,,64,0.265625,0.055208179785556914,9.484375,0.265625,5.109375,0.33634067328620165,8.779439477092243,128,49,24,29,5

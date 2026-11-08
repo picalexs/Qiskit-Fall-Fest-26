@@ -1,0 +1,10 @@
+snp_1,snp_2,retained,same_evidence,opposite_evidence
+1,2,False,1.0,2.0
+1,3,True,0.0,2.0
+1,4,False,2.0,0.0
+1,5,False,0.0,2.0
+2,3,True,4.0,0.0
+2,4,False,0.0,2.0
+3,4,True,0.0,4.0
+3,5,False,2.0,0.0
+4,5,True,0.0,4.0

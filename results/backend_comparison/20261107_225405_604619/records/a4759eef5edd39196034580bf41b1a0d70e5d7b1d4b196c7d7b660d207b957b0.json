@@ -1,0 +1,68 @@
+{
+  "key": "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_0",
+  "stage": "noisy",
+  "backend": "ibm_berlin",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 1,
+  "technique": "twirling",
+  "variant": "twirl_0",
+  "shots": 256,
+  "circuit_file": "circuits\\a4759eef5edd39196034580bf41b1a0d70e5d7b1d4b196c7d7b660d207b957b0.qpy",
+  "circuit_resources": {
+    "depth": 63,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 120,
+    "operations": {
+      "delay": 134,
+      "rz": 52,
+      "sx": 44,
+      "cz": 16,
+      "x": 13,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 12,
+      "1": 3,
+      "2": 2,
+      "3": 1,
+      "4": 0
+    }
+  },
+  "counts": {
+    "01001": 126,
+    "10110": 118,
+    "10111": 3,
+    "00110": 2,
+    "11110": 2,
+    "10001": 1,
+    "11001": 1,
+    "01000": 2,
+    "10010": 1
+  },
+  "seed_simulator": 3956189037,
+  "batch_wall_seconds": 15.99592549999943,
+  "batch_circuits": 16,
+  "batch_task_keys": [
+    "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_0",
+    "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_1",
+    "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_2",
+    "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_3",
+    "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_4",
+    "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_5",
+    "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_6",
+    "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_7",
+    "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_8",
+    "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_9",
+    "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_10",
+    "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_11",
+    "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_12",
+    "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_13",
+    "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_14",
+    "noisy|ibm_berlin|multi-angle|2|1|twirling|twirl_15"
+  ],
+  "job_id": null,
+  "pub_index": 0
+}

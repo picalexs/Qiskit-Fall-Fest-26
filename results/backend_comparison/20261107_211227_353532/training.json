@@ -1,0 +1,184 @@
+{
+  "standard_full_p1": {
+    "angles": [
+      2.7773902382547857,
+      0.4950161172275805
+    ],
+    "parameters": [
+      "theta[0]",
+      "theta[1]"
+    ],
+    "evaluations": "40",
+    "native_energy_without_offset": -4.702212897000054,
+    "converged": false,
+    "message": "Return from COBYLA because the objective function has been evaluated MAXFUN times.",
+    "wall_seconds": 0.13361240000085672
+  },
+  "standard_full_p2": {
+    "angles": [
+      0.831880032659512,
+      0.7573352922195162,
+      3.6472473500033895,
+      2.484833470279746
+    ],
+    "parameters": [
+      "theta[0]",
+      "theta[1]",
+      "theta[2]",
+      "theta[3]"
+    ],
+    "evaluations": "40",
+    "native_energy_without_offset": -5.078275047516717,
+    "converged": false,
+    "message": "Return from COBYLA because the objective function has been evaluated MAXFUN times.",
+    "wall_seconds": 0.13101280000046245
+  },
+  "multi_full_p2": {
+    "angles": [
+      0.7865172557754286,
+      3.170320923602434,
+      3.018363049181995,
+      2.4604082111073335,
+      0.4765127033360933,
+      -0.021124152232249074,
+      1.4786588042248954,
+      0.46784005670747075,
+      2.7101723974714496,
+      0.10764918257079421,
+      2.524522666625849,
+      1.169556558273606,
+      1.9147047433559623,
+      2.1367665050974094,
+      3.9172389025647933,
+      0.6582355311829063,
+      2.711770071144201,
+      2.903162795687341,
+      1.8723663639007264,
+      0.5080887482370015,
+      1.0830311313074934,
+      0.6429083703170619,
+      2.1668575981220664,
+      1.2864068762277163,
+      3.0354035239360755,
+      1.6734931755853015,
+      1.0285927710544565,
+      2.4466925112937545
+    ],
+    "parameters": [
+      "theta[0]",
+      "theta[1]",
+      "theta[2]",
+      "theta[3]",
+      "theta[4]",
+      "theta[5]",
+      "theta[6]",
+      "theta[7]",
+      "theta[8]",
+      "theta[9]",
+      "theta[10]",
+      "theta[11]",
+      "theta[12]",
+      "theta[13]",
+      "theta[14]",
+      "theta[15]",
+      "theta[16]",
+      "theta[17]",
+      "theta[18]",
+      "theta[19]",
+      "theta[20]",
+      "theta[21]",
+      "theta[22]",
+      "theta[23]",
+      "theta[24]",
+      "theta[25]",
+      "theta[26]",
+      "theta[27]"
+    ],
+    "evaluations": "40",
+    "native_energy_without_offset": -6.000790247293406,
+    "converged": false,
+    "message": "Return from COBYLA because the objective function has been evaluated MAXFUN times.",
+    "wall_seconds": 0.10506559999703313
+  },
+  "standard_forest_p1": {
+    "angles": [
+      2.4525783387769464,
+      3.5342685156655933
+    ],
+    "parameters": [
+      "theta[0]",
+      "theta[1]"
+    ],
+    "evaluations": "38",
+    "native_energy_without_offset": -1.7191885967165237,
+    "converged": true,
+    "message": "Return from COBYLA because the trust region radius reaches its lower bound.",
+    "wall_seconds": 0.09783969999989495
+  },
+  "standard_forest_p2": {
+    "angles": [
+      1.0081397534486192,
+      2.093235248003628,
+      3.583459598052199,
+      2.3949502476216638
+    ],
+    "parameters": [
+      "theta[0]",
+      "theta[1]",
+      "theta[2]",
+      "theta[3]"
+    ],
+    "evaluations": "40",
+    "native_energy_without_offset": -1.3199335882598708,
+    "converged": false,
+    "message": "Return from COBYLA because the objective function has been evaluated MAXFUN times.",
+    "wall_seconds": 0.14538119999997434
+  },
+  "multi_forest_p2": {
+    "angles": [
+      0.7798487532371737,
+      1.5781588339771162,
+      4.0217832022066915,
+      1.6544205075820386,
+      1.9780124582723115,
+      0.14648735444385313,
+      1.690174303061003,
+      0.4883692612967133,
+      1.6514077695232299,
+      0.06685149014153849,
+      2.2525739529135493,
+      2.2620800628896784,
+      0.7677686170750649,
+      2.0197911988255592,
+      2.6454870179973007,
+      0.014702237044969431,
+      1.5247544350135496,
+      2.4310987800527424
+    ],
+    "parameters": [
+      "theta[0]",
+      "theta[1]",
+      "theta[2]",
+      "theta[3]",
+      "theta[4]",
+      "theta[5]",
+      "theta[6]",
+      "theta[7]",
+      "theta[8]",
+      "theta[9]",
+      "theta[10]",
+      "theta[11]",
+      "theta[12]",
+      "theta[13]",
+      "theta[14]",
+      "theta[15]",
+      "theta[16]",
+      "theta[17]"
+    ],
+    "evaluations": "40",
+    "native_energy_without_offset": -6.024469815722387,
+    "converged": false,
+    "message": "Return from COBYLA because the objective function has been evaluated MAXFUN times.",
+    "wall_seconds": 0.09853840000141645
+  }
+}

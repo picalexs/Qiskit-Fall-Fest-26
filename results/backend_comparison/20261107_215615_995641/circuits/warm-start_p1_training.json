@@ -1,0 +1,194 @@
+{
+  "parameters": [
+    "g0",
+    "b0"
+  ],
+  "angles": [
+    0.3829418695928318,
+    0.4440256091260813
+  ],
+  "starts": [
+    {
+      "start": 0,
+      "angles": [
+        0.3829418695928318,
+        0.4440256091260813
+      ],
+      "native_cost": 1.9707118227161706,
+      "evaluations": 33,
+      "success": true,
+      "message": "Return from COBYLA because the trust region radius reaches its lower bound.",
+      "trace": [
+        {
+          "evaluation": 1,
+          "native_cost": 5.722488413069247,
+          "full_cost": 11.090782099312662
+        },
+        {
+          "evaluation": 2,
+          "native_cost": 6.102716781005738,
+          "full_cost": 10.857302626270387
+        },
+        {
+          "evaluation": 3,
+          "native_cost": 8.093615142384781,
+          "full_cost": 13.369748611551266
+        },
+        {
+          "evaluation": 4,
+          "native_cost": 4.189723034144764,
+          "full_cost": 8.242518589330295
+        },
+        {
+          "evaluation": 5,
+          "native_cost": 8.690818665927146,
+          "full_cost": 13.583526856083374
+        },
+        {
+          "evaluation": 6,
+          "native_cost": 4.8811560120609885,
+          "full_cost": 8.602835192573439
+        },
+        {
+          "evaluation": 7,
+          "native_cost": 5.369220541657528,
+          "full_cost": 10.132663370596937
+        },
+        {
+          "evaluation": 8,
+          "native_cost": 2.2961731164467327,
+          "full_cost": 5.67062587298939
+        },
+        {
+          "evaluation": 9,
+          "native_cost": 4.897441389802303,
+          "full_cost": 9.206694046644033
+        },
+        {
+          "evaluation": 10,
+          "native_cost": 4.272751760995279,
+          "full_cost": 8.418494509998043
+        },
+        {
+          "evaluation": 11,
+          "native_cost": 2.4122183159964283,
+          "full_cost": 5.7655414845234985
+        },
+        {
+          "evaluation": 12,
+          "native_cost": 1.9798587373096335,
+          "full_cost": 5.309984811129096
+        },
+        {
+          "evaluation": 13,
+          "native_cost": 2.1609557539160966,
+          "full_cost": 5.667345813402555
+        },
+        {
+          "evaluation": 14,
+          "native_cost": 1.9925537017494113,
+          "full_cost": 5.2749849889282725
+        },
+        {
+          "evaluation": 15,
+          "native_cost": 1.9922097522746394,
+          "full_cost": 5.3125887264258544
+        },
+        {
+          "evaluation": 16,
+          "native_cost": 1.981898203599538,
+          "full_cost": 5.345615906881896
+        },
+        {
+          "evaluation": 17,
+          "native_cost": 1.9773546479330908,
+          "full_cost": 5.301765883831951
+        },
+        {
+          "evaluation": 18,
+          "native_cost": 1.9719337551291942,
+          "full_cost": 5.3002868633034055
+        },
+        {
+          "evaluation": 19,
+          "native_cost": 1.970846758281745,
+          "full_cost": 5.297532873588038
+        },
+        {
+          "evaluation": 20,
+          "native_cost": 1.9736424505473151,
+          "full_cost": 5.3161696737967
+        },
+        {
+          "evaluation": 21,
+          "native_cost": 1.9712460436327097,
+          "full_cost": 5.290627056955932
+        },
+        {
+          "evaluation": 22,
+          "native_cost": 1.9712669960239224,
+          "full_cost": 5.300773786782598
+        },
+        {
+          "evaluation": 23,
+          "native_cost": 1.9708283158780033,
+          "full_cost": 5.298056646484849
+        },
+        {
+          "evaluation": 24,
+          "native_cost": 1.970745824587093,
+          "full_cost": 5.2971370447685295
+        },
+        {
+          "evaluation": 25,
+          "native_cost": 1.9707126197887752,
+          "full_cost": 5.29660850022886
+        },
+        {
+          "evaluation": 26,
+          "native_cost": 1.9707299534862381,
+          "full_cost": 5.2951206349563815
+        },
+        {
+          "evaluation": 27,
+          "native_cost": 1.9707138660521821,
+          "full_cost": 5.29681941437438
+        },
+        {
+          "evaluation": 28,
+          "native_cost": 1.970713618194713,
+          "full_cost": 5.2967938843862195
+        },
+        {
+          "evaluation": 29,
+          "native_cost": 1.9707131782670615,
+          "full_cost": 5.296226542923085
+        },
+        {
+          "evaluation": 30,
+          "native_cost": 1.9707123039964518,
+          "full_cost": 5.296629009055107
+        },
+        {
+          "evaluation": 31,
+          "native_cost": 1.9707118519743572,
+          "full_cost": 5.296538882471671
+        },
+        {
+          "evaluation": 32,
+          "native_cost": 1.9707118227161706,
+          "full_cost": 5.296562633811069
+        },
+        {
+          "evaluation": 33,
+          "native_cost": 1.97071209006406,
+          "full_cost": 5.296413095462552
+        }
+      ]
+    }
+  ],
+  "best_start": 0,
+  "best_native_cost": 1.9707118227161706,
+  "evaluations": 33,
+  "wall_seconds": 0.04840150000018184
+}

@@ -1,0 +1,61 @@
+stage,backend,method,depth,repeat,raw_success,factor_1_success,factor_3_success,zne_success_estimate,change_pp,raw_shots,factor_1_shots,factor_3_shots,outside_probability_range,technique,mitigated_success,value_type,total_shots,mean_full_cost,optimum_probability,diagnostic,factor_1_cost,factor_3_cost,raw_total_shots,mask_imbalance
+noisy,ibm_aachen,multi-angle,2,2,0.944091796875,0.9453125,0.90234375,0.966796875,2.2705078125,4096.0,2048.0,2048.0,False,zne,0.966796875,extrapolated estimate,,,,,,,,
+real,ibm_berlin,multi-angle,2,0,0.914794921875,0.91455078125,0.87255859375,0.935546875,2.0751953125,4096.0,2048.0,2048.0,False,zne,0.935546875,extrapolated estimate,,,,,,,,
+noisy,ibm_berlin,multi-angle,2,0,0.928466796875,0.9306640625,0.884765625,0.95361328125,2.5146484375,4096.0,2048.0,2048.0,False,zne,0.95361328125,extrapolated estimate,,,,,,,,
+real,ibm_aachen,multi-angle,2,0,0.9140625,0.91015625,0.85546875,0.9375,2.34375,4096.0,2048.0,2048.0,False,zne,0.9375,extrapolated estimate,,,,,,,,
+noisy,ibm_aachen,multi-angle,2,0,0.9443359375,0.93701171875,0.91552734375,0.94775390625,0.341796875,4096.0,2048.0,2048.0,False,zne,0.94775390625,extrapolated estimate,,,,,,,,
+real,ibm_aachen,multi-angle,2,1,0.911865234375,0.9072265625,0.87109375,0.92529296875,1.3427734375,4096.0,2048.0,2048.0,False,zne,0.92529296875,extrapolated estimate,,,,,,,,
+real,ibm_aachen,multi-angle,2,2,0.9150390625,0.923828125,0.8828125,0.9443359375,2.9296875,4096.0,2048.0,2048.0,False,zne,0.9443359375,extrapolated estimate,,,,,,,,
+noisy,ibm_berlin,multi-angle,2,1,0.918701171875,0.9287109375,0.89404296875,0.946044921875,2.734375,4096.0,2048.0,2048.0,False,zne,0.946044921875,extrapolated estimate,,,,,,,,
+real,ibm_berlin,multi-angle,2,2,0.92529296875,0.92431640625,0.88427734375,0.9443359375,1.904296875,4096.0,2048.0,2048.0,False,zne,0.9443359375,extrapolated estimate,,,,,,,,
+real,ibm_berlin,multi-angle,2,1,0.9326171875,0.912109375,0.88623046875,0.925048828125,-0.7568359375,4096.0,2048.0,2048.0,False,zne,0.925048828125,extrapolated estimate,,,,,,,,
+noisy,ibm_berlin,multi-angle,2,2,0.927001953125,0.93212890625,0.908203125,0.944091796875,1.708984375,4096.0,2048.0,2048.0,False,zne,0.944091796875,extrapolated estimate,,,,,,,,
+noisy,ibm_aachen,multi-angle,2,1,0.9404296875,0.94580078125,0.91943359375,0.958984375,1.85546875,4096.0,2048.0,2048.0,False,zne,0.958984375,extrapolated estimate,,,,,,,,
+noisy,ibm_aachen,multi-angle,2,2,0.944091796875,,,,-0.390625,,,,,twirling,0.940185546875,measured frequency,4096.0,1.55908203125,0.940185546875,,,,4096.0,
+noisy,ibm_berlin,multi-angle,2,1,0.918701171875,,,,-0.4150390625,,,,,twirling,0.91455078125,measured frequency,4096.0,1.828369140625,0.91455078125,,,,4096.0,
+noisy,ibm_aachen,multi-angle,2,1,0.9404296875,,,,-0.3662109375,,,,,twirling,0.936767578125,measured frequency,4096.0,1.5908203125,0.936767578125,,,,4096.0,
+noisy,ibm_berlin,multi-angle,2,2,0.927001953125,,,,-0.09765625,,,,,twirling,0.926025390625,measured frequency,4096.0,1.71533203125,0.926025390625,,,,4096.0,
+real,ibm_aachen,multi-angle,2,2,0.9150390625,,,,-0.439453125,,,,,twirling,0.91064453125,measured frequency,4096.0,1.936279296875,0.91064453125,,,,4096.0,
+noisy,ibm_aachen,multi-angle,2,0,0.9443359375,,,,-1.025390625,,,,,twirling,0.93408203125,measured frequency,4096.0,1.615234375,0.93408203125,,,,4096.0,
+real,ibm_aachen,multi-angle,2,0,0.9140625,,,,0.1708984375,,,,,twirling,0.915771484375,measured frequency,4096.0,1.838134765625,0.915771484375,,,,4096.0,
+real,ibm_aachen,multi-angle,2,1,0.911865234375,,,,0.48828125,,,,,twirling,0.916748046875,measured frequency,4096.0,1.85107421875,0.916748046875,,,,4096.0,
+real,ibm_berlin,multi-angle,2,2,0.92529296875,,,,-1.513671875,,,,,twirling,0.91015625,measured frequency,4096.0,1.828125,0.91015625,,,,4096.0,
+real,ibm_berlin,multi-angle,2,1,0.9326171875,,,,-1.123046875,,,,,twirling,0.92138671875,measured frequency,4096.0,1.744140625,0.92138671875,,,,4096.0,
+real,ibm_berlin,multi-angle,2,0,0.914794921875,,,,0.6591796875,,,,,twirling,0.92138671875,measured frequency,4096.0,1.750244140625,0.92138671875,,,,4096.0,
+real,ibm_berlin,multi-angle,2,0,0.914794921875,,,,-1.0498046875,,,,,dd,0.904296875,measured frequency,4096.0,1.890625,0.904296875,,,,4096.0,
+noisy,ibm_aachen,multi-angle,2,1,0.9404296875,,,,-0.048828125,,,,,dd,0.93994140625,measured frequency,4096.0,1.583984375,0.93994140625,,,,4096.0,
+noisy,ibm_berlin,multi-angle,2,0,0.928466796875,,,,-1.513671875,,,,,twirling,0.913330078125,measured frequency,4096.0,1.829345703125,0.913330078125,,,,4096.0,
+real,ibm_berlin,multi-angle,2,2,0.92529296875,,,,-0.9033203125,,,,,dd,0.916259765625,measured frequency,4096.0,1.81982421875,0.916259765625,,,,4096.0,
+noisy,ibm_berlin,multi-angle,2,0,0.928466796875,,,,-0.09765625,,,,,dd,0.927490234375,measured frequency,4096.0,1.679931640625,0.927490234375,,,,4096.0,
+noisy,ibm_berlin,multi-angle,2,1,0.918701171875,,,,-0.1953125,,,,,dd,0.916748046875,measured frequency,4096.0,1.76416015625,0.916748046875,,,,4096.0,
+real,ibm_aachen,multi-angle,2,1,0.911865234375,,,,-0.5126953125,,,,,dd,0.90673828125,measured frequency,4096.0,1.9619140625,0.90673828125,,,,4096.0,
+real,ibm_aachen,multi-angle,2,0,0.9140625,,,,-0.1708984375,,,,,dd,0.912353515625,measured frequency,4096.0,1.879638671875,0.912353515625,,,,4096.0,
+noisy,ibm_berlin,multi-angle,2,2,0.927001953125,,,,-0.9521484375,,,,,dd,0.91748046875,measured frequency,4096.0,1.79345703125,0.91748046875,,,,4096.0,
+noisy,ibm_aachen,multi-angle,2,0,0.9443359375,,,,0.0732421875,,,,,dd,0.945068359375,measured frequency,4096.0,1.521240234375,0.945068359375,,,,4096.0,
+noisy,ibm_aachen,multi-angle,2,2,0.944091796875,,,,0.0732421875,,,,,dd,0.94482421875,measured frequency,4096.0,1.5048828125,0.94482421875,,,,4096.0,
+real,ibm_berlin,multi-angle,2,1,0.9326171875,,,,-0.9033203125,,,,,dd,0.923583984375,measured frequency,4096.0,1.716796875,0.923583984375,,,,4096.0,
+real,ibm_aachen,multi-angle,2,2,0.9150390625,,,,-0.146484375,,,,,dd,0.91357421875,measured frequency,4096.0,1.87744140625,0.91357421875,,,,4096.0,
+real,ibm_berlin,multi-angle,2,1,0.9326171875,,,,,4096.0,,,False,readout,0.9616945685637274,local readout estimate,4096.0,,,,,,,
+real,ibm_berlin,multi-angle,2,1,0.9326171875,,,,,4096.0,,,False,trex,0.9675952311157743,TREX-style local-gain estimate,4096.0,,,,,,,1.0
+real,ibm_aachen,multi-angle,2,2,0.9150390625,,,,,4096.0,,,False,readout,0.9303462156411965,local readout estimate,4096.0,,,,,,,
+real,ibm_aachen,multi-angle,2,2,0.9150390625,,,,,4096.0,,,False,trex,0.949034168678158,TREX-style local-gain estimate,4096.0,,,,,,,1.0
+real,ibm_berlin,multi-angle,2,0,0.914794921875,,,,,4096.0,,,False,readout,0.9494510902857066,local readout estimate,4096.0,,,,,,,
+real,ibm_berlin,multi-angle,2,0,0.914794921875,,,,,4096.0,,,False,trex,0.9639858317861781,TREX-style local-gain estimate,4096.0,,,,,,,1.0
+real,ibm_aachen,multi-angle,2,1,0.911865234375,,,,,4096.0,,,False,readout,0.9415528822042707,local readout estimate,4096.0,,,,,,,
+real,ibm_aachen,multi-angle,2,1,0.911865234375,,,,,4096.0,,,False,trex,0.9299383164882125,TREX-style local-gain estimate,4096.0,,,,,,,1.0
+real,ibm_berlin,multi-angle,2,2,0.92529296875,,,,,4096.0,,,False,readout,0.9829092127289262,local readout estimate,4096.0,,,,,,,
+real,ibm_berlin,multi-angle,2,2,0.92529296875,,,,,4096.0,,,False,trex,0.9558885981113399,TREX-style local-gain estimate,4096.0,,,,,,,1.0
+noisy,ibm_berlin,multi-angle,2,2,0.927001953125,,,,,4096.0,,,False,readout,0.9651822406548733,local readout estimate,4096.0,,,,,,,
+noisy,ibm_berlin,multi-angle,2,2,0.927001953125,,,,,4096.0,,,False,trex,0.9684114034581818,TREX-style local-gain estimate,4096.0,,,,,,,1.0
+noisy,ibm_berlin,multi-angle,2,1,0.918701171875,,,,,4096.0,,,False,readout,0.9633528559887926,local readout estimate,4096.0,,,,,,,
+noisy,ibm_berlin,multi-angle,2,1,0.918701171875,,,,,4096.0,,,False,trex,0.9670148397996301,TREX-style local-gain estimate,4096.0,,,,,,,1.0
+noisy,ibm_aachen,multi-angle,2,0,0.9443359375,,,,,4096.0,,,False,readout,0.9662360081079413,local readout estimate,4096.0,,,,,,,
+noisy,ibm_aachen,multi-angle,2,0,0.9443359375,,,,,4096.0,,,False,trex,0.961626788576493,TREX-style local-gain estimate,4096.0,,,,,,,1.0
+real,ibm_aachen,multi-angle,2,0,0.9140625,,,,,4096.0,,,False,readout,0.9463972597631174,local readout estimate,4096.0,,,,,,,
+real,ibm_aachen,multi-angle,2,0,0.9140625,,,,,4096.0,,,False,trex,0.9332295027232437,TREX-style local-gain estimate,4096.0,,,,,,,1.0
+noisy,ibm_aachen,multi-angle,2,2,0.944091796875,,,,,4096.0,,,False,readout,0.9621041133106124,local readout estimate,4096.0,,,,,,,
+noisy,ibm_aachen,multi-angle,2,2,0.944091796875,,,,,4096.0,,,False,trex,0.9670710553102464,TREX-style local-gain estimate,4096.0,,,,,,,1.0
+noisy,ibm_aachen,multi-angle,2,1,0.9404296875,,,,,4096.0,,,False,readout,0.9706174186253099,local readout estimate,4096.0,,,,,,,
+noisy,ibm_aachen,multi-angle,2,1,0.9404296875,,,,,4096.0,,,False,trex,0.9628689953403095,TREX-style local-gain estimate,4096.0,,,,,,,1.0
+noisy,ibm_berlin,multi-angle,2,0,0.928466796875,,,,,4096.0,,,False,readout,0.9695390016119518,local readout estimate,4096.0,,,,,,,
+noisy,ibm_berlin,multi-angle,2,0,0.928466796875,,,,,4096.0,,,False,trex,0.9652139787459519,TREX-style local-gain estimate,4096.0,,,,,,,1.0

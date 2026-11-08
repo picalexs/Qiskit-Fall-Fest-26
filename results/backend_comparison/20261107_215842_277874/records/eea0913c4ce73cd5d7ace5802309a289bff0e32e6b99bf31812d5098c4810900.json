@@ -1,0 +1,56 @@
+{
+  "key": "screen|fake_manila|multi-angle|2|0|raw|target",
+  "stage": "screen",
+  "backend": "fake_manila",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 0,
+  "technique": "raw",
+  "variant": "target",
+  "shots": 16,
+  "circuit_file": "circuits\\eea0913c4ce73cd5d7ace5802309a289bff0e32e6b99bf31812d5098c4810900.qpy",
+  "circuit_resources": {
+    "depth": 47,
+    "two_qubit_depth": 20,
+    "two_qubit_gates": 22,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rz": 46,
+      "sx": 25,
+      "cx": 22,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    }
+  },
+  "counts": {
+    "10111": 2,
+    "01111": 1,
+    "01110": 1,
+    "10110": 5,
+    "01001": 5,
+    "01011": 2
+  },
+  "seed_simulator": 224565650,
+  "batch_wall_seconds": 0.13213810000161175,
+  "batch_circuits": 9,
+  "batch_task_keys": [
+    "screen|fake_manila|standard|1|0|raw|target",
+    "screen|fake_manila|standard|2|0|raw|target",
+    "screen|fake_manila|standard|3|0|raw|target",
+    "screen|fake_manila|warm-start|1|0|raw|target",
+    "screen|fake_manila|warm-start|2|0|raw|target",
+    "screen|fake_manila|warm-start|3|0|raw|target",
+    "screen|fake_manila|multi-angle|1|0|raw|target",
+    "screen|fake_manila|multi-angle|2|0|raw|target",
+    "screen|fake_manila|multi-angle|3|0|raw|target"
+  ],
+  "job_id": null,
+  "pub_index": 7
+}

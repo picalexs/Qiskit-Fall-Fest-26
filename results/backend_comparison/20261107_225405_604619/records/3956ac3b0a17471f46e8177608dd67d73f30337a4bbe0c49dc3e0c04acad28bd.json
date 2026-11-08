@@ -1,0 +1,68 @@
+{
+  "key": "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_9",
+  "stage": "noisy",
+  "backend": "ibm_aachen",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 1,
+  "technique": "twirling",
+  "variant": "twirl_9",
+  "shots": 256,
+  "circuit_file": "circuits\\3956ac3b0a17471f46e8177608dd67d73f30337a4bbe0c49dc3e0c04acad28bd.qpy",
+  "circuit_resources": {
+    "depth": 61,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 156,
+    "operations": {
+      "delay": 170,
+      "rz": 57,
+      "sx": 44,
+      "cz": 16,
+      "x": 12,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    }
+  },
+  "counts": {
+    "01001": 119,
+    "10110": 123,
+    "01011": 2,
+    "00110": 1,
+    "10111": 3,
+    "10001": 1,
+    "01000": 5,
+    "10100": 1,
+    "00001": 1
+  },
+  "seed_simulator": 4003899656,
+  "batch_wall_seconds": 10.80408030000035,
+  "batch_circuits": 16,
+  "batch_task_keys": [
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_0",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_1",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_2",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_3",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_4",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_5",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_6",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_7",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_8",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_9",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_10",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_11",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_12",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_13",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_14",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_15"
+  ],
+  "job_id": null,
+  "pub_index": 9
+}

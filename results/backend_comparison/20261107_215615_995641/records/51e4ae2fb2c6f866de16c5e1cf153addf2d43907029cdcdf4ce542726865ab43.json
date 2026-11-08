@@ -1,0 +1,21 @@
+{
+  "key": "noisy|fake_manila|multi-angle|2|0|readout|cal0",
+  "stage": "noisy",
+  "backend": "fake_manila",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 0,
+  "technique": "readout",
+  "variant": "cal0",
+  "shots": 16,
+  "circuit_file": "circuits\\51e4ae2fb2c6f866de16c5e1cf153addf2d43907029cdcdf4ce542726865ab43.qpy",
+  "counts": {
+    "00000": 14,
+    "00100": 2
+  },
+  "seed_simulator": 613003534,
+  "batch_wall_seconds": 0.035298499999044,
+  "batch_circuits": 2,
+  "job_id": null,
+  "pub_index": 0
+}

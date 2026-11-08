@@ -1,0 +1,73 @@
+{
+  "key": "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_14",
+  "stage": "noisy",
+  "backend": "ibm_berlin",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 2,
+  "technique": "twirling",
+  "variant": "twirl_14",
+  "shots": 256,
+  "circuit_file": "circuits\\4b686bef20aec5b359be58c93ff9cef97457b7eec38844b71de5fa064a8907c3.qpy",
+  "circuit_resources": {
+    "depth": 57,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 120,
+    "operations": {
+      "delay": 134,
+      "rz": 51,
+      "sx": 44,
+      "cz": 16,
+      "x": 9,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 12,
+      "1": 3,
+      "2": 2,
+      "3": 1,
+      "4": 0
+    }
+  },
+  "counts": {
+    "11000": 1,
+    "00001": 2,
+    "01001": 121,
+    "10110": 113,
+    "01111": 2,
+    "10111": 1,
+    "01000": 3,
+    "10101": 1,
+    "01110": 4,
+    "11110": 3,
+    "00110": 2,
+    "01011": 1,
+    "11001": 1,
+    "01101": 1
+  },
+  "seed_simulator": 2892947005,
+  "batch_wall_seconds": 11.374231100002362,
+  "batch_circuits": 16,
+  "batch_task_keys": [
+    "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_0",
+    "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_1",
+    "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_2",
+    "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_3",
+    "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_4",
+    "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_5",
+    "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_6",
+    "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_7",
+    "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_8",
+    "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_9",
+    "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_10",
+    "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_11",
+    "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_12",
+    "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_13",
+    "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_14",
+    "noisy|ibm_berlin|multi-angle|2|2|twirling|twirl_15"
+  ],
+  "job_id": null,
+  "pub_index": 14
+}

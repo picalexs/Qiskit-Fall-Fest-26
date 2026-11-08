@@ -1,0 +1,72 @@
+{
+  "key": "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_3",
+  "stage": "noisy",
+  "backend": "ibm_aachen",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 1,
+  "technique": "twirling",
+  "variant": "twirl_3",
+  "shots": 256,
+  "circuit_file": "circuits\\cd964f766a2ced73b94fd6e589a3986838c0847db46fc7081658eaa594504ae5.qpy",
+  "circuit_resources": {
+    "depth": 67,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 156,
+    "operations": {
+      "delay": 170,
+      "rz": 66,
+      "sx": 44,
+      "cz": 16,
+      "x": 16,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    }
+  },
+  "counts": {
+    "01110": 1,
+    "10100": 1,
+    "10110": 130,
+    "01001": 100,
+    "11001": 6,
+    "01000": 3,
+    "00110": 8,
+    "01100": 1,
+    "10011": 2,
+    "11010": 1,
+    "11110": 1,
+    "00001": 1,
+    "10001": 1
+  },
+  "seed_simulator": 4003899656,
+  "batch_wall_seconds": 15.270156999999017,
+  "batch_circuits": 16,
+  "batch_task_keys": [
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_0",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_1",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_2",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_3",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_4",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_5",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_6",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_7",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_8",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_9",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_10",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_11",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_12",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_13",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_14",
+    "noisy|ibm_aachen|multi-angle|2|1|twirling|twirl_15"
+  ],
+  "job_id": null,
+  "pub_index": 3
+}

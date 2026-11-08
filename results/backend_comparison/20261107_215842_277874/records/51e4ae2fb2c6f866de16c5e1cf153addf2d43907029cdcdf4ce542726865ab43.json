@@ -1,0 +1,41 @@
+{
+  "key": "noisy|fake_manila|multi-angle|2|0|readout|cal0",
+  "stage": "noisy",
+  "backend": "fake_manila",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 0,
+  "technique": "readout",
+  "variant": "cal0",
+  "shots": 16,
+  "circuit_file": "circuits\\51e4ae2fb2c6f866de16c5e1cf153addf2d43907029cdcdf4ce542726865ab43.qpy",
+  "circuit_resources": {
+    "depth": 1,
+    "two_qubit_depth": 0,
+    "two_qubit_gates": 0,
+    "physical_qubits_used": 5,
+    "operations": {
+      "measure": 5
+    },
+    "measurement_map": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    }
+  },
+  "counts": {
+    "00000": 14,
+    "00100": 2
+  },
+  "seed_simulator": 613003534,
+  "batch_wall_seconds": 0.03652250000232016,
+  "batch_circuits": 2,
+  "batch_task_keys": [
+    "noisy|fake_manila|multi-angle|2|0|readout|cal0",
+    "noisy|fake_manila|multi-angle|2|0|readout|cal1"
+  ],
+  "job_id": null,
+  "pub_index": 0
+}

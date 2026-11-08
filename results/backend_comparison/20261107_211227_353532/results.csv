@@ -1,0 +1,5 @@
+backend,method,mode,job_id,execution_wall_seconds,shots,full_optimum_probability,full_optimum_standard_error,mean_full_cost,mec_optimum_probability,mean_mec,total_variation_from_ideal,readout_corrected_mean_full_cost,calibration_shots,correction_error,depth,two_qubit_depth,two_qubit_gates,physical_qubits_used,compile_wall_seconds
+fake,multi_forest_p2,ideal,,0.0014480999998340849,16,0.875,0.08267972847076846,1.875,0.875,1.375,0.26616200640441295,,0,,47,20,22,5,0.0032971000000543427
+fake,multi_forest_p2,noisy,,0.03606170000057318,16,0.375,0.12103072956898178,7.125,0.375,3.875,0.4083559734543825,6.101638321995462,32,,47,20,22,5,0.0032971000000543427
+fake,standard_full_p1,ideal,,0.0018029999991995282,16,0.5,0.125,7.0,0.5,4.0,0.26193083820903224,,0,,49,24,29,5,0.006379700000252342
+fake,standard_full_p1,noisy,,0.1264975999984017,16,0.1875,0.09757809372497497,10.3125,0.1875,5.5625,0.60020573459504,10.25277777777778,32,,49,24,29,5,0.006379700000252342

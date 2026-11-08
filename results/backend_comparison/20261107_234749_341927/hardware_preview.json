@@ -1,0 +1,38 @@
+[
+  {
+    "backend": "ibm_berlin",
+    "repeat": 0,
+    "pubs": 64,
+    "shots": 43008
+  },
+  {
+    "backend": "ibm_berlin",
+    "repeat": 1,
+    "pubs": 64,
+    "shots": 43008
+  },
+  {
+    "backend": "ibm_berlin",
+    "repeat": 2,
+    "pubs": 64,
+    "shots": 43008
+  },
+  {
+    "backend": "ibm_aachen",
+    "repeat": 0,
+    "pubs": 64,
+    "shots": 43008
+  },
+  {
+    "backend": "ibm_aachen",
+    "repeat": 1,
+    "pubs": 64,
+    "shots": 43008
+  },
+  {
+    "backend": "ibm_aachen",
+    "repeat": 2,
+    "pubs": 64,
+    "shots": 43008
+  }
+]

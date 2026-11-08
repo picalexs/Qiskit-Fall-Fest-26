@@ -1,0 +1,25 @@
+{
+  "counts": {
+    "01001": 5,
+    "10000": 2,
+    "01000": 2,
+    "11110": 1,
+    "10110": 4,
+    "10100": 1,
+    "10010": 1
+  },
+  "metrics": {
+    "backend": "fake",
+    "method": "multi_forest_p2",
+    "shots": 16,
+    "full_optimum_probability": 0.5625,
+    "full_optimum_standard_error": 0.12401959270615269,
+    "mean_full_cost": 5.1875,
+    "mec_optimum_probability": 0.5625,
+    "mean_mec": 2.9375,
+    "total_variation_from_ideal": 0.3322913743700869,
+    "depth": 47,
+    "two_qubit_depth": 20,
+    "two_qubit_gates": 22
+  }
+}

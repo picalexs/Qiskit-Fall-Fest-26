@@ -1,0 +1,30 @@
+{
+  "key": "ideal|ideal|multi-angle|1|0|raw|target",
+  "stage": "ideal",
+  "backend": "ideal",
+  "method": "multi-angle",
+  "depth": 1,
+  "repeat": 0,
+  "technique": "raw",
+  "variant": "target",
+  "shots": 32,
+  "circuit_file": "circuits\\7ddf950b58a42f88b03a695230213ad9222324b4e3b339cfdf975bbea9462250.qpy",
+  "counts": {
+    "10110": 11,
+    "00110": 2,
+    "10111": 1,
+    "11000": 1,
+    "01001": 5,
+    "11001": 6,
+    "01110": 1,
+    "11110": 1,
+    "00111": 2,
+    "10001": 1,
+    "01000": 1
+  },
+  "seed_simulator": 2305254207,
+  "batch_wall_seconds": 0.01199320000159787,
+  "batch_circuits": 9,
+  "job_id": null,
+  "pub_index": 6
+}

@@ -1,0 +1,39 @@
+{
+  "key": "real|ibm_aachen|multi-angle|2|0|readout|cal0",
+  "stage": "real",
+  "backend": "ibm_aachen",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 0,
+  "technique": "readout",
+  "variant": "cal0",
+  "shots": 1024,
+  "circuit_file": "circuits\\e5f6843b67861b5dc11d8842ad26c7a1aa4a9312f3acbc71219192b6f5ac844c.qpy",
+  "circuit_resources": {
+    "depth": 1,
+    "two_qubit_depth": 0,
+    "two_qubit_gates": 0,
+    "physical_qubits_used": 5,
+    "operations": {
+      "measure": 5
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    }
+  },
+  "counts": {
+    "00000": 1011,
+    "10000": 8,
+    "01000": 3,
+    "00010": 2
+  },
+  "job_id": "dbnq1oq4udtc73c409hg",
+  "pub_index": 11,
+  "batch_wall_seconds": 0.3893727000031504,
+  "batch_wall_scope": "result_wait",
+  "batch_circuits": 64
+}

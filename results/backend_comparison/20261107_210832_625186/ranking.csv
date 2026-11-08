@@ -1,0 +1,7 @@
+method,mean_optimum_probability,mean_cost,mean_two_qubit_gates
+multi_forest_p2,0.34375,8.03125,22.0
+multi_full_p2,0.3125,8.40625,59.0
+standard_full_p1,0.125,10.875,29.0
+standard_full_p2,0.125,11.3125,59.0
+standard_forest_p1,0.09375,11.1875,9.0
+standard_forest_p2,0.03125,11.71875,22.0

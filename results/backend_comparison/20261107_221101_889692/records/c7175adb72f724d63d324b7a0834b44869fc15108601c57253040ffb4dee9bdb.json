@@ -1,0 +1,72 @@
+{
+  "key": "ideal|ideal|warm-start|3|1|raw|target",
+  "stage": "ideal",
+  "backend": "ideal",
+  "method": "warm-start",
+  "depth": 3,
+  "repeat": 1,
+  "technique": "raw",
+  "variant": "target",
+  "shots": 2048,
+  "circuit_file": "circuits\\c7175adb72f724d63d324b7a0834b44869fc15108601c57253040ffb4dee9bdb.qpy",
+  "circuit_resources": {
+    "depth": 21,
+    "two_qubit_depth": 10,
+    "two_qubit_gates": 12,
+    "physical_qubits_used": 5,
+    "operations": {
+      "ry": 35,
+      "rz": 15,
+      "rzz": 12,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    }
+  },
+  "counts": {
+    "00001": 79,
+    "01001": 1662,
+    "10001": 24,
+    "11001": 19,
+    "01101": 10,
+    "00100": 132,
+    "01011": 33,
+    "01100": 30,
+    "00101": 14,
+    "01000": 3,
+    "10101": 1,
+    "01110": 6,
+    "01111": 11,
+    "00111": 3,
+    "10111": 1,
+    "00000": 6,
+    "10100": 2,
+    "00110": 5,
+    "01010": 3,
+    "00011": 2,
+    "10000": 1,
+    "11100": 1
+  },
+  "seed_simulator": 3712801765,
+  "batch_wall_seconds": 0.04424669999934849,
+  "batch_circuits": 9,
+  "batch_task_keys": [
+    "ideal|ideal|standard|1|1|raw|target",
+    "ideal|ideal|standard|2|1|raw|target",
+    "ideal|ideal|standard|3|1|raw|target",
+    "ideal|ideal|warm-start|1|1|raw|target",
+    "ideal|ideal|warm-start|2|1|raw|target",
+    "ideal|ideal|warm-start|3|1|raw|target",
+    "ideal|ideal|multi-angle|1|1|raw|target",
+    "ideal|ideal|multi-angle|2|1|raw|target",
+    "ideal|ideal|multi-angle|3|1|raw|target"
+  ],
+  "job_id": null,
+  "pub_index": 5
+}

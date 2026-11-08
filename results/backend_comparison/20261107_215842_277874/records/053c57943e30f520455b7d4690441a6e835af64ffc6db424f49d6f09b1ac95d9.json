@@ -1,0 +1,62 @@
+{
+  "key": "noisy|fake_manila|multi-angle|2|0|raw|target",
+  "stage": "noisy",
+  "backend": "fake_manila",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 0,
+  "technique": "raw",
+  "variant": "target",
+  "shots": 32,
+  "circuit_file": "circuits\\053c57943e30f520455b7d4690441a6e835af64ffc6db424f49d6f09b1ac95d9.qpy",
+  "circuit_resources": {
+    "depth": 47,
+    "two_qubit_depth": 20,
+    "two_qubit_gates": 22,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rz": 46,
+      "sx": 25,
+      "cx": 22,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    }
+  },
+  "counts": {
+    "01110": 2,
+    "10100": 2,
+    "10101": 1,
+    "01010": 1,
+    "01001": 7,
+    "10111": 2,
+    "01000": 6,
+    "10110": 5,
+    "11110": 1,
+    "01101": 3,
+    "01011": 1,
+    "11001": 1
+  },
+  "seed_simulator": 298981027,
+  "batch_wall_seconds": 0.16393460000108462,
+  "batch_circuits": 9,
+  "batch_task_keys": [
+    "noisy|fake_manila|standard|1|0|raw|target",
+    "noisy|fake_manila|standard|2|0|raw|target",
+    "noisy|fake_manila|standard|3|0|raw|target",
+    "noisy|fake_manila|warm-start|1|0|raw|target",
+    "noisy|fake_manila|warm-start|2|0|raw|target",
+    "noisy|fake_manila|warm-start|3|0|raw|target",
+    "noisy|fake_manila|multi-angle|1|0|raw|target",
+    "noisy|fake_manila|multi-angle|2|0|raw|target",
+    "noisy|fake_manila|multi-angle|3|0|raw|target"
+  ],
+  "job_id": null,
+  "pub_index": 7
+}

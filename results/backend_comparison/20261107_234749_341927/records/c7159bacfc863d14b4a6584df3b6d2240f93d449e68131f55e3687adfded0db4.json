@@ -1,0 +1,57 @@
+{
+  "key": "real|ibm_aachen|multi-angle|2|2|twirling|twirl_8",
+  "stage": "real",
+  "backend": "ibm_aachen",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 2,
+  "technique": "twirling",
+  "variant": "twirl_8",
+  "shots": 256,
+  "circuit_file": "circuits\\c7159bacfc863d14b4a6584df3b6d2240f93d449e68131f55e3687adfded0db4.qpy",
+  "circuit_resources": {
+    "depth": 58,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 156,
+    "operations": {
+      "delay": 170,
+      "rz": 50,
+      "sx": 44,
+      "cz": 16,
+      "x": 13,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    }
+  },
+  "counts": {
+    "10110": 122,
+    "01001": 111,
+    "00001": 3,
+    "10001": 2,
+    "10010": 1,
+    "01110": 3,
+    "00101": 1,
+    "01011": 1,
+    "10111": 1,
+    "10101": 2,
+    "10100": 2,
+    "11001": 3,
+    "01100": 1,
+    "00110": 1,
+    "10000": 1,
+    "01111": 1
+  },
+  "job_id": "dbnq1p80rnvc73974gr0",
+  "pub_index": 54,
+  "batch_wall_seconds": 0.2572255000050063,
+  "batch_wall_scope": "result_wait",
+  "batch_circuits": 64
+}

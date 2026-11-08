@@ -1,0 +1,22 @@
+{
+  "key": "noisy|fake_manila|multi-angle|2|0|twirling|twirl_14",
+  "stage": "noisy",
+  "backend": "fake_manila",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 0,
+  "technique": "twirling",
+  "variant": "twirl_14",
+  "shots": 4,
+  "circuit_file": "circuits\\e24b7f9530029c31b558627d6ddefc31d22089ceeaacbde88a1becda029453f5.qpy",
+  "counts": {
+    "01001": 2,
+    "10100": 1,
+    "01000": 1
+  },
+  "seed_simulator": 1108600243,
+  "batch_wall_seconds": 0.31205340000087745,
+  "batch_circuits": 16,
+  "job_id": null,
+  "pub_index": 14
+}

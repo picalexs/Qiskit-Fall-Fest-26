@@ -1,0 +1,20 @@
+| IBM backend | Method      | Depth | Transpiled depth | 2-qubit depth | 2-qubit gates | Optimum rate (mean) | Mean cost |
+| ----------- | ----------- | ----: | ---------------: | ------------: | ------------: | ------------------: | --------: |
+| Berlin      | Standard    |     1 |               36 |             8 |             8 |                8.4% |    10.943 |
+| Berlin      | Standard    |     2 |               54 |            14 |            16 |               27.9% |     8.399 |
+| Berlin      | Standard    |     3 |               76 |            20 |            24 |               52.8% |     6.255 |
+| Berlin      | Warm-start  |     1 |               38 |             8 |             8 |               52.7% |     5.680 |
+| Berlin      | Warm-start  |     2 |               61 |            14 |            16 |               56.5% |     5.374 |
+| Berlin      | Warm-start  |     3 |               88 |            20 |            24 |               72.1% |     4.274 |
+| Berlin      | Multi-angle |     1 |               36 |             8 |             8 |               46.5% |     7.203 |
+| Berlin      | Multi-angle |     2 |               56 |            14 |            16 |           **92.0%** | **1.734** |
+| Berlin      | Multi-angle |     3 |               75 |            20 |            24 |               90.4% |     1.889 |
+| Aachen      | Standard    |     1 |               36 |             8 |             8 |                8.3% |    10.998 |
+| Aachen      | Standard    |     2 |               54 |            14 |            16 |               27.9% |     8.440 |
+| Aachen      | Standard    |     3 |               74 |            20 |            24 |               53.5% |     6.167 |
+| Aachen      | Warm-start  |     1 |               38 |             8 |             8 |               52.8% |     5.633 |
+| Aachen      | Warm-start  |     2 |               61 |            14 |            16 |               56.7% |     5.423 |
+| Aachen      | Warm-start  |     3 |               85 |            20 |            24 |               72.2% |     4.332 |
+| Aachen      | Multi-angle |     1 |               36 |             8 |             8 |               47.0% |     7.096 |
+| Aachen      | Multi-angle |     2 |               59 |            14 |            16 |               91.7% |     1.815 |
+| Aachen      | Multi-angle |     3 |               76 |            20 |            24 |               90.5% |     1.944 |

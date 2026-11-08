@@ -1,0 +1,62 @@
+{
+  "key": "noisy|fake_manila|multi-angle|2|0|twirling|twirl_13",
+  "stage": "noisy",
+  "backend": "fake_manila",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 0,
+  "technique": "twirling",
+  "variant": "twirl_13",
+  "shots": 4,
+  "circuit_file": "circuits\\006d4ce70795f28533bbb8ceac3c54d4e7d77e36298a1a8162804d89ee9eac02.qpy",
+  "circuit_resources": {
+    "depth": 67,
+    "two_qubit_depth": 20,
+    "two_qubit_gates": 22,
+    "physical_qubits_used": 5,
+    "operations": {
+      "rz": 59,
+      "sx": 25,
+      "x": 25,
+      "cx": 22,
+      "delay": 12,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    }
+  },
+  "counts": {
+    "01111": 1,
+    "01001": 2,
+    "10110": 1
+  },
+  "seed_simulator": 1108600243,
+  "batch_wall_seconds": 0.3182932999989134,
+  "batch_circuits": 16,
+  "batch_task_keys": [
+    "noisy|fake_manila|multi-angle|2|0|twirling|twirl_0",
+    "noisy|fake_manila|multi-angle|2|0|twirling|twirl_1",
+    "noisy|fake_manila|multi-angle|2|0|twirling|twirl_2",
+    "noisy|fake_manila|multi-angle|2|0|twirling|twirl_3",
+    "noisy|fake_manila|multi-angle|2|0|twirling|twirl_4",
+    "noisy|fake_manila|multi-angle|2|0|twirling|twirl_5",
+    "noisy|fake_manila|multi-angle|2|0|twirling|twirl_6",
+    "noisy|fake_manila|multi-angle|2|0|twirling|twirl_7",
+    "noisy|fake_manila|multi-angle|2|0|twirling|twirl_8",
+    "noisy|fake_manila|multi-angle|2|0|twirling|twirl_9",
+    "noisy|fake_manila|multi-angle|2|0|twirling|twirl_10",
+    "noisy|fake_manila|multi-angle|2|0|twirling|twirl_11",
+    "noisy|fake_manila|multi-angle|2|0|twirling|twirl_12",
+    "noisy|fake_manila|multi-angle|2|0|twirling|twirl_13",
+    "noisy|fake_manila|multi-angle|2|0|twirling|twirl_14",
+    "noisy|fake_manila|multi-angle|2|0|twirling|twirl_15"
+  ],
+  "job_id": null,
+  "pub_index": 13
+}

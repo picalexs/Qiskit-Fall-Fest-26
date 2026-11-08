@@ -1,0 +1,57 @@
+{
+  "key": "real|ibm_aachen|multi-angle|2|0|trex|target_mask_10110",
+  "stage": "real",
+  "backend": "ibm_aachen",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 0,
+  "technique": "trex",
+  "variant": "target_mask_10110",
+  "shots": 128,
+  "circuit_file": "circuits\\eaa07abb20e645c07787349cea9f0c25c4653e3a4eeb200d92c07673118c9e04.qpy",
+  "circuit_resources": {
+    "depth": 60,
+    "two_qubit_depth": 14,
+    "two_qubit_gates": 16,
+    "physical_qubits_used": 156,
+    "operations": {
+      "delay": 170,
+      "rz": 45,
+      "sx": 44,
+      "cz": 16,
+      "x": 6,
+      "measure": 5,
+      "barrier": 1
+    },
+    "measurement_map": {
+      "0": 88,
+      "1": 97,
+      "2": 87,
+      "3": 86,
+      "4": 85
+    }
+  },
+  "counts": {
+    "11011": 62,
+    "00100": 48,
+    "01011": 2,
+    "10100": 3,
+    "00101": 1,
+    "10011": 1,
+    "00011": 1,
+    "00000": 1,
+    "00111": 1,
+    "11001": 2,
+    "11010": 1,
+    "01111": 1,
+    "10111": 1,
+    "00110": 1,
+    "00001": 1,
+    "11100": 1
+  },
+  "job_id": "dbnq1oq4udtc73c409hg",
+  "pub_index": 41,
+  "batch_wall_seconds": 0.3893727000031504,
+  "batch_wall_scope": "result_wait",
+  "batch_circuits": 64
+}

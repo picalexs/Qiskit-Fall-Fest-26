@@ -1,0 +1,26 @@
+{
+  "dbnq1nsnqjds73evj030": {
+    "backend": "ibm_berlin",
+    "quantum_seconds": 175
+  },
+  "dbnq1o00rnvc73974go0": {
+    "backend": "ibm_berlin",
+    "quantum_seconds": 175
+  },
+  "dbnq1o80rnvc73974gp0": {
+    "backend": "ibm_berlin",
+    "quantum_seconds": 175
+  },
+  "dbnq1oq4udtc73c409hg": {
+    "backend": "ibm_aachen",
+    "quantum_seconds": 14
+  },
+  "dbnq1p24udtc73c409ig": {
+    "backend": "ibm_aachen",
+    "quantum_seconds": 14
+  },
+  "dbnq1p80rnvc73974gr0": {
+    "backend": "ibm_aachen",
+    "quantum_seconds": 14
+  }
+}

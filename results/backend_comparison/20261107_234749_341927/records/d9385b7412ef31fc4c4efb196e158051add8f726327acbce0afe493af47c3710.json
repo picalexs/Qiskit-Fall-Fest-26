@@ -1,0 +1,73 @@
+{
+  "key": "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_01001",
+  "stage": "noisy",
+  "backend": "ibm_berlin",
+  "method": "multi-angle",
+  "depth": 2,
+  "repeat": 2,
+  "technique": "trex",
+  "variant": "cal_mask_01001",
+  "shots": 128,
+  "circuit_file": "circuits\\d9385b7412ef31fc4c4efb196e158051add8f726327acbce0afe493af47c3710.qpy",
+  "circuit_resources": {
+    "depth": 2,
+    "two_qubit_depth": 0,
+    "two_qubit_gates": 0,
+    "physical_qubits_used": 5,
+    "operations": {
+      "measure": 5,
+      "x": 2
+    },
+    "measurement_map": {
+      "0": 11,
+      "1": 20,
+      "2": 10,
+      "3": 0,
+      "4": 1
+    }
+  },
+  "counts": {
+    "10010": 124,
+    "11010": 2,
+    "00010": 2
+  },
+  "seed_simulator": 114415798,
+  "batch_wall_seconds": 32.34919770000124,
+  "batch_circuits": 32,
+  "batch_task_keys": [
+    "noisy|ibm_berlin|multi-angle|2|2|trex|target_mask_11100",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_11100",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|target_mask_11010",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_11010",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|target_mask_00100",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_00100",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|target_mask_01001",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_01001",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|target_mask_00010",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_00010",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|target_mask_01101",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_01101",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|target_mask_00000",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_00000",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|target_mask_11110",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_11110",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|target_mask_10011",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_10011",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|target_mask_10001",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_10001",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|target_mask_01011",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_01011",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|target_mask_01111",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_01111",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|target_mask_10101",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_10101",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|target_mask_00110",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_00110",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|target_mask_10111",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_10111",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|target_mask_11000",
+    "noisy|ibm_berlin|multi-angle|2|2|trex|cal_mask_11000"
+  ],
+  "job_id": null,
+  "pub_index": 7
+}

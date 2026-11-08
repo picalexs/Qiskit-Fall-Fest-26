@@ -254,7 +254,7 @@
       <div>
         <span class="eyebrow">Page 3 of 3 · putting it together</span>
         <h1>One bench, five sockets</h1>
-        <p class="lead">Each of us writes <b>one notebook</b>, <code>bench/&lt;name&gt;.ipynb</code>. The engine plugs it in and runs it on the same puzzles, with the same shot budget and the same controls as everything else.</p>
+        <p class="lead">Each of us writes <b>one notebook</b>, <code>experiments/bench/&lt;name&gt;.ipynb</code>. The engine plugs it in and runs it on the same puzzles, with the same shot budget and the same controls as everything else.</p>
       </div>
       <div class="card">
         <h3>Who fills which socket</h3>
@@ -437,7 +437,7 @@
       <div class="section-head">
         <span class="eyebrow">3 · Write yours</span>
         <h2>Three steps, one notebook</h2>
-        <p><code>bench/plugin_template.ipynb</code> has a working example of all five sockets, with the inputs and outputs explained above each cell. Copy it and delete what you don't need.</p>
+        <p><code>experiments/bench/plugin_template.ipynb</code> has a working example of all five sockets, with the inputs and outputs explained above each cell. Copy it and delete what you don't need.</p>
       </div>
       <div class="steps">
         <div class="card step">
@@ -568,7 +568,7 @@ cp plugin_template.ipynb <span class="k">carla</span>.ipynb</pre>
           </tbody>
         </table>
       </div>
-<pre class="term" style="margin-top:12px"><span class="c"># "All together" = bench/all_together.ipynb: load every notebook, pick one name per socket</span>
+<pre class="term" style="margin-top:12px"><span class="c"># "All together" = all_together.ipynb: load every notebook, pick one name per socket</span>
 QGD_QUIET = PLUGINS_ONLY = True   <span class="c"># skip the engine checks and everyone's own races</span>
 %run qgd_bench.ipynb
 %run alexandra.ipynb
@@ -587,7 +587,7 @@ df = pd.DataFrame(run_bench([<span class="f">"toy"</span>, 8, 10, 12, 14, 16], 5
         <h2>From four notebooks to one result</h2>
       </div>
       <ol class="timeline">
-        <li><span class="when">each of us</span><b>Own branch, own notebook</b><code>user/&lt;name&gt;</code> touches only <code>bench/&lt;name&gt;.ipynb</code>.</li>
+        <li><span class="when">each of us</span><b>Own branch, own notebook</b><code>user/&lt;name&gt;</code> touches only <code>experiments/bench/&lt;name&gt;.ipynb</code>.</li>
         <li><span class="when">each of us</span><b>Smoke test</b><code>run_bench(["toy", 8, 10], 1, cfg)</code> runs in seconds without a <code>fail</code> column.</li>
         <li><span class="when">together</span><b>Merge to main</b>Separate notebooks, so no conflicts. <code>qgd_bench.ipynb</code> opened on its own still passes its 8 checks.</li>
         <li><span class="when">Tudor</span><b>Run the grid</b>The 5 rows above, same seeds. Big N on Kaggle with the plug-in notebooks bundled in.</li>
@@ -601,7 +601,7 @@ df = pd.DataFrame(run_bench([<span class="f">"toy"</span>, 8, 10, 12, 14, 16], 5
   </main>
 
   <footer class="wrap">
-    Based on <code>bench/qgd_bench.ipynb</code> (the engine) and <code>bench/plugin_template.ipynb</code>. Every <code>Config</code> field is explained in the engine, section 8.1.
+    Based on <code>experiments/bench/qgd_bench.ipynb</code> (the engine) and <code>experiments/bench/plugin_template.ipynb</code>. Every <code>Config</code> field is explained in the engine, section 8.1.
   </footer>
 </body>
 </html>
