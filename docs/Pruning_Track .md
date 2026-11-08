@@ -16,8 +16,8 @@ and a paired full-vs-pruned sweep averaged over several seeds.
 
 ## Where it lives
 
-The entire investigation is **Section 7 of
-`docs/Quantum_Genome_Detective_Lab.ipynb`** (self-contained, CPU-only, runs top
+The entire investigation is **Section 4 of
+[bench/all_together.ipynb](../bench/all_together.ipynb)** (self-contained, CPU-only, runs top
 to bottom). There is no separate package to install or run — the notebook defines
 `edge_table`, `components`, `n_blocks`, `prune` (including `mstforest`),
 `evaluate`, and the full seed-averaged sweep in its own cells. This file is a
